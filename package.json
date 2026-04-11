@@ -1,0 +1,11 @@
+{
+  "name": "seo-app-factory",
+  "version": "1.0.0",
+  "description": "Automated pipeline for generating, testing, and deploying SEO-optimized web tool apps",
+  "scripts": {
+    "extract": "node scripts/extract-apps.js",
+    "evaluate": "node scripts/evaluate-app.js",
+    "sitemap": "node scripts/generate-sitemap.js"
+  },
+  "type": "module"
+}

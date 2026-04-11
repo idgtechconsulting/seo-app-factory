@@ -1,0 +1,93 @@
+name: Deploy Approved Apps
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/approved/**'
+
+jobs:
+  evaluate-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # need previous commit to diff
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Find new/changed files in apps/approved/
+        id: changed
+        run: |
+          FILES=$(git diff --name-only HEAD~1 HEAD -- 'apps/approved/*.html' | tr '\n' ' ')
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          echo "Changed approved files: $FILES"
+
+      - name: Evaluate each new app
+        if: steps.changed.outputs.files != ''
+        run: |
+          ALL_PASS=true
+          for f in ${{ steps.changed.outputs.files }}; do
+            echo "Evaluating $f..."
+            RESULT=$(node scripts/evaluate-app.js "$f")
+            echo "$RESULT"
+            SCORE=$(echo "$RESULT" | node -e "let d=''; process.stdin.on('data',c=>d+=c); process.stdin.on('end',()=>console.log(JSON.parse(d).score))")
+            PASSED=$(echo "$RESULT" | node -e "let d=''; process.stdin.on('data',c=>d+=c); process.stdin.on('end',()=>console.log(JSON.parse(d).passed))")
+            echo "Score: $SCORE, Passed: $PASSED"
+            if [ "$PASSED" != "true" ]; then
+              echo "FAIL: $f scored $SCORE — below threshold."
+              ALL_PASS=false
+            fi
+          done
+          if [ "$ALL_PASS" = false ]; then
+            echo "One or more apps failed evaluation. Aborting deploy."
+            exit 1
+          fi
+
+      - name: Copy approved apps to deployed/
+        if: steps.changed.outputs.files != ''
+        run: |
+          mkdir -p deployed
+          for f in ${{ steps.changed.outputs.files }}; do
+            DEST="deployed/$(basename $f)"
+            cp "$f" "$DEST"
+            echo "Copied $f → $DEST"
+          done
+
+      - name: Regenerate sitemap and index
+        run: |
+          BASE_URL=${{ vars.SITE_BASE_URL || 'https://example.com' }} node scripts/generate-sitemap.js
+
+      - name: Commit deployed files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add deployed/
+          git diff --cached --quiet || git commit -m "deploy: update deployed apps and sitemap [skip ci]"
+          git push
+
+      # ---------------------------------------------------------------
+      # Placeholder: swap this step for your actual hosting provider
+      # ---------------------------------------------------------------
+      - name: Deploy to hosting (placeholder)
+        run: |
+          echo "TODO: deploy deployed/ to GitHub Pages / Netlify / Vercel / etc."
+          # GitHub Pages example (enable Pages → Actions source in repo settings):
+          #   uses: peaceiris/actions-gh-pages@v4
+          #   with:
+          #     github_token: ${{ secrets.GITHUB_TOKEN }}
+          #     publish_dir: ./deployed
+          #
+          # Netlify example:
+          #   uses: netlify/actions/cli@master
+          #   with:
+          #     args: deploy --prod --dir=deployed
+          #   env:
+          #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

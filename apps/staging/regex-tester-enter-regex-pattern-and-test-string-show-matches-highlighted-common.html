@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RegexPro | Professional Regular Expression Tester</title>
+    <meta name="description" content="A powerful, real-time Regular Expression tester and debugger. Test your patterns, explore common regex presets, and visualize matches instantly.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="RegexPro - Professional Regular Expression Tester">
+    <meta property="og:description" content="Test and debug your regular expressions in real-time with highlighting and common patterns library.">
+    <meta property="og:type" content="website">
+    <meta property="og:color" content="#6366f1">
+
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --error: #ef4444;
+            --success: #22c55e;
+            --highlight: rgba(99, 102, 241, 0.4);
+            --highlight-border: #818cf8;
+            --border: #334155;
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .regex-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 5px 15px;
+            transition: border-color 0.2s;
+        }
+
+        .regex-input-container:focus-within {
+            border-color: var(--accent);
+        }
+
+        .regex-slash {
+            color: var(--text-muted);
+            font-family: monospace;
+            font-size: 1.2rem;
+            user-select: none;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 1rem;
+            outline: none;
+            padding: 10px 0;
+        }
+
+        .flags-input {
+            width: 80px !important;
+            color: var(--accent) !important;
+            font-weight: bold;
+            border-left: 1px solid var(--border) !important;
+            padding-left: 10px !important;
+        }
+
+        textarea {
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 15px;
+            min-height: 200px;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .flags-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .flag-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .flag-option input {
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        /* Result Highlighting Area */
+        .result-wrapper {
+            position: relative;
+            margin-top: 1.5rem;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 2px solid var(--border);
+            background: var(--bg-input);
+        }
+
+        #highlight-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: transparent;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 1rem;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #test-string {
+            position: relative;
+            z-index: 2;
+            background: transparent !important;
+            color: var(--text-main) !important;
+            caret-color: var(--text-main);
+        }
+
+        .match-hl {
+            background: var(--highlight);
+            border-bottom: 2px solid var(--highlight-border);
+            border-radius: 2px;
+            color: transparent;
+        }
+
+        /* Library/Presets */
+        .library-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preset-item {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .preset-item:hover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .preset-item .preset-name {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .preset-item .preset-regex {
+            display: block;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Match Info Table */
+        .stats-panel {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card {
+            background: var(--bg-input);
+            padding: 10px;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-val {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .stat-lbl {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .error-msg {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .match-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        .match-list th, .match-list td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .match-list th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .match-list tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px;
+            font-style: italic;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>RegexPro</h1>
+            <p>Real-time Regular Expression Tester & Debugger</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="editor-section">
+                <div class="card">
+                    <div class="input-group">
+                        <label for="regex-pattern">Regular Expression</label>
+                        <div class="regex-input-container">
+                            <span class="regex-slash">/</span>
+                            <input type="text" id="regex-pattern" placeholder="enter pattern..." value="([a-zA-Z0-9._%-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})">
+                            <span class="regex-slash">/</span>
+                            <input type="text" id="regex-flags" class="flags-input" placeholder="gim" value="g">
+                        </div>
+                        <div id="regex-error" class="error-msg">Invalid regular expression</div>
+                        
+                        <div class="flags-container">
+                            <label class="flag-option"><input type="checkbox" class="flag-checkbox" value="g" checked> global (g)</label>
+                            <label class="flag-option"><input type="checkbox" class="flag-checkbox" value="i"> case-insensitive (i)</label>
+                            <label class="flag-option"><input type="checkbox" class="flag-checkbox" value="m"> multiline (m)</label>
+                            <label class="flag-option"><input type="checkbox" class="flag-checkbox" value="s"> dotAll (s)</label>
+                            <label class="flag-option"><input type="checkbox" class="flag-checkbox" value="u"> unicode (u)</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="test-string">Test String</label>
+                        <div class="result-wrapper">
+                            <div id="highlight-layer"></div>
+                            <textarea id="test-string" spellcheck="false">Contact us at support@example.com or sales.dept@company.org. 
+You can also reach the admin at admin123@web-mail.net!</textarea>
+                        </div>
+                    </div>
+
+                    <div class="stats-panel">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-val" id="stat-matches">0</span>
+                                <span class="stat-lbl">Matches</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-val" id="stat-groups">0</span>
+                                <span class="stat-lbl">Groups</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-val" id="stat-time">0ms</span>
+                                <span class="stat-lbl">Execution</span>
+                            </div>
+                        </div>
+
+                        <label>Match Details</label>
+                        <div style="overflow-x: auto;">
+                            <table class="match-list" id="match-details">
+                                <thead>
+                                    <tr>
+                                        <th>Match</th>
+                                        <th>Index</th>
+                                        <th>Groups</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="match-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <div id="no-matches" class="empty-state">No matches found</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <div class="card">
+                    <div class="library-title">
+                        <span>📚</span> Common Patterns
+                    </div>
+                    <div class="preset-list" id="preset-list">
+                        <!-- Presets injected by JS -->
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        const regexInput = document.getElementById('regex-pattern');
+        const flagsInput = document.getElementById('regex-flags');
+        const testStringInput = document.getElementById('test-string');
+        const highlightLayer = document.getElementById('highlight-layer');
+        const errorMsg = document.getElementById('regex-error');
+        const matchBody = document.getElementById('match-body');
+        const noMatchesMsg = document.getElementById('no-matches');
+        const flagCheckboxes = document.querySelectorAll('.flag-checkbox');
+        
+        const statMatches = document.getElementById('stat-matches');
+        const statGroups = document.getElementById('stat-groups');
+        const statTime = document.getElementById('stat-time');
+
+        const presets = [
+            { name: 'Email Address', regex: '([a-zA-Z0-9._%-]+)@([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6})', flags: 'g' },
+            { name: 'Phone Number (US)', regex: '\\(?(\\d{3})\\)?[\\s.-]?(\\d{3})[\\s.-]?(\\d{4})', flags: 'g' },
+            { name: 'URL', regex: 'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)', flags: 'gi' },
+            { name: 'IPv4 Address', regex: '(\\b25[0-5]|\\b2[0-4][0-9]|\\b[01]?[0-9][0-9]?)(\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}', flags: 'g' },
+            { name: 'Date (YYYY-MM-DD)', regex: '\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])', flags: 'g' },
+            { name: 'Strong Password', regex: '(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}', flags: 'g' },
+            { name: 'Alphanumeric', regex: '[a-zA-Z0-9]+', flags: 'g' },
+            { name: 'HTML Tags', regex: '<([^>]+)>', flags: 'g' },
+            { name: 'Digits only', regex: '\\d+', flags: 'g' }
+        ];
+
+        function initPresets() {
+            const list = document.getElementById('preset-list');
+            presets.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'preset-item';
+                item.innerHTML = `
+                    <span class="preset-name">${p.name}</span>
+                    <span class="preset-regex">/${p.regex}/${p.flags}</span>
+                `;
+                item.onclick = () => {
+                    regexInput.value = p.regex;
+                    flagsInput.value = p.flags;
+                    updateFlagCheckboxes(p.flags);
+                    process();
+                };
+                list.appendChild(item);
+            });
+        }
+
+        function updateFlagCheckboxes(flags) {
+            flagCheckboxes.forEach(cb => {
+                cb.checked = flags.includes(cb.value);
+            });
+        }
+
+        function syncFlagsFromCheckboxes() {
+            let flags = '';
+            flagCheckboxes.forEach(cb => {
+                if (cb.checked) flags += cb.value;
+            });
+            flagsInput.value = flags;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function process() {
+            const pattern = regexInput.value;
+            const flags = flagsInput.value;
+            const text = testStringInput.value;
+
+            if (!pattern) {
+                highlightLayer.innerHTML = escapeHtml(text);
+                clearStats();
+                return;
+            }
+
+            try {
+                const startTime = performance.now();
+                const re = new RegExp(pattern, flags);
+                const endTime = performance.now();
+                
+                errorMsg.style.display = 'none';
+                statTime.textContent = `${(endTime - startTime).toFixed(2)}ms`;
+
+                let match;
+                let matches = [];
+                let highlightedText = '';
+                let lastIndex = 0;
+                let totalGroups = 0;
+
+                // Avoid infinite loops with empty matches
+                const isGlobal = flags.includes('g');
+                
+                if (isGlobal) {
+                    while ((match = re.exec(text)) !== null) {
+                        if (match.index === re.lastIndex) re.lastIndex++; 
+                        matches.push(match);
+                        if (match.length > 1) totalGroups += (match.length - 1);
+                    }
+                } else {
+                    match = re.exec(text);
+                    if (match) {
+                        matches.push(match);
+                        if (match.length > 1) totalGroups += (match.length - 1);
+                    }
+                }
+
+                // Build highlighted HTML
+                matches.forEach(m => {
+                    highlightedText += escapeHtml(text.substring(lastIndex, m.index));
+                    highlightedText += `<span class="match-hl">${escapeHtml(m[0])}</span>`;
+                    lastIndex = m.index + m[0].length;
+                });
+                highlightedText += escapeHtml(text.substring(lastIndex));
+                
+                highlightLayer.innerHTML = highlightedText + '\n'; // Add newline to match textarea behavior
+                
+                // Update Stats
+                statMatches.textContent = matches.length;
+                statGroups.textContent = totalGroups;
+                
+                // Update Table
+                updateMatchTable(matches);
+
+            } catch (e) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = e.message;
+                highlightLayer.innerHTML = escapeHtml(text);
+                clearStats();
+            }
+        }
+
+        function updateMatchTable(matches) {
+            matchBody.innerHTML = '';
+            if (matches.length === 0) {
+                noMatchesMsg.style.display = 'block';
+                return;
+            }
+            noMatchesMsg.style.display = 'none';
+
+            matches.forEach((m, i) => {
+                const row = document.createElement('tr');
+                const groups = m.slice(1).map((g, idx) => `<div><small>Grp ${idx+1}:</small> ${escapeHtml(g || 'null')}</div>`).join('');
+                
+                row.innerHTML = `
+                    <td><strong>${escapeHtml(m[0])}</strong></td>
+                    <td>${m.index}</td>
+                    <td>${groups || '<span style="color:var(--text-muted)">none</span>'}</td>
+                `;
+                matchBody.appendChild(row);
+            });
+        }
+
+        function clearStats() {
+            statMatches.textContent = '0';
+            statGroups.textContent = '0';
+            statTime.textContent = '0ms';
+            matchBody.innerHTML = '';
+            noMatchesMsg.style.display = 'block';
+        }
+
+        // Event Listeners
+        regexInput.addEventListener('input', process);
+        flagsInput.addEventListener('input', () => {
+            updateFlagCheckboxes(flagsInput.value);
+            process();
+        });
+        testStringInput.addEventListener('input', process);
+        
+        flagCheckboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                syncFlagsFromCheckboxes();
+                process();
+            });
+        });
+
+        // Sync scroll of textarea and highlight layer
+        testStringInput.addEventListener('scroll', () => {
+            highlightLayer.scrollTop = testStringInput.scrollTop;
+            highlightLayer.scrollLeft = testStringInput.scrollLeft;
+        });
+
+        // Initialize
+        initPresets();
+        updateFlagCheckboxes(flagsInput.value);
+        process();
+    </script>
+</body>
+</html>

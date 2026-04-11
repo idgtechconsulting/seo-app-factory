@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Percentage Calculator | Precise & Fast Calculations</title>
+    <meta name="description" content="A professional, free online percentage calculator to find percentage of a value, percentage increase/decrease, and percentage difference.">
+    <meta name="keywords" content="percentage calculator, percent change, percent difference, math tool, online calculator">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Pro Percentage Calculator">
+    <meta property="og:description" content="Calculate percentages, changes, and differences instantly with this professional tool.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://percentage-calculator.app">
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #f1f5f9;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--accent);
+            padding: 8px;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.5);
+            color: var(--text-main);
+        }
+
+        .calculator-content {
+            padding: 32px 24px;
+        }
+
+        .calc-section {
+            display: none;
+        }
+
+        .calc-section.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            color: var(--text-main);
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .unit {
+            position: absolute;
+            right: 16px;
+            color: var(--text-muted);
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .result-card {
+            margin-top: 32px;
+            padding: 24px;
+            background: var(--accent);
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .result-card.highlight {
+            background: #eef2ff;
+            border-color: var(--primary);
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            word-break: break-all;
+        }
+
+        .result-detail {
+            margin-top: 8px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .badge-increase { background: #dcfce7; color: var(--success); }
+        .badge-decrease { background: #fee2e2; color: var(--danger); }
+        .badge-neutral { background: #f1f5f9; color: var(--text-muted); }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 480px) {
+            .tabs {
+                flex-wrap: wrap;
+            }
+            .tab-btn {
+                flex: 1 0 45%;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="app-container">
+        <header>
+            <h1>Pro Percentage Calculator</h1>
+            <p>Fast, accurate, and professional calculations</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="switchTab('percentage-of')">Percentage Of</button>
+            <button class="tab-btn" onclick="switchTab('percentage-change')">Percent Change</button>
+            <button class="tab-btn" onclick="switchTab('percentage-diff')">Percent Diff</button>
+        </nav>
+
+        <div class="calculator-content">
+            <!-- Percentage Of -->
+            <section id="percentage-of" class="calc-section active">
+                <div class="input-group">
+                    <label for="of-percent">What is</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="of-percent" placeholder="e.g. 20" oninput="calcPercentageOf()">
+                        <span class="unit">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="of-value">of</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="of-value" placeholder="e.g. 150" oninput="calcPercentageOf()">
+                    </div>
+                </div>
+                <div class="result-card" id="res-card-of">
+                    <span class="result-label">Result</span>
+                    <div class="result-value" id="res-of">0</div>
+                    <div class="result-detail" id="detail-of">Enter values to calculate</div>
+                </div>
+            </section>
+
+            <!-- Percentage Change -->
+            <section id="percentage-change" class="calc-section">
+                <div class="input-group">
+                    <label for="change-from">From (Original Value)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="change-from" placeholder="e.g. 100" oninput="calcPercentageChange()">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="change-to">To (New Value)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="change-to" placeholder="e.g. 120" oninput="calcPercentageChange()">
+                    </div>
+                </div>
+                <div class="result-card" id="res-card-change">
+                    <div id="change-badge-container"></div>
+                    <span class="result-label">Percentage Change</span>
+                    <div class="result-value" id="res-change">0%</div>
+                    <div class="result-detail" id="detail-change">Enter values to calculate</div>
+                </div>
+            </section>
+
+            <!-- Percentage Difference -->
+            <section id="percentage-diff" class="calc-section">
+                <div class="input-group">
+                    <label for="diff-val1">Value 1</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="diff-val1" placeholder="e.g. 50" oninput="calcPercentageDiff()">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="diff-val2">Value 2</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="diff-val2" placeholder="e.g. 75" oninput="calcPercentageDiff()">
+                    </div>
+                </div>
+                <div class="result-card" id="res-card-diff">
+                    <span class="result-label">Percentage Difference</span>
+                    <div class="result-value" id="res-diff">0%</div>
+                    <div class="result-detail" id="detail-diff">Enter values to calculate</div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            &copy; <span id="year"></span> Pro Percentage Calculator. All rights reserved.
+        </footer>
+    </main>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        function switchTab(tabId) {
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(tabId.split('-')[0])) {
+                    // This is a bit loose, let's use a better way
+                }
+            });
+            
+            // Precise button matching
+            const buttons = document.querySelectorAll('.tab-btn');
+            if(tabId === 'percentage-of') buttons[0].classList.add('active');
+            if(tabId === 'percentage-change') buttons[1].classList.add('active');
+            if(tabId === 'percentage-diff') buttons[2].classList.add('active');
+
+            // Update sections
+            document.querySelectorAll('.calc-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Override switchTab to be cleaner
+        function switchTab(tabId) {
+            const sections = {
+                'percentage-of': 0,
+                'percentage-change': 1,
+                'percentage-diff': 2
+            };
+            
+            const btnIdx = sections[tabId];
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === btnIdx);
+            });
+
+            document.querySelectorAll('.calc-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function formatNumber(num) {
+            if (isNaN(num) || !isFinite(num)) return "0";
+            return Number(num.toFixed(2)).toLocaleString();
+        }
+
+        function calcPercentageOf() {
+            const percent = parseFloat(document.getElementById('of-percent').value);
+            const value = parseFloat(document.getElementById('of-value').value);
+            const resEl = document.getElementById('res-of');
+            const detailEl = document.getElementById('detail-of');
+            const card = document.getElementById('res-card-of');
+
+            if (!isNaN(percent) && !isNaN(value)) {
+                const result = (percent / 100) * value;
+                resEl.textContent = formatNumber(result);
+                detailEl.textContent = `${percent}% of ${formatNumber(value)} is ${formatNumber(result)}`;
+                card.classList.add('highlight');
+            } else {
+                resEl.textContent = "0";
+                detailEl.textContent = "Enter values to calculate";
+                card.classList.remove('highlight');
+            }
+        }
+
+        function calcPercentageChange() {
+            const from = parseFloat(document.getElementById('change-from').value);
+            const to = parseFloat(document.getElementById('change-to').value);
+            const resEl = document.getElementById('res-change');
+            const detailEl = document.getElementById('detail-change');
+            const badgeCont = document.getElementById('change-badge-container');
+            const card = document.getElementById('res-card-change');
+
+            if (!isNaN(from) && !isNaN(to)) {
+                if (from === 0) {
+                    resEl.textContent = "∞";
+                    detailEl.textContent = "Cannot calculate change from zero";
+                    badgeCont.innerHTML = "";
+                    card.classList.remove('highlight');
+                    return;
+                }
+
+                const diff = to - from;
+                const percentChange = (diff / Math.abs(from)) * 100;
+                const formattedChange = percentChange.toFixed(2);
+                
+                resEl.textContent = `${formattedChange}%`;
+                
+                if (percentChange > 0) {
+                    badgeCont.innerHTML = `<span class="badge badge-increase">Increase</span>`;
+                    detailEl.textContent = `Increased by ${formattedChange}%`;
+                } else if (percentChange < 0) {
+                    badgeCont.innerHTML = `<span class="badge badge-decrease">Decrease</span>`;
+                    detailEl.textContent = `Decreased by ${Math.abs(formattedChange)}%`;
+                } else {
+                    badgeCont.innerHTML = `<span class="badge badge-neutral">No Change</span>`;
+                    detailEl.textContent = `Values are identical`;
+                }
+                card.classList.add('highlight');
+            } else {
+                resEl.textContent = "0%";
+                detailEl.textContent = "Enter values to calculate";
+                badgeCont.innerHTML = "";
+                card.classList.remove('highlight');
+            }
+        }
+
+        function calcPercentageDiff() {
+            const v1 = parseFloat(document.getElementById('diff-val1').value);
+            const v2 = parseFloat(document.getElementById('diff-val2').value);
+            const resEl = document.getElementById('res-diff');
+            const detailEl = document.getElementById('detail-diff');
+            const card = document.getElementById('res-card-diff');
+
+            if (!isNaN(v1) && !isNaN(v2)) {
+                const absDiff = Math.abs(v1 - v2);
+                const avg = (Math.abs(v1) + Math.abs(v2)) / 2;
+                
+                if (avg === 0) {
+                    resEl.textContent = "0%";
+                    detailEl.textContent = "Both values are zero";
+                    card.classList.remove('highlight');
+                    return;
+                }
+
+                const percentDiff = (absDiff / avg) * 100;
+                const formattedDiff = percentDiff.toFixed(2);
+                
+                resEl.textContent = `${formattedDiff}%`;
+                detailEl.textContent = `The difference between ${formatNumber(v1)} and ${formatNumber(v2)} is ${formattedDiff}%`;
+                card.classList.add('highlight');
+            } else {
+                resEl.textContent = "0%";
+                detailEl.textContent = "Enter values to calculate";
+                card.classList.remove('highlight');
+            }
+        }
+    </script>
+</body>
+</html>

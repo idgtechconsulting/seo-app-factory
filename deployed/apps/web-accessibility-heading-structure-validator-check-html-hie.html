@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Accessibility Heading Structure Validator - Check HTML Hierarchy</title>
+    <meta name="description" content="Free professional tool to validate your HTML heading structure for web accessibility. Ensure no heading levels are skipped to improve SEO and screen reader compatibility.">
+    <meta name="keywords" content="web accessibility heading structure validator, heading hierarchy checker, HTML accessibility tool, WCAG heading levels, SEO heading audit">
+    <link rel="canonical" href="https://idgtechconsulting.github.io/seo-app-factory/apps/web-accessibility-heading-structure-validator-check-html-hie.html">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Web Accessibility Heading Structure Validator">
+    <meta property="og:description" content="Instantly check if your HTML headings skip levels. Ensure WCAG compliance and better accessibility.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://idgtechconsulting.github.io/seo-app-factory/apps/web-accessibility-heading-structure-validator-check-html-hie.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Web Accessibility Heading Structure Validator",
+      "description": "A tool that parses HTML input and flags missing heading levels to ensure web accessibility compliance.",
+      "applicationCategory": "Accessibility Tool",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --border: #334155;
+            --radius: 8px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .tool-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .input-section, .results-section {
+            background-color: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 400px;
+            background-color: var(--bg-main);
+            color: #cbd5e1;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.875rem;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border);
+        }
+
+        .results-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+        }
+
+        .report-card {
+            display: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .status-pass { background-color: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-fail { background-color: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .issue-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .issue-item {
+            padding: 1rem;
+            border-left: 4px solid transparent;
+            background-color: var(--bg-main);
+            margin-bottom: 0.75rem;
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .issue-item.error { border-left-color: var(--error); }
+        .issue-item.warning { border-left-color: var(--warning); }
+
+        .issue-item strong {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .issue-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .heading-tree {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+        }
+
+        .tree-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .tree-level {
+            font-weight: 800;
+            color: var(--primary);
+            min-width: 30px;
+        }
+
+        .tree-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            background-color: var(--bg-card);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Web Accessibility Heading Structure Validator</h1>
+        <p>Ensure your content is accessible to everyone. Paste your HTML to check for skipped heading levels and hierarchy errors.</p>
+    </header>
+
+    <main>
+        <div class="tool-container">
+            <section class="input-section" aria-labelledby="input-title">
+                <h2 id="input-title" class="section-title">HTML Input</h2>
+                <label for="html-input" class="sr-only">Paste your HTML code here</label>
+                <textarea id="html-input" placeholder="Paste your HTML here... (e.g. <div><h1>Title</h1><h3>Subtitle</h3></div>)"></textarea>
+                
+                <div class="button-group">
+                    <button id="validate-btn" class="btn-primary">Validate Structure</button>
+                    <button id="example-btn" class="btn-secondary">Load Example</button>
+                    <button id="clear-btn" class="btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="results-section" aria-labelledby="results-title">
+                <h2 id="results-title" class="section-title">Validation Report</h2>
+                
+                <div id="placeholder" class="results-placeholder">
+                    Enter HTML and click validate to see the accessibility report.
+                </div>
+
+                <div id="report" class="report-card">
+                    <div id="status-badge" class="status-badge"></div>
+                    
+                    <div id="issues-container">
+                        <ul id="issue-list" class="issue-list"></ul>
+                    </div>
+
+                    <div class="heading-tree">
+                        <h3 style="font-size: 1rem; margin-bottom: 1rem;">Detected Hierarchy</h3>
+                        <div id="tree-list"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Accessibility Validator Tool. Built for professional web developers and accessibility auditors.</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const htmlInput = document.getElementById('html-input');
+        const validateBtn = document.getElementById('validate-btn');
+        const exampleBtn = document.getElementById('example-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const placeholder = document.getElementById('placeholder');
+        const report = document.getElementById('report');
+        const statusBadge = document.getElementById('status-badge');
+        const issueList = document.getElementById('issue-list');
+        const treeList = document.getElementById('tree-list');
+
+        const EXAMPLE_HTML = `
+<article>
+    <h1>Main Page Title</h1>
+    <p>Intro text...</p>
+    <h2>Section 1</h2>
+    <p>Some content...</p>
+    <h4>Skipped H3 here!</h4>
+    <p>This is an accessibility error.</p>
+    <h2>Section 2</h2>
+    <h3>Subsection 2.1</h3>
+    <h6>Jumped too far to H6!</h6>
+    <h1>Unexpected second H1</h1>
+</article>`;
+
+        exampleBtn.addEventListener('click', () => {
+            htmlInput.value = EXAMPLE_HTML.trim();
+        });
+
+        clearBtn.addEventListener('click', () => {
+            htmlInput.value = '';
+            report.style.display = 'none';
+            placeholder.style.display = 'block';
+        });
+
+        validateBtn.addEventListener('click', () => {
+            const input = htmlInput.value.trim();
+            if (!input) {
+                alert('Please enter some HTML to validate.');
+                return;
+            }
+
+            validateHTML(input);
+        });
+
+        function validateHTML(htmlString) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, 'text/html');
+            const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            
+            const issues = [];
+            const hierarchy = [];
+            
+            if (headings.length === 0) {
+                showReport([], [], true);
+                return;
+            }
+
+            let prevLevel = 0;
+            let h1Count = 0;
+
+            headings.forEach((heading, index) => {
+                const level = parseInt(heading.tagName.substring(1));
+                const text = heading.innerText.trim() || '[Empty Heading]';
+                
+                hierarchy.push({ level, text });
+
+                if (level === 1) h1Count++;
+
+                // Rule 1: First heading should be H1
+                if (index === 0 && level !== 1) {
+                    issues.push({
+                        type: 'error',
+                        title: 'Incorrect Starting Level',
+                        desc: `The first heading found is <${heading.tagName.toLowerCase()}>. For accessibility, the page should ideally start with an <h1>.`
+                    });
+                }
+
+                // Rule 2: No skipping levels
+                if (prevLevel > 0 && level > prevLevel + 1) {
+                    issues.push({
+                        type: 'error',
+                        title: 'Skipped Heading Level',
+                        desc: `Skipped from <h${prevLevel}> to <h${level}> at "${text}". Heading levels must be sequential.`
+                    });
+                }
+
+                prevLevel = level;
+            });
+
+            // Rule 3: Multiple H1s
+            if (h1Count > 1) {
+                issues.push({
+                    type: 'warning',
+                    title: 'Multiple H1 Headings',
+                    desc: `Found ${h1Count} <h1> tags. While HTML5 allows it, having a single <h1> is recommended for clearer page structure.`
+                });
+            }
+
+            showReport(issues, hierarchy, false);
+        }
+
+        function showReport(issues, hierarchy, isEmpty) {
+            placeholder.style.display = 'none';
+            report.style.display = 'block';
+            issueList.innerHTML = '';
+            treeList.innerHTML = '';
+
+            if (isEmpty) {
+                statusBadge.textContent = 'No Headings Found';
+                statusBadge.className = 'status-badge status-fail';
+                issueList.innerHTML = '<li class="issue-item error"><strong>No headings detected</strong><p>Please ensure your HTML contains h1-h6 tags.</p></li>';
+                return;
+            }
+
+            const hasErrors = issues.some(i => i.type === 'error');
+            
+            if (hasErrors) {
+                statusBadge.textContent = 'Accessibility Issues Found';
+                statusBadge.className = 'status-badge status-fail';
+            } else if (issues.length > 0) {
+                statusBadge.textContent = 'Warnings Found';
+                statusBadge.className = 'status-badge status-warning';
+            } else {
+                statusBadge.textContent = 'Structure Valid';
+                statusBadge.className = 'status-badge status-pass';
+            }
+
+            if (issues.length === 0) {
+                issueList.innerHTML = '<li class="issue-item" style="border-left-color: var(--success)"><strong>Perfect Hierarchy!</strong><p>No skipped levels or structural errors detected.</p></li>';
+            } else {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.className = `issue-item ${issue.type}`;
+                    li.innerHTML = `<strong>${issue.title}</strong><p>${issue.desc}</p>`;
+                    issueList.appendChild(li);
+                });
+            }
+
+            hierarchy.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'tree-item';
+                div.innerHTML = `<span class="tree-level">H${item.level}</span><span class="tree-text">${escapeHtml(item.text)}</span>`;
+                treeList.appendChild(div);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

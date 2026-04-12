@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Bleed and Trim Calculator | Professional Document Setup Tool</title>
+    <meta name="description" content="Free professional tool for graphic designers to calculate total canvas dimensions including bleed margins. Ensure your print files are set up correctly for commercial printing.">
+    <meta name="keywords" content="print bleed and trim calculator, bleed margin calculator, print document size, graphic design tools, bleed area calculation">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Print Bleed and Trim Calculator">
+    <meta property="og:description" content="Calculate final canvas dimensions with bleed margins for professional print software setup.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://idgtechconsulting.github.io/seo-app-factory/apps/print-bleed-and-trim-calculator-professional-document-setup.html">
+    
+    <link rel="canonical" href="https://idgtechconsulting.github.io/seo-app-factory/apps/print-bleed-and-trim-calculator-professional-document-setup.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Print Bleed and Trim Calculator",
+      "description": "A professional tool to calculate total canvas dimensions including bleed margins for print software setup.",
+      "applicationCategory": "DesignTool",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #f1f5f9;
+            --success: #22c55e;
+            --bleed-color: #ef4444;
+            --trim-color: #3b82f6;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 850px) {
+            main {
+                grid-template-columns: 400px 1fr;
+                align-items: start;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        input {
+            flex: 1;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, ring 0.2s;
+            width: 100%;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        select {
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--accent);
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .preset-btn {
+            background: var(--accent);
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .preset-btn:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 600px) {
+            .results-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .result-card {
+            background: var(--accent);
+            padding: 1.25rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .visualizer-box {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        #canvas-preview {
+            max-width: 100%;
+            max-height: 500px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: white;
+        }
+
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .dot.bleed { background: var(--bleed-color); }
+        .dot.trim { background: var(--trim-color); }
+
+        footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 2rem 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .copy-btn {
+            margin-top: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        nav {
+            display: none; /* Not needed for single tool, but included for semantic requirement */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Print Bleed & Trim Calculator</h1>
+        <p>Calculate your total document dimensions for Adobe Illustrator, InDesign, or Photoshop to ensure perfect print cuts.</p>
+    </header>
+
+    <nav aria-label="Main Navigation"></nav>
+
+    <main>
+        <section class="card" aria-labelledby="settings-title">
+            <h2 id="settings-title" class="section-title">⚙️ Document Settings</h2>
+            
+            <div class="input-group">
+                <label for="unit-select">Measurement Unit</label>
+                <select id="unit-select">
+                    <option value="in">Inches (in)</option>
+                    <option value="mm">Millimeters (mm)</option>
+                    <option value="px">Pixels (px)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="trim-width">Trim Width (Finished Size)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="trim-width" value="8.5" step="0.001" min="0" aria-required="true">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="trim-height">Trim Height (Finished Size)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="trim-height" value="11" step="0.001" min="0" aria-required="true">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="bleed-amount">Bleed Margin (Per Side)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="bleed-amount" value="0.125" step="0.001" min="0" aria-required="true">
+                </div>
+            </div>
+
+            <div class="section-title" style="font-size: 0.9rem; margin-top: 2rem;">Quick Presets</div>
+            <div class="presets">
+                <button class="preset-btn" onclick="setPreset(8.5, 11, 0.125, 'in')">US Letter</button>
+                <button class="preset-btn" onclick="setPreset(210, 297, 3, 'mm')">A4</button>
+                <button class="preset-btn" onclick="setPreset(3.5, 2, 0.125, 'in')">Biz Card</button>
+                <button class="preset-btn" onclick="setPreset(1080, 1920, 0, 'px')">Digital HD</button>
+            </div>
+        </section>
+
+        <section class="card" aria-labelledby="results-title">
+            <h2 id="results-title" class="section-title">📐 Total Canvas Dimensions</h2>
+            
+            <div class="results-container">
+                <div class="result-card">
+                    <div class="result-label">Total Width</div>
+                    <div id="res-total-width" class="result-value">8.75 in</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Total Height</div>
+                    <div id="res-total-height" class="result-value">11.25 in</div>
+                </div>
+            </div>
+
+            <button class="copy-btn" onclick="copyResults()">Copy Dimensions</button>
+
+            <div class="visualizer-box">
+                <canvas id="canvas-preview"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><span class="dot bleed"></span> Bleed Area</div>
+                    <div class="legend-item"><span class="dot trim"></span> Trim Line</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Print Bleed & Trim Calculator. Professional tool for graphic designers.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem;">Ensure you export your PDF with bleed marks for the best results.</p>
+    </footer>
+
+    <div id="toast" class="toast">Dimensions copied to clipboard!</div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const trimWidthInput = document.getElementById('trim-width');
+        const trimHeightInput = document.getElementById('trim-height');
+        const bleedInput = document.getElementById('bleed-amount');
+        const unitSelect = document.getElementById('unit-select');
+        
+        const resTotalWidth = document.getElementById('res-total-width');
+        const resTotalHeight = document.getElementById('res-total-height');
+        const canvas = document.getElementById('canvas-preview');
+        const ctx = canvas.getContext('2d');
+
+        function calculate() {
+            const w = parseFloat(trimWidthInput.value) || 0;
+            const h = parseFloat(trimHeightInput.value) || 0;
+            const b = parseFloat(bleedInput.value) || 0;
+            const unit = unitSelect.value;
+
+            if (w <= 0 || h <= 0) {
+                resTotalWidth.textContent = "0 " + unit;
+                resTotalHeight.textContent = "0 " + unit;
+                drawPreview(0, 0, 0);
+                return;
+            }
+
+            const totalW = w + (b * 2);
+            const totalH = h + (b * 2);
+
+            resTotalWidth.textContent = `${totalW.toFixed(3)} ${unit}`;
+            resTotalHeight.textContent = `${totalH.toFixed(3)} ${unit}`;
+
+            drawPreview(totalW, totalH, b);
+        }
+
+        function drawPreview(totalW, totalH, bleed) {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (totalW === 0 || totalH === 0) return;
+
+            // Set canvas internal resolution for sharpness
+            canvas.width = 600;
+            canvas.height = 600;
+
+            const padding = 40;
+            const availableW = canvas.width - (padding * 2);
+            const availableH = canvas.height - (padding * 2);
+
+            // Scaling factor to fit the preview box
+            const scale = Math.min(availableW / totalW, availableH / totalH);
+            
+            const drawW = totalW * scale;
+            const drawH = totalH * scale;
+            const offsetX = (canvas.width - drawW) / 2;
+            const offsetY = (canvas.height - drawH) / 2;
+
+            // 1. Draw Bleed Area (Outer Box)
+            ctx.fillStyle = '#fee2e2'; // Light red
+            ctx.fillRect(offsetX, offsetY, drawW, drawH);
+            ctx.strokeStyle = '#ef4444'; // Red
+            ctx.lineWidth = 2;
+            ctx.strokeRect(offsetX, offsetY, drawW, drawH);
+
+            // 2. Draw Trim Area (Inner Box)
+            const bleedScale = bleed * scale;
+            const trimW = drawW - (bleedScale * 2);
+            const trimH = drawH - (bleedScale * 2);
+            
+            ctx.strokeStyle = '#3b82f6'; // Blue
+            ctx.setLineDash([5, 5]); // Dashed line for trim
+            ctx.strokeRect(
+                offsetX + bleedScale, 
+                offsetY + bleedScale, 
+                trimW, 
+                trimH
+            );
+            ctx.setLineDash([]); // Reset dash
+        }
+
+        function setPreset(w, h, b, unit) {
+            unitSelect.value = unit;
+            trimWidthInput.value = w;
+            trimHeightInput.value = h;
+            bleedInput.value = b;
+            calculate();
+        }
+
+        function copyResults() {
+            const text = `Total Canvas Size: ${resTotalWidth.textContent} x ${resTotalHeight.textContent}`;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            });
+        }
+
+        // Event Listeners
+        [trimWidthInput, trimHeightInput, bleedInput, unitSelect].forEach(el => {
+            el.addEventListener('input', calculate);
+        });
+
+        // Initial Calculation
+        calculate();
+    </script>
+</body>
+</html>

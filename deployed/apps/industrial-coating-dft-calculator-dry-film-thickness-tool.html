@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrial Coating DFT Calculator | Dry Film Thickness Tool</title>
+    <meta name="description" content="Professional Industrial Coating DFT (Dry Film Thickness) and WFT (Wet Film Thickness) calculator. Calculate volume solids, dry film, and wet film thickness for industrial paint applications.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Industrial Coating DFT Calculator">
+    <meta property="og:description" content="Professional tool for calculating Dry Film Thickness, Wet Film Thickness, and Volume Solids for industrial coatings.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Canonical URL Placeholder -->
+    <link rel="canonical" href="https://idgtechconsulting.github.io/seo-app-factory/apps/industrial-coating-dft-calculator-dry-film-thickness-tool.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Industrial Coating DFT Calculator",
+      "description": "A professional calculator for industrial coating thickness, calculating DFT, WFT, and Volume Solids.",
+      "applicationCategory": "Industrial Tool",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --error: #ef4444;
+            --success: #22c55e;
+            --border: #334155;
+            --radius: 8px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .calc-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .unit-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .unit-btn {
+            background: var(--border);
+            color: var(--text-muted);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .unit-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 0 2px var(--primary-dark);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .input-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            width: 100%;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .unit-badge {
+            position: absolute;
+            right: 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            pointer-events: none;
+            font-weight: 600;
+        }
+
+        .action-section {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border);
+            color: var(--text-main);
+        }
+
+        .result-card {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-card h3 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            color: var(--text-main);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            transform: translateY(150%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .toast.error {
+            border-left-color: var(--error);
+        }
+
+        .info-section {
+            margin-top: 3rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .info-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .info-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+        }
+
+        .info-card h4 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Industrial Coating DFT Calculator</h1>
+        <p>Precision tool for calculating Dry Film Thickness (DFT), Wet Film Thickness (WFT), and Volume Solids for industrial painting and coating specifications.</p>
+    </header>
+
+    <main>
+        <section class="calc-container" aria-labelledby="calc-title">
+            <h2 id="calc-title" style="display:none;">Coating Calculator</h2>
+            
+            <div class="unit-toggle">
+                <button id="unit-metric" class="unit-btn active" onclick="setUnit('metric')">Metric (µm)</button>
+                <button id="unit-imperial" class="unit-btn" onclick="setUnit('imperial')">Imperial (mils)</button>
+            </div>
+
+            <div class="input-grid">
+                <div class="form-group">
+                    <label for="wft">Wet Film Thickness (WFT)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="wft" placeholder="Enter WFT" step="any">
+                        <span class="unit-badge" id="wft-unit">µm</span>
+                    </div>
+                    <p class="help-text">Leave blank to calculate this value</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="dft">Dry Film Thickness (DFT)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="dft" placeholder="Enter DFT" step="any">
+                        <span class="unit-badge" id="dft-unit">µm</span>
+                    </div>
+                    <p class="help-text">Leave blank to calculate this value</p>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="solids">Volume Solids (%)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="solids" placeholder="e.g. 65" step="any">
+                        <span class="unit-badge">%</span>
+                    </div>
+                    <p class="help-text">Percentage of non-volatile material in the coating</p>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <button class="btn-primary" onclick="calculate()">Calculate Missing Value</button>
+                <button class="btn-secondary" onclick="resetFields()">Clear All</button>
+            </div>
+
+            <div id="result" class="result-card">
+                <h3 id="result-label">Calculated Result</h3>
+                <div class="result-value" id="result-val">0.00</div>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <article class="info-card">
+                <h4><span>📏</span> The Formula</h4>
+                <p>The relationship between wet and dry film thickness is determined by the volume solids of the coating:</p>
+                <p style="margin-top: 1rem; font-family: monospace; background: var(--bg-dark); padding: 0.5rem; border-radius: 4px; text-align: center;">
+                    DFT = WFT × (Volume Solids / 100)
+                </p>
+            </article>
+            <article class="info-card">
+                <h4><span>💡</span> Pro Tips</h4>
+                <p>Ensure you are using <span class="highlight">Volume Solids</span> and not Weight Solids. Weight solids include the weight of the pigments and resins but not the volume they occupy once the solvent evaporates.</p>
+            </article>
+            <article class="info-card">
+                <h4><span>🔄</span> Conversion</h4>
+                <p>1 mil = 25.4 microns (µm). To convert mils to microns, multiply by 25.4. To convert microns to mils, divide by 25.4.</p>
+            </article>
+            <article class="info-card">
+                <h4><span>⚠️</span> Validation</h4>
+                <p>Always verify calculations against the technical data sheet (TDS) provided by the coating manufacturer for specific product requirements.</p>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Industrial Coating Tools. Professional Grade Calculation.</p>
+    </footer>
+
+    <div id="toast" class="toast">Notification message</div>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        let currentUnit = 'metric';
+
+        function setUnit(unit) {
+            currentUnit = unit;
+            document.getElementById('unit-metric').classList.toggle('active', unit === 'metric');
+            document.getElementById('unit-imperial').classList.toggle('active', unit === 'imperial');
+            
+            const unitText = unit === 'metric' ? 'µm' : 'mils';
+            document.getElementById('wft-unit').textContent = unitText;
+            document.getElementById('dft-unit').textContent = unitText;
+            
+            // Clear results when unit changes to avoid confusion
+            document.getElementById('result').style.display = 'none';
+            showToast(`Units switched to ${unit === 'metric' ? 'Microns' : 'Mils'}`);
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${isError ? 'error' : ''} show`;
+            
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        function resetFields() {
+            document.getElementById('wft').value = '';
+            document.getElementById('dft').value = '';
+            document.getElementById('solids').value = '';
+            document.getElementById('result').style.display = 'none';
+            showToast('All fields cleared');
+        }
+
+        function calculate() {
+            const wftInput = document.getElementById('wft').value;
+            const dftInput = document.getElementById('dft').value;
+            const solidsInput = document.getElementById('solids').value;
+
+            const wft = wftInput === '' ? null : parseFloat(wftInput);
+            const dft = dftInput === '' ? null : parseFloat(dftInput);
+            const solids = solidsInput === '' ? null : parseFloat(solidsInput);
+
+            // Validation: Check for non-numeric or negative values
+            if ((wftInput !== '' && isNaN(wft)) || (dftInput !== '' && isNaN(dft)) || (solidsInput !== '' && isNaN(solids))) {
+                showToast('Please enter valid numeric values', true);
+                return;
+            }
+
+            if ((wft !== null && wft <= 0) || (dft !== null && dft <= 0) || (solids !== null && solids <= 0)) {
+                showToast('Values must be greater than zero', true);
+                return;
+            }
+
+            if (solids !== null && (solids > 100 || solids < 0)) {
+                showToast('Volume solids must be between 0 and 100%', true);
+                return;
+            }
+
+            // Determine what we are solving for
+            // Case 1: Solve for DFT (WFT and Solids provided)
+            if (wft !== null && solids !== null && dft === null) {
+                const result = wft * (solids / 100);
+                displayResult('Calculated Dry Film Thickness (DFT)', result);
+            } 
+            // Case 2: Solve for WFT (DFT and Solids provided)
+            else if (dft !== null && solids !== null && wft === null) {
+                const result = dft / (solids / 100);
+                displayResult('Calculated Wet Film Thickness (WFT)', result);
+            } 
+            // Case 3: Solve for Volume Solids (WFT and DFT provided)
+            else if (wft !== null && dft !== null && solids === null) {
+                const result = (dft / wft) * 100;
+                if (result > 100) {
+                    showToast('DFT cannot be greater than WFT', true);
+                    return;
+                }
+                displayResult('Calculated Volume Solids', result, '%');
+            } 
+            // Error cases
+            else if (wft !== null && dft !== null && solids !== null) {
+                showToast('Please leave one field blank to calculate it', true);
+            } 
+            else {
+                showToast('Please provide at least two values', true);
+            }
+        }
+
+        function displayResult(label, value, suffix = null) {
+            const unit = currentUnit === 'metric' ? 'µm' : 'mils';
+            const finalSuffix = suffix || unit;
+            
+            const resultCard = document.getElementById('result');
+            const resultLabel = document.getElementById('result-label');
+            const resultVal = document.getElementById('result-val');
+
+            resultLabel.textContent = label;
+            resultVal.textContent = `${value.toFixed(2)} ${finalSuffix}`;
+            
+            resultCard.style.display = 'block';
+            
+            // Scroll to result on mobile
+            if (window.innerWidth < 640) {
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Prevent accidental form submission if wrapped in form
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>

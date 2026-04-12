@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHA Loan PMI Breakeven Calculator | Compare Down Payment vs Mortgage Insurance</title>
+    <meta name="description" content="Calculate the breakeven point between a higher down payment and monthly PMI/MIP costs. Find out if paying more upfront saves you money over the life of your FHA or conventional loan.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="FHA Loan PMI Breakeven Calculator">
+    <meta property="og:description" content="Compare the cost of a higher down payment versus monthly mortgage insurance to find your financial breakeven point.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/fha-pmi-breakeven-calculator">
+    
+    <link rel="canonical" href="https://yourdomain.com/fha-pmi-breakeven-calculator">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FHA Loan PMI Breakeven Calculator",
+      "description": "A professional tool to calculate the breakeven point between paying a higher down payment to avoid PMI versus paying monthly mortgage insurance.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #10b981;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.875rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            main {
+                grid-template-columns: 380px 1fr;
+                align-items: start;
+            }
+        }
+
+        .calculator-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper .prefix {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, ring 0.2s;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .input-wrapper.no-prefix input {
+            padding-left: 0.75rem;
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .metric-card .label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .metric-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .metric-card .value.highlight {
+            color: var(--accent);
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-header h3 {
+            font-size: 1.125rem;
+            color: var(--text-main);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 400px;
+        }
+
+        .info-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .info-section h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .info-section p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        .legend {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FHA Loan PMI Breakeven Calculator</h1>
+        <p>Analyze whether a larger down payment is worth the upfront cost compared to paying monthly mortgage insurance (PMI/MIP).</p>
+    </header>
+
+    <main>
+        <section class="calculator-card">
+            <div class="input-group">
+                <label for="homePrice">Home Purchase Price</label>
+                <div class="input-wrapper">
+                    <span class="prefix">$</span>
+                    <input type="number" id="homePrice" value="350000" step="1000">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="currentDP">Current Down Payment (%)</label>
+                <div class="input-wrapper">
+                    <span class="prefix">%</span>
+                    <input type="number" id="currentDP" value="3.5" step="0.1">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="targetDP">Target Down Payment (%)</label>
+                <div class="input-wrapper">
+                    <span class="prefix">%</span>
+                    <input type="number" id="targetDP" value="20" step="0.1">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="interestRate">Interest Rate (%)</label>
+                <div class="input-wrapper">
+                    <span class="prefix">%</span>
+                    <input type="number" id="interestRate" value="6.5" step="0.1">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="pmiRate">Annual PMI/MIP Rate (%)</label>
+                <div class="input-wrapper">
+                    <span class="prefix">%</span>
+                    <input type="number" id="pmiRate" value="0.85" step="0.01">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="loanTerm">Loan Term (Years)</label>
+                <div class="input-wrapper no-prefix">
+                    <input type="number" id="loanTerm" value="30">
+                </div>
+            </div>
+        </section>
+
+        <section class="results-container">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="label">Additional Upfront Cost</span>
+                    <div class="value" id="extraUpfront">$0</div>
+                </div>
+                <div class="metric-card">
+                    <span class="label">Monthly Savings</span>
+                    <div class="value" id="monthlySavings">$0</div>
+                </div>
+                <div class="metric-card">
+                    <span class="label">Breakeven Period</span>
+                    <div class="value highlight" id="breakevenTime">0 Months</div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Cumulative Cost Comparison</h3>
+                </div>
+                <canvas id="breakevenChart" width="800" height="400"></canvas>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #2563eb;"></div>
+                        <span>Lower Down Payment</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #10b981;"></div>
+                        <span>Higher Down Payment</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section class="info-section">
+        <h2>Understanding the PMI Breakeven Point</h2>
+        <p>When you put less than 20% down on a home, lenders typically require Private Mortgage Insurance (PMI) or Mortgage Insurance Premium (MIP for FHA loans). This insurance protects the lender, not the borrower, and adds a monthly cost to your mortgage.</p>
+        <p>The <strong>Breakeven Point</strong> is the moment when the total amount you saved in monthly payments (by putting more money down) equals the extra cash you spent upfront to reach that higher down payment percentage.</p>
+        <p><strong>Key Considerations:</strong></p>
+        <ul>
+            <li><strong>Opportunity Cost:</strong> This calculator looks at raw cash. It does not account for the interest you could have earned by investing that extra down payment in the stock market.</li>
+            <li><strong>Equity:</strong> A higher down payment gives you immediate equity in your home, reducing the risk of being "underwater" if home prices drop.</li>
+            <li><strong>FHA vs Conventional:</strong> FHA loans often have an upfront MIP fee added to the loan balance, which this simplified tool calculates based on the monthly premium impact.</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; <span id="year"></span> FHA Loan PMI Breakeven Calculator. For educational purposes only. Consult a licensed mortgage professional for actual loan terms.</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const inputs = ['homePrice', 'currentDP', 'targetDP', 'interestRate', 'pmiRate', 'loanTerm'];
+        const elements = {};
+        inputs.forEach(id => elements[id] = document.getElementById(id));
+
+        const canvas = document.getElementById('breakevenChart');
+        const ctx = canvas.getContext('2d');
+
+        function calculate() {
+            const homePrice = parseFloat(elements.homePrice.value) || 0;
+            const currentDPPercent = (parseFloat(elements.currentDP.value) || 0) / 100;
+            const targetDPPercent = (parseFloat(elements.targetDP.value) || 0) / 100;
+            const annualRate = (parseFloat(elements.interestRate.value) || 0) / 100;
+            const pmiAnnualRate = (parseFloat(elements.pmiRate.value) || 0) / 100;
+            const years = parseInt(elements.loanTerm.value) || 30;
+
+            const monthlyRate = annualRate / 12;
+            const totalMonths = years * 12;
+
+            // Scenario 1: Lower Down Payment
+            const loanAmount1 = homePrice * (1 - currentDPPercent);
+            const monthlyPI1 = loanAmount1 * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1) || 0;
+            const monthlyPMI1 = (loanAmount1 * pmiAnnualRate) / 12;
+            const totalMonthly1 = monthlyPI1 + monthlyPMI1;
+
+            // Scenario 2: Higher Down Payment
+            const loanAmount2 = homePrice * (1 - targetDPPercent);
+            const monthlyPI2 = loanAmount2 * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1) || 0;
+            // Assuming PMI is 0 if down payment is 20% or more
+            const monthlyPMI2 = targetDPPercent >= 0.20 ? 0 : (loanAmount2 * pmiAnnualRate) / 12;
+            const totalMonthly2 = monthlyPI2 + monthlyPMI2;
+
+            const extraUpfront = (homePrice * targetDPPercent) - (homePrice * currentDPPercent);
+            const monthlySavings = totalMonthly1 - totalMonthly2;
+            
+            let breakevenMonths = 0;
+            if (monthlySavings > 0) {
+                breakevenMonths = extraUpfront / monthlySavings;
+            }
+
+            // Update UI
+            document.getElementById('extraUpfront').textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(extraUpfront);
+            document.getElementById('monthlySavings').textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(monthlySavings);
+            
+            if (monthlySavings <= 0) {
+                document.getElementById('breakevenTime').textContent = "Never";
+            } else if (breakevenMonths > totalMonths) {
+                document.getElementById('breakevenTime').textContent = "Over Loan Term";
+            } else {
+                const yrs = Math.floor(breakevenMonths / 12);
+                const mos = Math.round(breakevenMonths % 12);
+                document.getElementById('breakevenTime').textContent = `${yrs}y ${mos}m`;
+            }
+
+            drawChart(extraUpfront, monthlySavings, totalMonths, breakevenMonths);
+        }
+
+        function drawChart(extraUpfront, monthlySavings, totalMonths, breakevenMonths) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 50;
+            const width = canvas.width - padding * 2;
+            const height = canvas.height - padding * 2;
+            
+            // Calculate data points
+            const points = 20;
+            const step = totalMonths / points;
+            const data1 = []; // Lower DP
+            const data2 = []; // Higher DP
+
+            for (let i = 0; i <= points; i++) {
+                const month = i * step;
+                // We plot the "Net Cost" relative to the starting point of Scenario 1
+                // Scenario 1 starts at 0 extra cost, adds monthly payments
+                // Scenario 2 starts at 'extraUpfront' cost, adds lower monthly payments
+                data1.push({ x: month, y: 0 }); // Baseline
+                data2.push({ x: month, y: extraUpfront - (monthlySavings * month) });
+            }
+
+            // Scale Y axis
+            const minY = Math.min(0, ...data2.map(p => p.y));
+            const maxY = Math.max(0, ...data2.map(p => p.y));
+            const rangeY = maxY - minY;
+
+            const getX = (val) => padding + (val / totalMonths) * width;
+            const getY = (val) => (canvas.height - padding) - ((val - minY) / rangeY) * height;
+
+            // Draw Axis
+            ctx.beginPath();
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.moveTo(padding, getY(0));
+            ctx.lineTo(canvas.width - padding, getY(0));
+            ctx.stroke();
+
+            // Draw Line 1 (Lower DP)
+            ctx.beginPath();
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 3;
+            ctx.moveTo(getX(0), getY(0));
+            ctx.lineTo(getX(totalMonths), getY(0));
+            ctx.stroke();
+
+            // Draw Line 2 (Higher DP)
+            ctx.beginPath();
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 3;
+            ctx.moveTo(getX(0), getY(extraUpfront));
+            data2.forEach(p => ctx.lineTo(getX(p.x), getY(p.y)));
+            ctx.stroke();
+
+            // Breakeven point marker
+            if (breakevenMonths > 0 && breakevenMonths <= totalMonths) {
+                ctx.beginPath();
+                ctx.fillStyle = '#ef4444';
+                ctx.arc(getX(breakevenMonths), getY(0), 6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.font = 'bold 12px sans-serif';
+                ctx.fillStyle = '#ef4444';
+                ctx.textAlign = 'center';
+                ctx.fillText('Breakeven', getX(breakevenMonths), getY(0) - 15);
+            }
+
+            // Labels
+            ctx.fillStyle = '#64748b';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Time (Months)', canvas.width / 2, canvas.height - 10);
+            
+            ctx.save();
+            ctx.translate(15, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Net Cost Difference ($)', 0, 0);
+            ctx.restore();
+        }
+
+        // Event Listeners
+        inputs.forEach(id => {
+            elements[id].addEventListener('input', calculate);
+        });
+
+        // Initial Calculation
+        calculate();
+
+        // Handle window resize for canvas
+        window.addEventListener('resize', () => {
+            // We keep fixed internal resolution for the canvas but CSS handles scaling
+            calculate();
+        });
+    </script>
+</body>
+</html>

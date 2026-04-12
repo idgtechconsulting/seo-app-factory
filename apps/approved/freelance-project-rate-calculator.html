@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelance Rate Calculator | Professional Pricing Tool</title>
+    <meta name="description" content="Calculate your ideal freelance hourly and project rates based on desired salary, expenses, taxes, and billable hours.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Freelance Rate Calculator">
+    <meta property="og:description" content="Stop undercharging. Calculate your professional freelance rates with precision.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/freelance-rate-calculator">
+
+    <link rel="canonical" href="https://yourdomain.com/freelance-rate-calculator">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Freelance Project Rate Calculator",
+      "description": "A tool to help freelancers calculate their hourly and project rates based on financial goals and overhead.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --error: #ef4444;
+            --border: #334155;
+            --input-bg: #0f172a;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 850px) {
+            main {
+                grid-template-columns: 1fr 1fr;
+                align-items: start;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .section-title span {
+            color: var(--primary);
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper .prefix {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            padding-left: 2rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .input-wrapper .suffix {
+            position: absolute;
+            right: 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .input-wrapper input.no-prefix {
+            padding-left: 1rem;
+        }
+
+        .results-container {
+            position: sticky;
+            top: 2rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .result-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary), #4f46e5);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .highlight-box .label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .highlight-box .value {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .project-calc-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed var(--border);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            background-color: var(--bg-card);
+        }
+
+        /* Toast Notification */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: var(--error);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            margin-top: 1rem;
+            animation: slideIn 0.3s ease-out forwards;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(1rem); }
+        }
+
+        /* Accessibility focus */
+        input:focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><span>Freelance</span> Rate Calculator</h1>
+        <p>Stop guessing your prices. Calculate a sustainable hourly and project rate that covers your taxes, expenses, and desired profit.</p>
+    </header>
+
+    <main>
+        <!-- Input Section -->
+        <section class="card" aria-labelledby="input-heading">
+            <h2 id="input-heading" class="section-title"><span>1.</span> Financial Goals</h2>
+            
+            <div class="input-group">
+                <label for="annual-salary">Desired Annual Take-Home Salary</label>
+                <div class="input-wrapper">
+                    <span class="prefix">$</span>
+                    <input type="number" id="annual-salary" value="60000" step="1000" min="0" aria-required="true">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="tax-rate">Estimated Tax Rate</label>
+                <div class="input-wrapper">
+                    <span class="prefix">%</span>
+                    <input type="number" id="tax-rate" value="25" step="1" min="0" max="100" aria-required="true">
+                </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 2rem;"><span>2.</span> Business Overhead</h2>
+
+            <div class="input-group">
+                <label for="monthly-expenses">Monthly Business Expenses</label>
+                <div class="input-wrapper">
+                    <span class="prefix">$</span>
+                    <input type="number" id="monthly-expenses" value="300" step="10" min="0" aria-required="true">
+                    <span class="suffix">/mo</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="profit-margin">Desired Profit Margin (for growth/savings)</label>
+                <div class="input-wrapper">
+                    <span class="prefix">%</span>
+                    <input type="number" id="profit-margin" value="15" step="1" min="0" max="100" aria-required="true">
+                </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 2rem;"><span>3.</span> Capacity & Time</h2>
+
+            <div class="input-group">
+                <label for="billable-hours">Billable Hours Per Week</label>
+                <div class="input-wrapper">
+                    <span class="prefix">⏱️</span>
+                    <input type="number" id="billable-hours" value="30" step="1" min="1" max="168" aria-required="true">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="billable-weeks">Billable Weeks Per Year (Vacation/Sick Leave)</label>
+                <div class="input-wrapper">
+                    <span class="prefix">📅</span>
+                    <input type="number" id="billable-weeks" value="46" step="1" min="1" max="52" aria-required="true">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="buffer-rate">Project Buffer (Unexpected delays)</label>
+                <div class="input-wrapper">
+                    <span class="prefix">%</span>
+                    <input type="number" id="buffer-rate" value="10" step="1" min="0" max="100" aria-required="true">
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-container">
+            <article class="card">
+                <div class="highlight-box">
+                    <span class="label">Recommended Hourly Rate</span>
+                    <div class="value" id="final-hourly-rate">$0.00</div>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">Total Annual Revenue Target</span>
+                    <span class="result-value" id="total-revenue">$0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Annual Business Expenses</span>
+                    <span class="result-value" id="annual-expenses">$0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Annual Billable Hours</span>
+                    <span class="result-value" id="total-hours">0 hrs</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Base Hourly Rate (No Profit)</span>
+                    <span class="result-value" id="base-rate">$0.00</span>
+                </div>
+
+                <div class="project-calc-section">
+                    <h2 class="section-title"><span>4.</span> Project Quote Estimator</h2>
+                    <div class="input-group">
+                        <label for="project-hours">Estimated Project Hours</label>
+                        <div class="input-wrapper">
+                            <span class="prefix">⌛</span>
+                            <input type="number" id="project-hours" value="40" step="1" min="1" class="no-prefix">
+                        </div>
+                    </div>
+                    <div class="highlight-box" style="background: var(--bg-dark); border: 2px solid var(--primary); color: var(--text-main);">
+                        <span class="label" style="color: var(--text-muted);">Total Project Quote</span>
+                        <div class="value" id="project-total" style="color: var(--accent);">$0.00</div>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Freelance Rate Calculator. Professional Tool for Independent Contractors.</p>
+    </footer>
+
+    <div id="toast-container" aria-live="polite"></div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // Select all input elements
+            const inputs = document.querySelectorAll('input');
+            const toastContainer = document.getElementById('toast-container');
+
+            // Result elements
+            const elements = {
+                finalHourlyRate: document.getElementById('final-hourly-rate'),
+                totalRevenue: document.getElementById('total-revenue'),
+                annualExpenses: document.getElementById('annual-expenses'),
+                totalHours: document.getElementById('total-hours'),
+                baseRate: document.getElementById('base-rate'),
+                projectTotal: document.getElementById('project-total')
+            };
+
+            function showToast(message) {
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = `<span>⚠️</span> ${message}`;
+                toastContainer.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.classList.add('fade-out');
+                    setTimeout(() => toast.remove(), 300);
+                }, 4000);
+            }
+
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                }).format(value);
+            }
+
+            function calculate() {
+                try {
+                    // Get values and sanitize
+                    const salary = parseFloat(document.getElementById('annual-salary').value) || 0;
+                    const taxRate = parseFloat(document.getElementById('tax-rate').value) / 100 || 0;
+                    const monthlyExp = parseFloat(document.getElementById('monthly-expenses').value) || 0;
+                    const profitMargin = parseFloat(document.getElementById('profit-margin').value) / 100 || 0;
+                    const hoursPerWeek = parseFloat(document.getElementById('billable-hours').value) || 0;
+                    const weeksPerYear = parseFloat(document.getElementById('billable-weeks').value) || 0;
+                    const bufferRate = parseFloat(document.getElementById('buffer-rate').value) / 100 || 0;
+                    const projectHours = parseFloat(document.getElementById('project-hours').value) || 0;
+
+                    // Validation
+                    if (weeksPerYear > 52) {
+                        showToast("Billable weeks cannot exceed 52.");
+                        return;
+                    }
+                    if (hoursPerWeek > 168) {
+                        showToast("Billable hours cannot exceed 168 per week.");
+                        return;
+                    }
+                    if (taxRate < 0 || taxRate > 1) {
+                        showToast("Tax rate must be between 0 and 100%.");
+                        return;
+                    }
+
+                    // Logic
+                    const annualExpenses = monthlyExp * 12;
+                    
+                    // Target Revenue = (Salary + Expenses) / (1 - Tax Rate)
+                    // This ensures that after taxes and expenses, you have the desired salary.
+                    const revenueTarget = (salary + annualExpenses) / (1 - taxRate);
+                    
+                    const totalBillableHours = hoursPerWeek * weeksPerYear;
+                    
+                    if (totalBillableHours === 0) {
+                        updateUI(0, 0, 0, 0, 0, 0);
+                        return;
+                    }
+
+                    const baseHourlyRate = revenueTarget / totalBillableHours;
+                    
+                    // Final Rate = Base Rate * (1 + Profit Margin) * (1 + Buffer)
+                    const finalHourlyRate = baseHourlyRate * (1 + profitMargin) * (1 + bufferRate);
+                    
+                    const projectTotal = finalHourlyRate * projectHours;
+
+                    updateUI(finalHourlyRate, revenueTarget, annualExpenses, totalBillableHours, baseHourlyRate, projectTotal);
+
+                } catch (e) {
+                    console.error("Calculation error", e);
+                }
+            }
+
+            function updateUI(finalRate, revenue, expenses, hours, base, project) {
+                elements.finalHourlyRate.textContent = formatCurrency(finalRate);
+                elements.totalRevenue.textContent = formatCurrency(revenue);
+                elements.annualExpenses.textContent = formatCurrency(expenses);
+                elements.totalHours.textContent = `${Math.round(hours)} hrs`;
+                elements.baseRate.textContent = formatCurrency(base);
+                elements.projectTotal.textContent = formatCurrency(project);
+            }
+
+            // Event listeners for real-time updates
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    // Clear any negative values immediately
+                    if (input.value < 0) {
+                        input.value = 0;
+                    }
+                    calculate();
+                });
+            });
+
+            // Initial calculation
+            calculate();
+        })();
+    </script>
+</body>
+</html>

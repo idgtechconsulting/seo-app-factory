@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SponsorRate — Professional Social Media Sponsorship Calculator</title>
+    <meta name="description" content="Calculate fair sponsorship rates for your social media content based on followers, engagement, niche, and platform metrics.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="SponsorRate — Social Media Sponsorship Calculator">
+    <meta property="og:description" content="Professional tool for creators to determine their market value for brand deals.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sponsorrate.app">
+    
+    <link rel="canonical" href="https://sponsorrate.app">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SponsorRate Calculator",
+      "description": "A tool for social media influencers to calculate their sponsorship rates based on engagement and niche.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #22d3ee;
+            --success: #10b981;
+            --border: #334155;
+            --input-bg: #0f172a;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--text-main);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 850px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--accent);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .range-value {
+            min-width: 4rem;
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .results-card {
+            position: sticky;
+            top: 7rem;
+            background: linear-gradient(145deg, var(--bg-card), #25334a);
+            border: 2px solid var(--primary);
+        }
+
+        .price-display {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .price-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .price-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1;
+            margin: 0.5rem 0;
+        }
+
+        .price-amount span {
+            font-size: 1.5rem;
+            vertical-align: super;
+            margin-right: 0.25rem;
+        }
+
+        .breakdown {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-item span:first-child {
+            color: var(--text-muted);
+        }
+
+        .breakdown-item span:last-child {
+            font-weight: 600;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .package-pill {
+            background-color: var(--input-bg);
+            padding: 1rem 0.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .package-pill .pkg-name {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .package-pill .pkg-price {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--accent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            transform: translateY(150%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        .btn-copy {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .btn-copy:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-copy:active {
+            transform: scale(0.98);
+        }
+
+        /* Accessibility: High Contrast Focus */
+        *:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">🚀 Sponsor<span>Rate</span></a>
+    </header>
+
+    <main>
+        <div class="calculator-grid">
+            <!-- Inputs Section -->
+            <section class="card" aria-labelledby="input-heading">
+                <h2 id="input-heading" class="section-title">📊 Metrics & Details</h2>
+                
+                <div class="input-group">
+                    <label for="platform">Platform</label>
+                    <select id="platform">
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="twitter">Twitter / X</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="followers">Follower Count</label>
+                    <input type="number" id="followers" placeholder="e.g. 50000" min="0" value="10000">
+                </div>
+
+                <div class="input-group">
+                    <label for="engagement">Engagement Rate (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="engagement" min="0.1" max="20" step="0.1" value="3">
+                        <span class="range-value" id="engagement-val">3%</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="niche">Content Niche</label>
+                    <select id="niche">
+                        <option value="lifestyle">Lifestyle / Vlog (1.0x)</option>
+                        <option value="gaming">Gaming / Entertainment (0.9x)</option>
+                        <option value="beauty">Beauty / Fashion (1.1x)</option>
+                        <option value="tech">Technology / AI (1.3x)</option>
+                        <option value="finance">Finance / Business (1.6x)</option>
+                        <option value="health">Health / Fitness (1.2x)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="content-type">Deliverable Type</label>
+                    <select id="content-type">
+                        <option value="story">Story / Tweet (Basic)</option>
+                        <option value="post">Feed Post / Image (Standard)</option>
+                        <option value="reel">Reel / TikTok / Short (Premium)</option>
+                        <option value="video">Long-form Video (Elite)</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="card results-card" aria-labelledby="results-heading">
+                <h2 id="results-heading" class="section-title">💰 Estimated Value</h2>
+                
+                <div class="price-display">
+                    <p class="price-label">Suggested Rate per Post</p>
+                    <div class="price-amount" id="final-price"><span>$</span>0</div>
+                </div>
+
+                <div class="breakdown">
+                    <div class="breakdown-item">
+                        <span>Base CPM Rate</span>
+                        <span id="base-cpm">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Engagement Multiplier</span>
+                        <span id="eng-mult">1.0x</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Niche Multiplier</span>
+                        <span id="niche-mult">1.0x</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Content Multiplier</span>
+                        <span id="type-mult">1.0x</span>
+                    </div>
+                </div>
+
+                <div class="package-grid">
+                    <div class="package-pill">
+                        <span class="pkg-name">Starter</span>
+                        <span class="pkg-price" id="pkg-starter">$0</span>
+                    </div>
+                    <div class="package-pill">
+                        <span class="pkg-name">Standard</span>
+                        <span class="pkg-price" id="pkg-standard">$0</span>
+                    </div>
+                    <div class="package-pill">
+                        <span class="pkg-name">Bundle</span>
+                        <span class="pkg-price" id="pkg-bundle">$0</span>
+                    </div>
+                </div>
+
+                <button class="btn-copy" id="copy-btn">Copy Rate Proposal</button>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> SponsorRate Calculator. Based on industry averages. Rates may vary by region and brand.</p>
+    </footer>
+
+    <div id="toast" role="alert">Copied to clipboard!</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const inputs = {
+                platform: document.getElementById('platform'),
+                followers: document.getElementById('followers'),
+                engagement: document.getElementById('engagement'),
+                niche: document.getElementById('niche'),
+                contentType: document.getElementById('content-type')
+            };
+
+            const displays = {
+                engagementVal: document.getElementById('engagement-val'),
+                finalPrice: document.getElementById('final-price'),
+                baseCpm: document.getElementById('base-cpm'),
+                engMult: document.getElementById('eng-mult'),
+                nicheMult: document.getElementById('niche-mult'),
+                typeMult: document.getElementById('type-mult'),
+                pkgStarter: document.getElementById('pkg-starter'),
+                pkgStandard: document.getElementById('pkg-standard'),
+                pkgBundle: document.getElementById('pkg-bundle'),
+                toast: document.getElementById('toast')
+            };
+
+            // Constants for logic
+            const PLATFORM_CPM = {
+                instagram: 20,
+                tiktok: 15,
+                youtube: 35,
+                twitter: 10
+            };
+
+            const NICHE_MULTIPLIERS = {
+                lifestyle: 1.0,
+                gaming: 0.9,
+                beauty: 1.1,
+                tech: 1.3,
+                finance: 1.6,
+                health: 1.2
+            };
+
+            const TYPE_MULTIPLIERS = {
+                story: 0.6,
+                post: 1.0,
+                reel: 1.5,
+                video: 2.5
+            };
+
+            function calculate() {
+                // Sanitize inputs
+                const followers = Math.max(0, parseInt(inputs.followers.value) || 0);
+                const engRate = parseFloat(inputs.engagement.value);
+                const platform = inputs.platform.value;
+                const niche = inputs.niche.value;
+                const type = inputs.contentType.value;
+
+                // Update UI range label
+                displays.engagementVal.textContent = `${engRate}%`;
+
+                // 1. Base Calculation (CPM)
+                const baseCpm = PLATFORM_CPM[platform];
+                const basePrice = (followers / 1000) * baseCpm;
+
+                // 2. Engagement Multiplier
+                // Industry average is roughly 2-3%. 
+                // We scale linearly: 1% = 0.8x, 3% = 1.0x, 5% = 1.4x
+                let engMultiplier = 1 + ((engRate - 3) / 10);
+                engMultiplier = Math.max(0.5, Math.min(2.5, engMultiplier));
+
+                // 3. Niche and Type Multipliers
+                const nicheMultiplier = NICHE_MULTIPLIERS[niche];
+                const typeMultiplier = TYPE_MULTIPLIERS[type];
+
+                // Final Calculation
+                const total = basePrice * engMultiplier * nicheMultiplier * typeMultiplier;
+                const finalAmount = isNaN(total) ? 0 : total;
+
+                // Update Display
+                displays.finalPrice.innerHTML = `<span>$</span>${Math.round(finalAmount).toLocaleString()}`;
+                displays.baseCpm.textContent = `$${baseCpm}`;
+                displays.engMult.textContent = `${engMultiplier.toFixed(2)}x`;
+                displays.nicheMult.textContent = `${nicheMultiplier.toFixed(1)}x`;
+                displays.typeMult.textContent = `${typeMultiplier.toFixed(1)}x`;
+
+                // Packages
+                displays.pkgStarter.textContent = `$${Math.round(finalAmount * 0.8).toLocaleString()}`;
+                displays.pkgStandard.textContent = `$${Math.round(finalAmount).toLocaleString()}`;
+                displays.pkgBundle.textContent = `$${Math.round(finalAmount * 2.5).toLocaleString()}`;
+            }
+
+            function showToast(message) {
+                displays.toast.textContent = message;
+                displays.toast.classList.add('show');
+                setTimeout(() => {
+                    displays.toast.classList.remove('show');
+                }, 3000);
+            }
+
+            function copyProposal() {
+                const price = displays.finalPrice.textContent.trim();
+                const platform = inputs.platform.options[inputs.platform.selectedIndex].text;
+                const type = inputs.contentType.options[inputs.contentType.selectedIndex].text;
+                
+                const text = `Sponsorship Proposal\n\nPlatform: ${platform}\nDeliverable: ${type}\nSuggested Rate: ${price}\n\nCalculated via SponsorRate Professional Tool.`;
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast("Proposal copied to clipboard!");
+                }).catch(() => {
+                    showToast("Failed to copy text.");
+                });
+            }
+
+            // Event Listeners
+            Object.values(inputs).forEach(input => {
+                input.addEventListener('input', calculate);
+            });
+
+            document.getElementById('copy-btn').addEventListener('click', copyProposal);
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // Initial run
+            calculate();
+        });
+    </script>
+</body>
+</html>

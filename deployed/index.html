@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Online Tools - Calculators, Converters &amp; Generators</title>
+  <meta name="description" content="A collection of 26 free online tools: calculators, converters, generators, and more. No sign-up required.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://idgtechconsulting.github.io/seo-app-factory/">
+  <meta property="og:title" content="Free Online Tools - Calculators, Converters &amp; Generators">
+  <meta property="og:description" content="A collection of 26 free online tools: calculators, converters, generators, and more.">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Free Online Tools">
+  <meta name="twitter:description" content="Calculators, converters, generators &amp; more — all free, no sign-up.">
+
+  <link rel="canonical" href="https://idgtechconsulting.github.io/seo-app-factory/">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Free Online Tools",
+    "url": "https://idgtechconsulting.github.io/seo-app-factory/",
+    "description": "A collection of free online tools including calculators, converters, and generators.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://idgtechconsulting.github.io/seo-app-factory/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3e;
+      --accent: #6c63ff;
+      --accent-hover: #857dff;
+      --text: #e2e4f0;
+      --muted: #8b8fa8;
+      --radius: 12px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-size: clamp(1.75rem, 5vw, 3rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      margin-top: 0.75rem;
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.3rem 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* Search */
+    .search-wrap {
+      max-width: 480px;
+      margin: 1.5rem auto 0;
+    }
+    #search {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #search:focus { border-color: var(--accent); }
+    #search::placeholder { color: var(--muted); }
+
+    main {
+      max-width: 1200px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .card h2 a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .card h2 a:hover { color: var(--accent-hover); }
+
+    .card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: auto;
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: var(--accent-hover); }
+
+    #no-results {
+      display: none;
+      text-align: center;
+      color: var(--muted);
+      padding: 3rem;
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Free Online Tools</h1>
+  <p>Calculators, converters, generators &amp; more — instant, free, no sign-up.</p>
+  <span class="badge">26 tools available</span>
+  <div class="search-wrap">
+    <input id="search" type="search" placeholder="Search tools..." autocomplete="off">
+  </div>
+</header>
+
+<main>
+  <div class="grid" id="grid">
+
+      <article class="card">
+        <h2><a href="apps/base64-master-professional-encoder-decoder.html">Base64 Master | Professional Encoder &amp; Decoder</a></h2>
+        <p>A secure, fast, and professional Base64 encoder and decoder. Convert text and files to Base64 instantly in your browser.</p>
+        <a class="btn" href="apps/base64-master-professional-encoder-decoder.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/break-even-roas-calculator-ad-spend-profitability-tool.html">Break-Even ROAS Calculator | Ad Spend Profitability Tool</a></h2>
+        <p>Calculate the minimum Return on Ad Spend (ROAS) needed to avoid losses. Use our free ad spend break-even ROAS calculator to determine your profitability threshold.</p>
+        <a class="btn" href="apps/break-even-roas-calculator-ad-spend-profitability-tool.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/chromaconvert-professional-color-picker-converter.html">ChromaConvert | Professional Color Picker &amp; Converter</a></h2>
+        <p>A professional, free online color picker and converter. Seamlessly convert between HEX, RGB, and HSL formats with a visual interface.</p>
+        <a class="btn" href="apps/chromaconvert-professional-color-picker-converter.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/fabric-yardage-pattern-waste-calculator-precision-textile-pl.html">Fabric Yardage &amp; Pattern Waste Calculator | Precision Textile Planner</a></h2>
+        <p>Professional fabric yardage calculator to estimate material needs, optimize pattern placement, and calculate waste for sewing and textile projects.</p>
+        <a class="btn" href="apps/fabric-yardage-pattern-waste-calculator-precision-textile-pl.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/fha-loan-pmi-breakeven-calculator-compare-down-payment-vs-mo.html">FHA Loan PMI Breakeven Calculator | Compare Down Payment vs Mortgage Insurance</a></h2>
+        <p>Calculate the breakeven point between a higher down payment and monthly PMI/MIP costs. Find out if paying more upfront saves you money over the life of your FHA or conventional loan.</p>
+        <a class="btn" href="apps/fha-loan-pmi-breakeven-calculator-compare-down-payment-vs-mo.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/freelance-rate-calculator-professional-pricing-tool.html">Freelance Rate Calculator | Professional Pricing Tool</a></h2>
+        <p>Calculate your ideal freelance hourly and project rates based on desired salary, expenses, taxes, and billable hours.</p>
+        <a class="btn" href="apps/freelance-rate-calculator-professional-pricing-tool.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/industrial-coating-dft-calculator-dry-film-thickness-tool.html">Industrial Coating DFT Calculator | Dry Film Thickness Tool</a></h2>
+        <p>Professional Industrial Coating DFT (Dry Film Thickness) and WFT (Wet Film Thickness) calculator. Calculate volume solids, dry film, and wet film thickness for industrial paint applications.</p>
+        <a class="btn" href="apps/industrial-coating-dft-calculator-dry-film-thickness-tool.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/json-formatter-validator-professional-json-tool.html">JSON Formatter &amp; Validator | Professional JSON Tool</a></h2>
+        <p>Free, fast, and secure online JSON formatter and validator. Pretty-print your JSON code and validate its syntax instantly.</p>
+        <a class="btn" href="apps/json-formatter-validator-professional-json-tool.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/kubecalc-kubernetes-pod-resource-calculator.html">KubeCalc | Kubernetes Pod Resource Calculator</a></h2>
+        <p>Professional Kubernetes Pod Memory and CPU limit calculator. Calculate total cluster resource requirements and generate YAML manifests instantly.</p>
+        <a class="btn" href="apps/kubecalc-kubernetes-pod-resource-calculator.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/landed-cost-calculator-professional-import-cost-tool.html">Landed Cost Calculator | Professional Import Cost Tool</a></h2>
+        <p>Calculate the total landed cost of your imports including shipping, insurance, customs duties, and taxes. A professional tool for importers and logistics managers.</p>
+        <a class="btn" href="apps/landed-cost-calculator-professional-import-cost-tool.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/podcast-episode-length-to-word-count-estimator-script-planni.html">Podcast Episode Length to Word Count Estimator | Script Planning Tool</a></h2>
+        <p>Accurately calculate the estimated word count for your podcast script based on desired episode duration and speaking pace. A professional tool for creators.</p>
+        <a class="btn" href="apps/podcast-episode-length-to-word-count-estimator-script-planni.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/print-bleed-and-trim-calculator-professional-document-setup.html">Print Bleed and Trim Calculator | Professional Document Setup Tool</a></h2>
+        <p>Free professional tool for graphic designers to calculate total canvas dimensions including bleed margins. Ensure your print files are set up correctly for commercial printing.</p>
+        <a class="btn" href="apps/print-bleed-and-trim-calculator-professional-document-setup.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/pro-percentage-calculator-precise-fast-calculations.html">Pro Percentage Calculator | Precise &amp; Fast Calculations</a></h2>
+        <p>A professional, free online percentage calculator to find percentage of a value, percentage increase/decrease, and percentage difference.</p>
+        <a class="btn" href="apps/pro-percentage-calculator-precise-fast-calculations.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/promark-professional-live-markdown-editor.html">ProMark | Professional Live Markdown Editor</a></h2>
+        <p>A powerful, real-time Markdown preview tool for developers and writers. Write markdown on the left and see the rendered HTML on the right.</p>
+        <a class="btn" href="apps/promark-professional-live-markdown-editor.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/protext-professional-lorem-ipsum-generator.html">ProText | Professional Lorem Ipsum Generator</a></h2>
+        <p>Generate professional placeholder text for your designs. Choose between Classic, Hipster, or Tech styles. Fast, free, and responsive.</p>
+        <a class="btn" href="apps/protext-professional-lorem-ipsum-generator.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/qr-studio-professional-qr-code-generator.html">QR Studio | Professional QR Code Generator</a></h2>
+        <p>Create high-quality, customizable QR codes instantly. Free, fast, and secure QR code generator for URLs, text, and more.</p>
+        <a class="btn" href="apps/qr-studio-professional-qr-code-generator.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/regexpro-professional-regular-expression-tester.html">RegexPro | Professional Regular Expression Tester</a></h2>
+        <p>A powerful, real-time Regular Expression tester and debugger. Test your patterns, explore common regex presets, and visualize matches instantly.</p>
+        <a class="btn" href="apps/regexpro-professional-regular-expression-tester.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/saas-churn-impact-calculator-measure-revenue-leakage.html">SaaS Churn Impact Calculator | Measure Revenue Leakage</a></h2>
+        <p>Calculate the true cost of customer churn on your SaaS business. Visualize revenue loss over time and analyze LTV:CAC ratios.</p>
+        <a class="btn" href="apps/saas-churn-impact-calculator-measure-revenue-leakage.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/saas-ltv-to-cac-ratio-calculator-measure-unit-economics-heal.html">SaaS LTV to CAC Ratio Calculator | Measure Unit Economics Health</a></h2>
+        <p>Free SaaS LTV to CAC ratio calculator. Input your ARPU, churn rate, and CAC to determine your customer lifetime value and business health score instantly.</p>
+        <a class="btn" href="apps/saas-ltv-to-cac-ratio-calculator-measure-unit-economics-heal.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/securepass-professional-password-generator.html">SecurePass | Professional Password Generator</a></h2>
+        <p>Generate secure, random passwords instantly with customizable length and character sets. Free, private, and browser-based.</p>
+        <a class="btn" href="apps/securepass-professional-password-generator.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/shopify-shipping-profit-calculator-calculate-net-shipping-ma.html">Shopify Shipping Profit Calculator | Calculate Net Shipping Margins</a></h2>
+        <p>Free Shopify shipping profit calculator to find the net profit or loss per order by comparing shipping charged to customers versus actual carrier costs.</p>
+        <a class="btn" href="apps/shopify-shipping-profit-calculator-calculate-net-shipping-ma.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/sponsorrate-professional-social-media-sponsorship-calculator.html">SponsorRate — Professional Social Media Sponsorship Calculator</a></h2>
+        <p>Calculate fair sponsorship rates for your social media content based on followers, engagement, niche, and platform metrics.</p>
+        <a class="btn" href="apps/sponsorrate-professional-social-media-sponsorship-calculator.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/svg-path-data-visualizer-instant-path-rendering-tool.html">SVG Path Data Visualizer - Instant Path Rendering Tool</a></h2>
+        <p>A free, professional SVG path data visualizer for developers. Paste your SVG</p>
+        <a class="btn" href="apps/svg-path-data-visualizer-instant-path-rendering-tool.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/textanalyzer-pro-advanced-word-counter-text-analysis-tool.html">TextAnalyzer Pro | Advanced Word Counter &amp; Text Analysis Tool</a></h2>
+        <p>Free professional online word counter and text analyzer. Calculate words, characters, sentences, paragraphs, and estimated reading time in real-time.</p>
+        <a class="btn" href="apps/textanalyzer-pro-advanced-word-counter-text-analysis-tool.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/true-hourly-rate-calculator-salary-to-hourly-rate-with-paid.html">True Hourly Rate Calculator | Salary to Hourly Rate with Paid Time Off</a></h2>
+        <p>Calculate your true hourly rate by subtracting vacation, holidays, and sick leave from your annual salary. Essential for freelancers and contractors.</p>
+        <a class="btn" href="apps/true-hourly-rate-calculator-salary-to-hourly-rate-with-paid.html">Open Tool →</a>
+      </article>
+
+      <article class="card">
+        <h2><a href="apps/web-accessibility-heading-structure-validator-check-html-hie.html">Web Accessibility Heading Structure Validator - Check HTML Hierarchy</a></h2>
+        <p>Free professional tool to validate your HTML heading structure for web accessibility. Ensure no heading levels are skipped to improve SEO and screen reader compatibility.</p>
+        <a class="btn" href="apps/web-accessibility-heading-structure-validator-check-html-hie.html">Open Tool →</a>
+      </article>
+    <p id="no-results">No tools match your search.</p>
+  </div>
+</main>
+
+<footer>
+  <p>All tools run in your browser — no data is sent to any server.</p>
+</footer>
+
+<script>
+  const search = document.getElementById('search');
+  const cards  = Array.from(document.querySelectorAll('.card'));
+  const noRes  = document.getElementById('no-results');
+
+  search.addEventListener('input', () => {
+    const q = search.value.toLowerCase().trim();
+    let visible = 0;
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      const show = !q || text.includes(q);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    noRes.style.display = visible === 0 ? 'block' : 'none';
+  });
+</script>
+
+</body>
+</html>

@@ -38,7 +38,7 @@ for f in apps/staging/*.html; do
   result=$(node scripts/evaluate-app.js "$f" 2>/dev/null || echo '{"score":0}')
   score=$(echo "$result" | python3 -c "import sys,json; print(json.load(sys.stdin).get('score',0))" 2>/dev/null || echo "0")
 
-  if [ "$score" -ge 70 ]; then
+  if [ "$score" -ge 75 ]; then
     cp "$f" apps/approved/"$name"
     # Copy metadata too
     meta="${f%.html}.meta.json"

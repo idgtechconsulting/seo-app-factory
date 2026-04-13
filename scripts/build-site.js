@@ -20,7 +20,7 @@ const APPROVED_DIR = path.join(__dirname, '..', 'apps', 'approved');
 const DEPLOYED_DIR = path.join(__dirname, '..', 'deployed');
 const DEPLOYED_APPS_DIR = path.join(DEPLOYED_DIR, 'apps');
 const BASE_URL = 'https://freetoolbox.tools';
-const GA_ID = process.env.GA_ID || 'G-XXXXXXXXXX'; // Set via env or replace here
+const GA_ID = process.env.GA_ID || 'G-BKTYFM7PZD';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -140,6 +140,16 @@ function injectIntoTool(html, others, totalCount) {
 // ── main ─────────────────────────────────────────────────────────────────────
 
 function main() {
+  // Clean deployed/apps/ to remove stale files from previous builds
+  if (fs.existsSync(DEPLOYED_APPS_DIR)) {
+    try {
+      for (const f of fs.readdirSync(DEPLOYED_APPS_DIR)) {
+        fs.unlinkSync(path.join(DEPLOYED_APPS_DIR, f));
+      }
+    } catch (err) {
+      console.warn('  [warn] Could not clean deployed/apps/ — stale files may remain:', err.message);
+    }
+  }
   ensureDir(DEPLOYED_APPS_DIR);
 
   const sourceFiles = fs.readdirSync(APPROVED_DIR).filter(f => f.endsWith('.html'));
@@ -176,11 +186,22 @@ function main() {
   // Second pass — inject nav/analytics/more-tools and write deployed files
   for (const app of apps) {
     const others = randomOthers(apps, app.slug, 4);
+    let appHtml = app.html
+      .replace(/(<link\s+rel=["']canonical["']\s+href=["'])[^"']*["']/gi, `$1${BASE_URL}/apps/${app.slug}.html"`)
+      .replace(/(<meta\s+property=["']og:url["']\s+content=["'])[^"']*["']/gi, `$1${BASE_URL}/apps/${app.slug}.html"`)
+      .replace(/(<meta\s+content=["'])[^"']*["'](\s+property=["']og:url["'])/gi, `$1${BASE_URL}/apps/${app.slug}.html"$2`);
+
+    // Insert canonical if missing entirely
+    if (!/rel=["']canonical["']/i.test(appHtml)) {
+      appHtml = appHtml.replace(/<\/head>/i, `  <link rel="canonical" href="${BASE_URL}/apps/${app.slug}.html">\n</head>`);
+    }
+    // Insert og:url if missing entirely
+    if (!/property=["']og:url["']/i.test(appHtml)) {
+      appHtml = appHtml.replace(/<\/head>/i, `  <meta property="og:url" content="${BASE_URL}/apps/${app.slug}.html">\n</head>`);
+    }
+
     const patchedHtml = injectIntoTool(
-      app.html
-        .replace(/(<link\s+rel=["']canonical["']\s+href=["'])[^"']*["']/gi, `$1${BASE_URL}/apps/${app.slug}.html"`)
-        .replace(/(<meta\s+property=["']og:url["']\s+content=["'])[^"']*["']/gi, `$1${BASE_URL}/apps/${app.slug}.html"`)
-        .replace(/(<meta\s+content=["'])[^"']*["'](\s+property=["']og:url["'])/gi, `$1${BASE_URL}/apps/${app.slug}.html"$2`),
+      appHtml,
       others,
       apps.length
     );

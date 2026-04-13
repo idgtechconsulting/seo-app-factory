@@ -9,7 +9,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const PASS_THRESHOLD = 70;
+const PASS_THRESHOLD = 75;
 
 const CHECKS = [
   {
@@ -143,16 +143,22 @@ const FUNCTIONAL_CHECKS = [
     label: 'Does not claim backend features impossible in single-file HTML',
     weight: 15,
     test: html => {
-      const lc = html.toLowerCase();
       // These patterns indicate the app claims to do things a single HTML file can't actually do
       const impossiblePatterns = [
         /connects?\s+to\s+(?:your|a|the)\s+(?:api|database|server|backend)/i,
         /(?:real[- ]?time|live)\s+(?:data|feed|stream|update)\s+from/i,
-        /(?:scrapes?|crawls?|monitors?)\s+(?:reddit|twitter|linkedin|hacker\s*news|websites?)/i,
+        /(?:scrapes?|crawls?|monitors?|scan(?:s|ning)?)\s+(?:reddit|twitter|linkedin|hacker\s*news|websites?|social)/i,
         /(?:uploads?\s+to|saves?\s+to|syncs?\s+with)\s+(?:cloud|server|database)/i,
+        /(?:analyze|scan|monitor)\s+(?:reddit|twitter|social\s+media)/i,
+        /(?:pull|fetch|get)s?\s+(?:data|results|listings)\s+from\s+(?:api|server|reddit|twitter)/i,
+        /chrome\s+extension/i,
+        /browser\s+extension/i,
+        /crowdsourc/i,
+        /community[- ]sourced/i,
+        /user[- ]submitted\s+(?:data|content|reviews|prices)/i,
       ];
-      // Check title/description area (first 2000 chars) for claims vs actual capability
-      const head = html.slice(0, 2000);
+      // Check head section AND meta content (first 3000 chars covers all meta tags)
+      const head = html.slice(0, 3000);
       for (const pat of impossiblePatterns) {
         if (pat.test(head)) return false;
       }

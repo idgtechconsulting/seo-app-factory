@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreeToolbox Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3e;
+      --accent: #6c63ff; --accent2: #10b981; --warn: #f59e0b; --danger: #ef4444;
+      --text: #e2e4f0; --muted: #8b8fa8; --radius: 10px;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-height: 100vh; }
+
+    /* ── Auth ── */
+    #auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 360px; text-align: center; }
+    .auth-box h1 { font-size: 1.5rem; margin-bottom: .25rem; }
+    .auth-box p { color: var(--muted); font-size: .9rem; margin-bottom: 1.5rem; }
+    .auth-box input { width: 100%; padding: .75rem 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 1rem; margin-bottom: 1rem; outline: none; }
+    .auth-box input:focus { border-color: var(--accent); }
+    .auth-box button { width: 100%; padding: .75rem; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 600; cursor: pointer; }
+    .auth-box button:hover { background: #857dff; }
+    #auth-error { color: var(--danger); font-size: .85rem; margin-top: .75rem; display: none; }
+
+    /* ── Dashboard ── */
+    #dashboard { display: none; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+    .logout-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: .3rem .75rem; border-radius: 6px; cursor: pointer; font-size: .8rem; }
+    .logout-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    main { max-width: 1300px; margin: 0 auto; padding: 1.5rem; }
+
+    /* ── Stats row ── */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+    .stat-card .label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .4rem; }
+    .stat-card .value { font-size: 1.8rem; font-weight: 700; color: var(--text); }
+    .stat-card .sub { font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+    .stat-card.green .value { color: var(--accent2); }
+    .stat-card.purple .value { color: var(--accent); }
+    .stat-card.yellow .value { color: var(--warn); }
+
+    /* ── Grid layout ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.25rem; }
+    @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ── Panel ── */
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .panel-header { padding: .9rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .panel-header h2 { font-size: .9rem; font-weight: 600; }
+    .panel-header .badge { background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: .15rem .6rem; font-size: .75rem; color: var(--muted); }
+    .panel-body { padding: 1.25rem; }
+
+    /* ── Pipeline ── */
+    .pipeline-step { display: flex; align-items: center; gap: .75rem; padding: .5rem 0; border-bottom: 1px solid var(--border); }
+    .pipeline-step:last-child { border-bottom: none; }
+    .step-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; flex-shrink: 0; }
+    .step-icon.active { background: rgba(108,99,255,.2); color: var(--accent); border: 1px solid var(--accent); }
+    .step-icon.done { background: rgba(16,185,129,.15); color: var(--accent2); border: 1px solid var(--accent2); }
+    .step-icon.idle { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+    .step-name { font-size: .85rem; flex: 1; }
+    .step-status { font-size: .75rem; color: var(--muted); }
+
+    /* ── Knowledge base ── */
+    .kb-row { display: flex; justify-content: space-between; align-items: center; padding: .5rem 0; border-bottom: 1px solid var(--border); font-size: .85rem; }
+    .kb-row:last-child { border-bottom: none; }
+    .severity-badge { padding: .1rem .5rem; border-radius: 4px; font-size: .7rem; font-weight: 600; }
+    .severity-critical { background: rgba(239,68,68,.15); color: #ef4444; }
+    .severity-high { background: rgba(245,158,11,.15); color: #f59e0b; }
+    .severity-medium { background: rgba(108,99,255,.15); color: var(--accent); }
+    .severity-low { background: rgba(139,143,168,.15); color: var(--muted); }
+
+    /* ── Tools list ── */
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .5rem; }
+    .tool-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: .6rem .9rem; display: flex; align-items: center; gap: .5rem; }
+    .tool-item a { color: var(--text); text-decoration: none; font-size: .8rem; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tool-item a:hover { color: var(--accent); }
+    .tool-num { font-size: .7rem; color: var(--muted); }
+
+    /* ── Placeholder sections ── */
+    .placeholder-box { background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius); padding: 2rem; text-align: center; color: var(--muted); font-size: .85rem; }
+    .placeholder-box .icon { font-size: 1.8rem; margin-bottom: .5rem; }
+    .placeholder-box p { margin-top: .25rem; font-size: .75rem; }
+
+    /* ── Error list ── */
+    .error-item { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); border-radius: 6px; padding: .5rem .75rem; margin-bottom: .4rem; font-size: .8rem; color: #fca5a5; }
+
+    /* ── Refresh ── */
+    .refresh-btn { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: .35rem .9rem; font-size: .8rem; cursor: pointer; }
+    .refresh-btn:hover { background: #857dff; }
+    .last-updated { font-size: .75rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- Auth Screen -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <h1>🧰 FreeToolbox</h1>
+    <p>Admin Dashboard — internal access only</p>
+    <input type="password" id="pw-input" placeholder="Password" autofocus>
+    <button onclick="checkAuth()">Enter</button>
+    <div id="auth-error">Incorrect password</div>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+  <header>
+    <h1>🧰 FreeToolbox Admin</h1>
+    <div class="header-right">
+      <div class="status-dot" id="status-dot"></div>
+      <span class="last-updated" id="last-updated">Loading...</span>
+      <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card purple">
+        <div class="label">Apps Deployed</div>
+        <div class="value" id="stat-apps">—</div>
+        <div class="sub">on freetoolbox.tools</div>
+      </div>
+      <div class="stat-card green">
+        <div class="label">Pipeline Mode</div>
+        <div class="value" id="stat-mode" style="font-size:1.1rem;padding-top:.35rem">—</div>
+        <div class="sub" id="stat-step">—</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="label">Cycles Completed</div>
+        <div class="value" id="stat-cycles">—</div>
+        <div class="sub" id="stat-processed">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">KB Lessons</div>
+        <div class="value" id="stat-lessons">—</div>
+        <div class="sub" id="stat-practices">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Cycle Errors</div>
+        <div class="value" id="stat-errors" style="color:var(--danger)">—</div>
+        <div class="sub">current cycle</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Last Cycle</div>
+        <div class="value" id="stat-cycle-age" style="font-size:1rem;padding-top:.4rem">—</div>
+        <div class="sub">ago</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Pipeline Status -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Pipeline Status</h2>
+          <span class="badge" id="pipeline-mode-badge">—</span>
+        </div>
+        <div class="panel-body">
+          <div id="pipeline-steps">
+            <div class="pipeline-step"><div class="step-icon idle" id="step-generating">⚙</div><span class="step-name">Generate (todo → HTML)</span><span class="step-status" id="ss-generating">—</span></div>
+            <div class="pipeline-step"><div class="step-icon idle" id="step-evaluating">✓</div><span class="step-name">Evaluate (in_progress → done/todo)</span><span class="step-status" id="ss-evaluating">—</span></div>
+            <div class="pipeline-step"><div class="step-icon idle" id="step-discovering">🔍</div><span class="step-name">Discover-v2 (if queue &lt; 10)</span><span class="step-status" id="ss-discovering">—</span></div>
+            <div class="pipeline-step"><div class="step-icon idle" id="step-seo-campaign">📈</div><span class="step-name">SEO Campaign (3 apps/cycle)</span><span class="step-status" id="ss-seo-campaign">—</span></div>
+            <div class="pipeline-step"><div class="step-icon idle" id="step-waiting">⏳</div><span class="step-name">Waiting (30s between cycles)</span><span class="step-status" id="ss-waiting">—</span></div>
+          </div>
+          <div id="cycle-errors" style="margin-top:1rem"></div>
+        </div>
+      </div>
+
+      <!-- Knowledge Base -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Knowledge Base</h2>
+          <span class="badge" id="kb-count-badge">—</span>
+        </div>
+        <div class="panel-body" style="max-height:320px;overflow-y:auto">
+          <div id="kb-lessons-list">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Placeholder Sections -->
+    <div class="grid-3" style="margin-bottom:1.25rem">
+      <div class="panel">
+        <div class="panel-header"><h2>📊 Google Rankings</h2><span class="badge">coming soon</span></div>
+        <div class="panel-body">
+          <div class="placeholder-box">
+            <div class="icon">📉</div>
+            <strong>Rank Tracker</strong>
+            <p>Connect Google Search Console API to track keyword positions for each tool page.</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>📈 Traffic Per Tool</h2><span class="badge">coming soon</span></div>
+        <div class="panel-body">
+          <div class="placeholder-box">
+            <div class="icon">👁</div>
+            <strong>GA4 Analytics</strong>
+            <p>Connect GA4 Data API (G-BKTYFM7PZD) to show pageviews and sessions per tool.</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>🏆 SEO Scores</h2><span class="badge">coming soon</span></div>
+        <div class="panel-body">
+          <div class="placeholder-box">
+            <div class="icon">🔬</div>
+            <strong>SEO Audit Scores</strong>
+            <p>Run Lighthouse or custom QA checks on each deployed app and track scores over time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deployed Tools List -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Deployed Tools</h2>
+        <span class="badge" id="tools-count-badge">—</span>
+      </div>
+      <div class="panel-body">
+        <div class="tools-grid" id="tools-list">Loading...</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const BRIDGE = 'http://localhost:4000';
+const BASE_URL = 'https://freetoolbox.tools';
+const CORRECT_PW = 'ginga2026';
+
+// ── Auth ─────────────────────────────────────────────────────────────────────
+function checkAuth() {
+  const val = document.getElementById('pw-input').value;
+  if (val === CORRECT_PW) {
+    sessionStorage.setItem('admin_auth', '1');
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadAll();
+    setInterval(loadAll, 15000); // auto-refresh every 15s
+  } else {
+    document.getElementById('auth-error').style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+function logout() {
+  sessionStorage.removeItem('admin_auth');
+  location.reload();
+}
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkAuth(); });
+if (sessionStorage.getItem('admin_auth') === '1') {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadAll();
+  setInterval(loadAll, 15000);
+}
+
+// ── Load all data ─────────────────────────────────────────────────────────────
+async function loadAll() {
+  const [pipeline, kb] = await Promise.all([
+    fetchJSON(`${BRIDGE}/pipeline-status`),
+    fetchJSON(`${BRIDGE}/knowledge`)
+  ]);
+  renderPipeline(pipeline);
+  renderKB(kb);
+  renderTools();
+  document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+}
+
+async function fetchJSON(url) {
+  try {
+    const r = await fetch(url);
+    return await r.json();
+  } catch { return null; }
+}
+
+// ── Pipeline ──────────────────────────────────────────────────────────────────
+function renderPipeline(p) {
+  if (!p) {
+    document.getElementById('stat-mode').textContent = 'offline';
+    document.getElementById('status-dot').style.background = 'var(--danger)';
+    return;
+  }
+  document.getElementById('status-dot').style.background = p.running ? 'var(--accent2)' : 'var(--warn)';
+  document.getElementById('stat-mode').textContent = p.mode;
+  document.getElementById('stat-step').textContent = 'step: ' + p.step;
+  document.getElementById('stat-cycles').textContent = p.cyclesCompleted;
+  document.getElementById('stat-processed').textContent = p.totalProcessed + ' total apps processed';
+  document.getElementById('stat-errors').textContent = p.currentCycleErrors?.length ?? 0;
+  document.getElementById('pipeline-mode-badge').textContent = p.mode + (p.running ? ' • running' : ' • stopped');
+
+  const age = p.secondsSinceLastCycle;
+  document.getElementById('stat-cycle-age').textContent = age != null ? formatAge(age) : '—';
+
+  const steps = ['generating','evaluating','discovering','seo-campaign','waiting'];
+  steps.forEach(s => {
+    const icon = document.getElementById('step-' + s);
+    const ss = document.getElementById('ss-' + s);
+    if (!icon) return;
+    icon.className = 'step-icon ' + (p.step === s ? 'active' : (p.cyclesCompleted > 0 ? 'done' : 'idle'));
+    if (ss) ss.textContent = p.step === s ? '← current' : '';
+  });
+
+  const errContainer = document.getElementById('cycle-errors');
+  errContainer.innerHTML = '';
+  (p.currentCycleErrors || []).forEach(e => {
+    const d = document.createElement('div');
+    d.className = 'error-item';
+    d.textContent = `[${e.step}] ${e.error}`;
+    errContainer.appendChild(d);
+  });
+}
+
+function formatAge(s) {
+  if (s < 60) return s + 's';
+  if (s < 3600) return Math.floor(s/60) + 'm ' + (s%60) + 's';
+  return Math.floor(s/3600) + 'h ' + Math.floor((s%3600)/60) + 'm';
+}
+
+// ── Knowledge Base ────────────────────────────────────────────────────────────
+function renderKB(kb) {
+  if (!kb) return;
+  const lessons = kb.lessons || [];
+  document.getElementById('stat-lessons').textContent = lessons.length;
+  document.getElementById('stat-practices').textContent = (kb.bestPractices?.length || 0) + ' best practices';
+  document.getElementById('kb-count-badge').textContent = lessons.length + ' lessons';
+  const list = document.getElementById('kb-lessons-list');
+  list.innerHTML = lessons.map(l => `
+    <div class="kb-row">
+      <span style="flex:1;color:var(--text);font-size:.82rem">${l.description?.slice(0,65) || '—'}</span>
+      <span class="severity-badge severity-${l.severity}">${l.severity}</span>
+    </div>`).join('') || '<div style="color:var(--muted);font-size:.85rem">No lessons yet.</div>';
+}
+
+// ── Tools List ────────────────────────────────────────────────────────────────
+function renderTools() {
+  const tools = getDeployedTools();
+  document.getElementById('stat-apps').textContent = tools.length;
+  document.getElementById('tools-count-badge').textContent = tools.length + ' tools';
+  const grid = document.getElementById('tools-list');
+  grid.innerHTML = tools.map((t, i) => `
+    <div class="tool-item">
+      <span class="tool-num">${String(i+1).padStart(2,'0')}</span>
+      <a href="${BASE_URL}/apps/${t.slug}.html" target="_blank" title="${t.title}">${t.title}</a>
+    </div>`).join('');
+}
+
+function getDeployedTools() {
+  return [
+    {slug:'2026-us-midterm-ballot-simplified',title:'2026 US Midterm Ballot'},
+    {slug:'ai-disclosure-generator',title:'AI Disclosure Generator'},
+    {slug:'base64-master',title:'Base64 Master'},
+    {slug:'break-even-roas-calculator',title:'Break-Even ROAS Calculator'},
+    {slug:'cancelmap',title:'CancelMap'},
+    {slug:'chromaconvert',title:'ChromaConvert'},
+    {slug:'echo-chamber-visualizer',title:'Echo Chamber Visualizer'},
+    {slug:'fabric-yardage-pattern-waste-calculator',title:'Fabric Yardage Calculator'},
+    {slug:'fanroute-2026',title:'FanRoute 2026 (FIFA Travel)'},
+    {slug:'fha-loan-pmi-breakeven-calculator',title:'FHA Loan PMI Breakeven'},
+    {slug:'freelance-rate-calculator',title:'Freelance Rate Calculator'},
+    {slug:'freelancer-true-hourly-rate-calculator',title:'Freelancer True Hourly Rate'},
+    {slug:'industrial-coating-dft-calculator',title:'Industrial Coating DFT Calc'},
+    {slug:'json-formatter-validator',title:'JSON Formatter & Validator'},
+    {slug:'kubecalc',title:'KubeCalc (K8s CPU/Memory)'},
+    {slug:'landed-cost-calculator',title:'Landed Cost Calculator'},
+    {slug:'linkedin-cringe-remover',title:'LinkedIn Cringe Remover'},
+    {slug:'local-candidate-stance-matcher',title:'Candidate Stance Matcher'},
+    {slug:'meeting-cost-live-ticker',title:'Meeting Cost Live Ticker'},
+    {slug:'micro-saas-idea-validator',title:'Micro-SaaS Idea Validator'},
+    {slug:'podcast-episode-length-to-word-count-est',title:'Podcast Word Count Estimator'},
+    {slug:'print-bleed-and-trim-calculator',title:'Print Bleed & Trim Calculator'},
+    {slug:'pro-percentage-calculator',title:'Pro Percentage Calculator'},
+    {slug:'promark',title:'ProMark (Markdown Preview)'},
+    {slug:'promptcompare',title:'PromptCompare'},
+    {slug:'protext',title:'ProText (Lorem Ipsum)'},
+    {slug:'pto-day-optimizer-2026',title:'PTO Day Optimizer 2026'},
+    {slug:'qr-studio',title:'QR Studio'},
+    {slug:'regexpro',title:'RegexPro'},
+    {slug:'saas-churn-impact-calculator',title:'SaaS Churn Impact Calculator'},
+    {slug:'saas-ltv-to-cac-ratio-calculator',title:'SaaS LTV/CAC Calculator'},
+    {slug:'saas-pricetruth',title:'SaaS PriceTruth'},
+    {slug:'screen-time-activity-swapper',title:'Screen Time Activity Swapper'},
+    {slug:'securepass',title:'SecurePass Generator'},
+    {slug:'shopify-shipping-profit-calculator',title:'Shopify Shipping Profit Calc'},
+    {slug:'sponsorrate',title:'SponsorRate Calculator'},
+    {slug:'subtrack',title:'SubTrack (Subscription Tracker)'},
+    {slug:'svg-path-data-visualizer',title:'SVG Path Visualizer'},
+    {slug:'textanalyzer-pro',title:'TextAnalyzer Pro'},
+    {slug:'true-hourly-rate-calculator',title:'True Hourly Rate Calculator'},
+    {slug:'us-tariff-impact-calculator',title:'US Tariff Impact Calculator'},
+    {slug:'web-accessibility-heading-structure-vali',title:'Web Accessibility Heading Validator'},
+    {slug:'world-cup-2026-sweepstake-generator-free',title:'World Cup 2026 Sweepstake'},
+  ];
+}
+</script>
+</body>
+</html>

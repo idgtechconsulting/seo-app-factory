@@ -109,7 +109,74 @@ const CHECKS = [
   },
 ];
 
-const TOTAL_WEIGHT = CHECKS.reduce((sum, c) => sum + c.weight, 0);
+// ── Functional checks — detect fake/impossible apps ───────────────────────
+const FUNCTIONAL_CHECKS = [
+  {
+    id: 'has_event_listeners',
+    label: 'Has interactive event listeners (click, input, change, submit)',
+    weight: 10,
+    test: html => /addEventListener\s*\(\s*['"](?:click|input|change|submit|keyup|keydown)/i.test(html)
+               || /on(?:click|input|change|submit)\s*=/i.test(html),
+  },
+  {
+    id: 'has_dom_manipulation',
+    label: 'Has DOM manipulation (getElementById, querySelector, innerHTML, textContent)',
+    weight: 8,
+    test: html => /(?:getElementById|querySelector|innerHTML|textContent|innerText|\.value\s*[=!])/i.test(html),
+  },
+  {
+    id: 'not_all_hardcoded',
+    label: 'Has computation logic (Math, parseFloat, parseInt, ternary, if/else with variables)',
+    weight: 10,
+    test: html => {
+      const scriptMatch = html.match(/<script[\s\S]*?>([\s\S]*?)<\/script>/gi);
+      if (!scriptMatch) return false;
+      const scripts = scriptMatch.join(' ');
+      // Must have actual computation, not just display logic
+      const hasComputation = /(?:Math\.|parseFloat|parseInt|Number\(|\.toFixed|reduce\(|\.map\(|\.filter\(|new Date|RegExp)/i.test(scripts);
+      const hasConditionals = /if\s*\(|switch\s*\(|\?\s*[^:]+\s*:/i.test(scripts);
+      return hasComputation || hasConditionals;
+    },
+  },
+  {
+    id: 'no_impossible_features',
+    label: 'Does not claim backend features impossible in single-file HTML',
+    weight: 15,
+    test: html => {
+      const lc = html.toLowerCase();
+      // These patterns indicate the app claims to do things a single HTML file can't actually do
+      const impossiblePatterns = [
+        /connects?\s+to\s+(?:your|a|the)\s+(?:api|database|server|backend)/i,
+        /(?:real[- ]?time|live)\s+(?:data|feed|stream|update)\s+from/i,
+        /(?:scrapes?|crawls?|monitors?)\s+(?:reddit|twitter|linkedin|hacker\s*news|websites?)/i,
+        /(?:uploads?\s+to|saves?\s+to|syncs?\s+with)\s+(?:cloud|server|database)/i,
+      ];
+      // Check title/description area (first 2000 chars) for claims vs actual capability
+      const head = html.slice(0, 2000);
+      for (const pat of impossiblePatterns) {
+        if (pat.test(head)) return false;
+      }
+      return true;
+    },
+  },
+  {
+    id: 'has_user_input',
+    label: 'Has input elements (input, textarea, select, or contenteditable)',
+    weight: 8,
+    test: html => /<(?:input|textarea|select)\b/i.test(html)
+               || /contenteditable\s*=\s*["']true["']/i.test(html),
+  },
+  {
+    id: 'has_output_display',
+    label: 'Has designated output area (result, output, or dynamic content region)',
+    weight: 5,
+    test: html => /id\s*=\s*["'](?:result|output|display|answer|calculation|preview)/i.test(html)
+               || /class\s*=\s*["'][^"']*(?:result|output|display|answer)[^"']*["']/i.test(html),
+  },
+];
+
+const ALL_CHECKS = [...CHECKS, ...FUNCTIONAL_CHECKS];
+const TOTAL_WEIGHT = ALL_CHECKS.reduce((sum, c) => sum + c.weight, 0);
 
 function evaluate(filePath) {
   const absPath = path.resolve(filePath);
@@ -121,7 +188,7 @@ function evaluate(filePath) {
   const html = fs.readFileSync(absPath, 'utf8');
   const fileSize = Buffer.byteLength(html, 'utf8');
 
-  const checks = CHECKS.map(check => {
+  const checks = ALL_CHECKS.map(check => {
     let passed = false;
     try {
       passed = check.test(html);

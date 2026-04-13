@@ -91,6 +91,10 @@
     .faq-item p { padding:.75rem 1.25rem 1rem; color:var(--muted); font-size:.9rem; border-top:1px solid var(--border); }
 
     footer { text-align:center; padding:2rem 1rem; color:var(--muted); font-size:.85rem; border-top:1px solid var(--border); }
+    .footer-links { display:flex; justify-content:center; gap:1.5rem; margin:.75rem 0; }
+    .footer-links a { color:var(--muted); text-decoration:none; font-size:.85rem; }
+    .footer-links a:hover { color:var(--accent-hover); }
+    .copyright { margin-top:.5rem; font-size:.8rem; color:#555; }
 
     /* Search mode: hide category headings, show flat grid */
     body.searching .category-section { display:none; }
@@ -656,6 +660,12 @@
 
 <footer>
   <p>All tools run in your browser — no data is sent to any server.</p>
+  <nav class="footer-links">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <p class="copyright">&copy; 2026 FreeToolbox.tools</p>
 </footer>
 
 <script>

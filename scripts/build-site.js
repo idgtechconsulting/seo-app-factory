@@ -20,7 +20,7 @@ const APPROVED_DIR = path.join(__dirname, '..', 'apps', 'approved');
 const DEPLOYED_DIR = path.join(__dirname, '..', 'deployed');
 const DEPLOYED_APPS_DIR = path.join(DEPLOYED_DIR, 'apps');
 const BASE_URL = 'https://freetoolbox.tools';
-const GA_ID = 'G-XXXXXXXXXX'; // Replace with real Measurement ID
+const GA_ID = process.env.GA_ID || 'G-XXXXXXXXXX'; // Set via env or replace here
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -356,6 +356,10 @@ function main() {
     .faq-item p { padding:.75rem 1.25rem 1rem; color:var(--muted); font-size:.9rem; border-top:1px solid var(--border); }
 
     footer { text-align:center; padding:2rem 1rem; color:var(--muted); font-size:.85rem; border-top:1px solid var(--border); }
+    .footer-links { display:flex; justify-content:center; gap:1.5rem; margin:.75rem 0; }
+    .footer-links a { color:var(--muted); text-decoration:none; font-size:.85rem; }
+    .footer-links a:hover { color:var(--accent-hover); }
+    .copyright { margin-top:.5rem; font-size:.8rem; color:#555; }
 
     /* Search mode: hide category headings, show flat grid */
     body.searching .category-section { display:none; }
@@ -394,6 +398,12 @@ ${faqHtml}
 
 <footer>
   <p>All tools run in your browser — no data is sent to any server.</p>
+  <nav class="footer-links">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <p class="copyright">&copy; ${new Date().getFullYear()} FreeToolbox.tools</p>
 </footer>
 
 <script>
@@ -465,6 +475,81 @@ ${faqHtml}
 <body><div><h1>404</h1><p>That tool doesn't exist — or may have moved.</p><a href="${BASE_URL}/">Browse all tools →</a></div></body>
 </html>`, 'utf8');
   console.log('  [ok] deployed/404.html');
+
+  // ── Trust pages (About, Privacy, Contact) ─────────────────────────────────
+  const trustPageStyle = `
+    body{background:#0f1117;color:#e2e4f0;font-family:system-ui,sans-serif;line-height:1.7;margin:0}
+    .wrap{max-width:720px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:1.8rem;margin-bottom:1rem;background:linear-gradient(135deg,#fff,#857dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    h2{font-size:1.2rem;color:#857dff;margin:1.5rem 0 .5rem}
+    p,li{color:#a0a3b5;font-size:.95rem}
+    a{color:#6c63ff}a:hover{color:#857dff}
+    footer{text-align:center;padding:2rem 1rem;color:#555;font-size:.85rem;border-top:1px solid #2a2d3e;margin-top:3rem}
+  `;
+
+  const aboutHtml = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>About | FreeToolbox</title><meta name="description" content="FreeToolbox provides free, browser-based tools. No sign-up, no data collection, no ads.">
+<link rel="canonical" href="${BASE_URL}/about.html">${FAVICON_TAG}<style>${trustPageStyle}</style></head>
+<body>${NAV_BAR}<div class="wrap">
+<h1>About FreeToolbox</h1>
+<p>FreeToolbox is a collection of free, instant web tools that run entirely in your browser. Every tool is a single self-contained page — no server calls, no accounts, no tracking.</p>
+<h2>Our Mission</h2>
+<p>Too many online tools are bloated, ad-ridden, or require sign-ups. We build focused micro-tools that do one thing well, load instantly, and respect your privacy.</p>
+<h2>How It Works</h2>
+<p>All processing happens locally in your browser using JavaScript. Your data never leaves your device. There are no analytics trackers, no cookies, and no advertising.</p>
+<h2>Open Source</h2>
+<p>Every tool's source code is visible — just right-click and "View Source". If you find a bug or want to suggest a new tool, <a href="contact.html">get in touch</a>.</p>
+</div><footer><a href="${BASE_URL}/">← Back to all tools</a></footer></body></html>`;
+
+  const privacyHtml = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Privacy Policy | FreeToolbox</title><meta name="description" content="FreeToolbox privacy policy. No data collection, no cookies, no tracking.">
+<link rel="canonical" href="${BASE_URL}/privacy.html">${FAVICON_TAG}<style>${trustPageStyle}</style></head>
+<body>${NAV_BAR}<div class="wrap">
+<h1>Privacy Policy</h1>
+<p><strong>Last updated:</strong> ${new Date().toISOString().slice(0, 10)}</p>
+<h2>Data Collection</h2>
+<p>FreeToolbox does not collect, store, or transmit any personal data. All tool computations run entirely in your browser. No data is sent to any server.</p>
+<h2>Cookies</h2>
+<p>This site does not use cookies or any form of local storage for tracking purposes.</p>
+<h2>Analytics</h2>
+<p>We may use privacy-respecting analytics (such as Google Analytics with IP anonymization) to understand aggregate traffic patterns. No personally identifiable information is collected.</p>
+<h2>Third Parties</h2>
+<p>This site is hosted on GitHub Pages. GitHub's privacy policy applies to the hosting infrastructure. No other third-party services process your data.</p>
+<h2>Contact</h2>
+<p>Questions about this policy? <a href="contact.html">Contact us</a>.</p>
+</div><footer><a href="${BASE_URL}/">← Back to all tools</a></footer></body></html>`;
+
+  const contactHtml = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Contact | FreeToolbox</title><meta name="description" content="Contact the FreeToolbox team. Report bugs, suggest tools, or say hello.">
+<link rel="canonical" href="${BASE_URL}/contact.html">${FAVICON_TAG}<style>${trustPageStyle}</style></head>
+<body>${NAV_BAR}<div class="wrap">
+<h1>Contact</h1>
+<p>Have a bug report, tool suggestion, or just want to say hi?</p>
+<h2>Email</h2>
+<p><a href="mailto:idgtechconsulting@gmail.com">idgtechconsulting@gmail.com</a></p>
+<h2>GitHub</h2>
+<p>Found a bug? <a href="https://github.com/idgtechconsulting/seo-app-factory/issues" target="_blank" rel="noopener">Open an issue</a> on GitHub.</p>
+<h2>Suggest a Tool</h2>
+<p>Know a tool that should exist but doesn't? Email us or open a GitHub issue with [Tool Request] in the subject line.</p>
+</div><footer><a href="${BASE_URL}/">← Back to all tools</a></footer></body></html>`;
+
+  fs.writeFileSync(path.join(DEPLOYED_DIR, 'about.html'), aboutHtml, 'utf8');
+  fs.writeFileSync(path.join(DEPLOYED_DIR, 'privacy.html'), privacyHtml, 'utf8');
+  fs.writeFileSync(path.join(DEPLOYED_DIR, 'contact.html'), contactHtml, 'utf8');
+  console.log('  [ok] deployed/about.html, privacy.html, contact.html');
+
+  // ── Sitemap: include trust pages ──────────────────────────────────────────
+  const trustPages = ['about.html', 'privacy.html', 'contact.html'];
+  const trustSitemapEntries = trustPages.map(p =>
+    `  <url><loc>${BASE_URL}/${p}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>`
+  ).join('\n');
+  const sitemapContent = fs.readFileSync(path.join(DEPLOYED_DIR, 'sitemap.xml'), 'utf8');
+  fs.writeFileSync(path.join(DEPLOYED_DIR, 'sitemap.xml'),
+    sitemapContent.replace('</urlset>', `${trustSitemapEntries}\n</urlset>`), 'utf8');
+  console.log('  [ok] sitemap.xml updated with trust pages');
 
   console.log(`\nBuild complete. ${apps.length} apps deployed to deployed/apps/\n`);
 }

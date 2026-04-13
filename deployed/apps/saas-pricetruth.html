@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS PriceTruth | SaaS Pricing Side-by-Side Comparator</title>
+    <meta name="description" content="Stop the 'Contact Sales' game. Access a community-sourced database of actual Enterprise SaaS pricing and compare cost-per-seat side-by-side.">
+    <meta name="keywords" content="SaaS pricing side-by-side comparator, Enterprise SaaS costs, B2B pricing database, actual SaaS quotes">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="SaaS PriceTruth | Community-Sourced SaaS Pricing">
+    <meta property="og:description" content="Real Enterprise pricing quotes shared by the community. Compare actual costs, not marketing fluff.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/saas-pricetruth.html">
+
+    <link rel="canonical" href="https://freetoolbox.tools/apps/saas-pricetruth.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SaaS PriceTruth",
+      "description": "A community-sourced database of actual Enterprise SaaS pricing for side-by-side comparison.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --error: #ef4444;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .table-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow-x: auto;
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            min-width: 800px;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-enterprise {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .price-tag {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .cost-per-seat {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--text);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Toast Notification */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: #1e293b;
+            color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast-success { border-left: 4px solid var(--success); }
+        .toast-error { border-left: 4px solid var(--error); }
+
+        footer {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 640px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <a href="#" class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            PriceTruth
+        </a>
+        <nav>
+            <button class="btn btn-outline" onclick="toggleModal(true)">Submit Quote</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>SaaS Pricing Side-by-Side Comparator</h1>
+            <p>No more "Contact Sales" black holes. A community-sourced database of actual Enterprise quotes to help B2B buyers negotiate better deals.</p>
+        </section>
+
+        <section class="controls">
+            <div class="search-wrapper">
+                <span class="search-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search SaaS tools (e.g. Salesforce, HubSpot, Zendesk)..." aria-label="Search SaaS tools">
+            </div>
+            <button class="btn btn-primary" onclick="toggleModal(true)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Price
+            </button>
+        </section>
+
+        <section class="table-container">
+            <table id="pricingTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Software Tool</th>
+                        <th scope="col">Tier</th>
+                        <th scope="col">Annual Quote</th>
+                        <th scope="col">Seats</th>
+                        <th scope="col">Cost / Seat / Yr</th>
+                        <th scope="col">Key Enterprise Features</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data injected by JS -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <div id="modalOverlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Submit Enterprise Quote</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Share the actual price you were quoted to help others.</p>
+            </div>
+            <form id="priceForm">
+                <div class="form-group">
+                    <label for="toolName">Software Name</label>
+                    <input type="text" id="toolName" required placeholder="e.g. HubSpot">
+                </div>
+                <div class="form-group">
+                    <label for="tierName">Tier Name</label>
+                    <input type="text" id="tierName" required placeholder="e.g. Enterprise Platinum">
+                </div>
+                <div class="form-group">
+                    <label for="annualPrice">Annual Contract Value (USD)</label>
+                    <input type="number" id="annualPrice" required min="1" placeholder="e.g. 24000">
+                </div>
+                <div class="form-group">
+                    <label for="seatCount">Number of Seats</label>
+                    <input type="number" id="seatCount" required min="1" placeholder="e.g. 10">
+                </div>
+                <div class="form-group">
+                    <label for="features">Key Features (comma separated)</label>
+                    <input type="text" id="features" placeholder="e.g. SSO, Audit Logs, Dedicated AM">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="toggleModal(false)">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Quote</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> SaaS PriceTruth. Community-driven data for transparent B2B buying.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">Disclaimer: Prices are community-reported and may vary based on negotiation, geography, and bundle.</p>
+    </footer>
+
+    <script>
+        // Seed Data
+        const initialData = [
+            { id: 1, tool: "Salesforce", tier: "Enterprise", price: 15000, seats: 5, features: "Custom Objects, Workflow Rules", date: "2023-11-12" },
+            { id: 2, tool: "HubSpot", tier: "Enterprise", price: 24000, seats: 10, features: "Advanced Reporting, Custom Objects", date: "2024-01-05" },
+            { id: 3, tool: "Zendesk", tier: "Suite Professional", price: 12000, seats: 15, features: "Omnichannel, Advanced Analytics", date: "2023-09-20" },
+            { id: 4, tool: "Intercom", tier: "Enterprise", price: 30000, seats: 8, features: "SLA Management, Custom Bot", date: "2024-02-15" },
+            { id: 5, tool: "Slack", tier: "Enterprise Grid", price: 45000, seats: 100, features: "Unlimited History, Org-wide Admin", date: "2023-12-01" },
+            { id: 6, tool: "Monday.com", tier: "Enterprise", price: 18000, seats: 20, features: "HIPAA Compliance, Advanced Permissions", date: "2024-03-10" }
+        ];
+
+        let pricingData = JSON.parse(localStorage.getItem('saas_pricing_db')) || initialData;
+
+        // DOM Elements
+        const tableBody = document.getElementById('tableBody');
+        const searchInput = document.getElementById('searchInput');
+        const priceForm = document.getElementById('priceForm');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const toastContainer = document.getElementById('toast-container');
+
+        // Initialize
+        function init() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            renderTable(pricingData);
+            
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = pricingData.filter(item => 
+                    item.tool.toLowerCase().includes(term) || 
+                    item.features.toLowerCase().includes(term)
+                );
+                renderTable(filtered);
+            });
+
+            priceForm.addEventListener('submit', handleFormSubmit);
+        }
+
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 3rem; color: var(--text-muted);">No matching tools found. Be the first to submit a quote!</td></tr>`;
+                return;
+            }
+
+            data.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(item => {
+                const costPerSeat = (item.price / item.seats).toFixed(2);
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td style="font-weight: 600;">${escapeHtml(item.tool)}</td>
+                    <td><span class="badge badge-enterprise">${escapeHtml(item.tier)}</span></td>
+                    <td class="price-tag">$${item.price.toLocaleString()}</td>
+                    <td>${item.seats}</td>
+                    <td>
+                        <span class="price-tag">$${parseFloat(costPerSeat).toLocaleString()}</span>
+                        <span class="cost-per-seat">per seat / yr</span>
+                    </td>
+                    <td style="font-size: 0.9rem; color: var(--text-muted)">${escapeHtml(item.features)}</td>
+                    <td style="font-size: 0.85rem; color: var(--text-muted)">${item.date}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const tool = document.getElementById('toolName').value.trim();
+            const tier = document.getElementById('tierName').value.trim();
+            const price = parseFloat(document.getElementById('annualPrice').value);
+            const seats = parseInt(document.getElementById('seatCount').value);
+            const features = document.getElementById('features').value.trim();
+
+            if (!tool || !tier || isNaN(price) || isNaN(seats)) {
+                showToast("Please fill in all required fields correctly.", "error");
+                return;
+            }
+
+            const newEntry = {
+                id: Date.now(),
+                tool,
+                tier,
+                price,
+                seats,
+                features: features || "Not specified",
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            pricingData.push(newEntry);
+            localStorage.setItem('saas_pricing_db', JSON.stringify(pricingData));
+            
+            renderTable(pricingData);
+            toggleModal(false);
+            priceForm.reset();
+            showToast("Quote submitted successfully!", "success");
+        }
+
+        function toggleModal(show) {
+            modalOverlay.style.display = show ? 'flex' : 'none';
+            if (show) {
+                document.getElementById('toolName').focus();
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icon = type === 'success' 
+                ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+                : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+            
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Close modal on background click
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) toggleModal(false);
+        });
+
+        // Close on Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+                toggleModal(false);
+            }
+        });
+
+        init();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/promark.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">ProMark | Professional Live Markdown Editor</a>
+    <a href="https://freetoolbox.tools/apps/freelancer-true-hourly-rate-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Freelancer True Hourly Rate Calculator | Price Your Services Correctly</a>
+    <a href="https://freetoolbox.tools/apps/web-accessibility-heading-structure-vali.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Web Accessibility Heading Structure Validator - Check HTML Hierarchy</a>
+    <a href="https://freetoolbox.tools/apps/freelance-rate-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Freelance Rate Calculator | Professional Pricing Tool</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 43 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

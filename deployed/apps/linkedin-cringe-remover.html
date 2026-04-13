@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Cringe-Remover | De-corporate Your Feed</title>
+    <meta name="description" content="Instantly rewrite corporate buzzwords and 'humbled and honored' posts into plain, human English. The ultimate LinkedIn cringe-remover for professionals.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="LinkedIn Cringe-Remover">
+    <meta property="og:description" content="Stop the corporate speak. Turn 'synergistic alignment' into 'working together'.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/linkedin-cringe-remover.html">
+
+    <link rel="canonical" href="https://freetoolbox.tools/apps/linkedin-cringe-remover.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "LinkedIn Cringe-Remover",
+      "description": "A tool to rewrite corporate buzzwords and LinkedIn tropes into plain, human English.",
+      "applicationCategory": "Utility",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-primary: #38bdf8;
+            --accent-secondary: #818cf8;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --border-color: #334155;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--bg-color);
+            font-size: 24px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1fr 1fr;
+                align-items: start;
+            }
+        }
+
+        .input-section, .output-section {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            resize: none;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        .output-display {
+            width: 100%;
+            height: 300px;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            position: relative;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg-color);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .cringe-meter-container {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .meter-label {
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: var(--text-muted);
+        }
+
+        .meter-bar-bg {
+            width: 100%;
+            height: 12px;
+            background: #334155;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .meter-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--success), #eab308, var(--danger));
+            transition: width 0.5s ease-out;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--accent-primary);
+            color: var(--text-main);
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transform: translateY(200%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .highlight {
+            color: var(--accent-primary);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--accent-secondary);
+            color: white;
+            vertical-align: middle;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">✂️</div>
+            <h1>LinkedIn Cringe-Remover</h1>
+        </div>
+        <p class="subtitle">Turning corporate jargon into human conversation. Paste your post below to remove the "humbled and honored" energy.</p>
+    </header>
+
+    <main>
+        <section class="input-section" aria-labelledby="input-heading">
+            <div class="section-label">
+                <span id="input-heading">Corporate Speak</span>
+                <span class="badge">Original</span>
+            </div>
+            <textarea id="input-text" placeholder="I am humbled and honored to announce that I've started a new position as a Synergistic Thought Leader... 🚀 #blessed #growthmindset"></textarea>
+            
+            <div class="controls">
+                <button class="btn btn-primary" id="btn-rewrite">
+                    <span>✨ De-Cringe</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-clear">
+                    <span>🗑️ Clear</span>
+                </button>
+            </div>
+
+            <div class="cringe-meter-container">
+                <span class="meter-label">Cringe Factor: <span id="cringe-value">0%</span></span>
+                <div class="meter-bar-bg">
+                    <div class="meter-bar-fill" id="meter-fill"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="output-section" aria-labelledby="output-heading">
+            <div class="section-label">
+                <span id="output-heading">Human English</span>
+                <span class="badge">Cleaned</span>
+            </div>
+            <div class="output-display" id="output-text">Your human-readable post will appear here...</div>
+            <button class="btn btn-secondary" id="btn-copy" style="margin-top: 1rem; justify-content: center;">
+                <span>📋 Copy to Clipboard</span>
+            </button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> LinkedIn Cringe-Remover. No corporate synergy was harmed in the making of this app.</p>
+    </footer>
+
+    <div id="toast" class="toast">Copied to clipboard!</div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // The "Corporate-to-Human" Dictionary
+        const cringeMap = [
+            { regex: /I am (humbled and honored|thrilled|excited) to announce/gi, replacement: "I'm happy to share" },
+            { regex: /started a new position as/gi, replacement: "started working as" },
+            { regex: /synergy|synergistic/gi, replacement: "collaboration" },
+            { regex: /thought leader/gi, replacement: "expert" },
+            { regex: /leverage|leveraging/gi, replacement: "use" },
+            { regex: /deep dive/gi, replacement: "detailed look" },
+            { regex: /circle back/gi, replacement: "talk again later" },
+            { regex: /touch base/gi, replacement: "connect" },
+            { regex: /value-add|adding value/gi, replacement: "helpful" },
+            { regex: /game-changer/gi, replacement: "big improvement" },
+            { regex: /disrupting the industry/gi, replacement: "changing how things work" },
+            { regex: /passionate about/gi, replacement: "I like" },
+            { regex: /at the end of the day/gi, replacement: "ultimately" },
+            { regex: /moving forward/gi, replacement: "next" },
+            { regex: /ecosystem/gi, replacement: "environment" },
+            { regex: /holistic approach/gi, replacement: "complete way" },
+            { regex: /bandwidth/gi, replacement: "time" },
+            { regex: /low hanging fruit/gi, replacement: "easy wins" },
+            { regex: /drill down/gi, replacement: "examine" },
+            { regex: /paradigm shift/gi, replacement: "fundamental change" },
+            { regex: /optimizing/gi, replacement: "improving" },
+            { regex: /alignment/gi, replacement: "agreement" },
+            { regex: /best-in-class/gi, replacement: "great" },
+            { regex: /mission-critical/gi, replacement: "essential" },
+            { regex: /hyper-growth/gi, replacement: "fast growth" },
+            { regex: /#blessed|#growthmindset|#hustle|#grind|#leadership/gi, replacement: "" },
+            { regex: /🚀|📈|💎|🙌|🙏|✨/g, replacement: "" }
+        ];
+
+        const inputArea = document.getElementById('input-text');
+        const outputArea = document.getElementById('output-text');
+        const btnRewrite = document.getElementById('btn-rewrite');
+        const btnClear = document.getElementById('btn-clear');
+        const btnCopy = document.getElementById('btn-copy');
+        const meterFill = document.getElementById('meter-fill');
+        const cringeValue = document.getElementById('cringe-value');
+        const toast = document.getElementById('toast');
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function calculateCringe(text) {
+            if (!text) return 0;
+            let cringePoints = 0;
+            let totalWords = text.split(/\s+/).length;
+            
+            cringeMap.forEach(item => {
+                const matches = text.match(item.regex);
+                if (matches) {
+                    cringePoints += matches.length * 5;
+                }
+            });
+
+            // Bonus points for excessive capitalization and exclamation marks
+            const caps = (text.match(/[A-Z]{2,}/g) || []).length;
+            const exclamations = (text.match(/!/g) || []).length;
+            cringePoints += (caps * 2) + (exclamations * 3);
+
+            const score = Math.min(100, Math.round((cringePoints / (totalWords * 0.5)) * 10));
+            return isNaN(score) ? 0 : score;
+        }
+
+        function rewriteText() {
+            let text = inputArea.value;
+            if (!text) {
+                outputArea.textContent = "Your human-readable post will appear here...";
+                updateMeter(0);
+                return;
+            }
+
+            const score = calculateCringe(text);
+            updateMeter(score);
+
+            let cleanedText = text;
+            
+            // 1. Regex replacements (The "Small LLM" logic simulation)
+            cringeMap.forEach(item => {
+                cleanedText = cleanedText.replace(item.regex, item.replacement);
+            });
+
+            // 2. Post-processing cleanup
+            // Remove double spaces
+            cleanedText = cleanedText.replace(/\s\s+/g, ' ');
+            // Remove trailing spaces
+            cleanedText = cleanedText.trim();
+            // Fix spacing around punctuation
+            cleanedText = cleanedText.replace(/\s+([.,!?;:])/g, '$1');
+
+            // 3. Simulated "Humanization" - breaking up long corporate sentences
+            // (Simplified version of LLM sentence restructuring)
+            cleanedText = cleanedText.replace(/, and I believe that/gi, '. I believe');
+            cleanedText = cleanedText.replace(/, which is why/gi, '. That is why');
+
+            outputArea.textContent = cleanedText || "Post was too cringey to save. Try again!";
+        }
+
+        function updateMeter(value) {
+            meterFill.style.width = `${value}%`;
+            cringeValue.textContent = `${value}%`;
+            
+            if (value < 30) {
+                meterFill.style.background = 'var(--success)';
+            } else if (value < 60) {
+                meterFill.style.background = '#eab308';
+            } else {
+                meterFill.style.background = 'var(--danger)';
+            }
+        }
+
+        btnRewrite.addEventListener('click', () => {
+            rewriteText();
+            showToast("Cringe removed! ✨");
+        });
+
+        btnClear.addEventListener('click', () => {
+            inputArea.value = '';
+            outputArea.textContent = "Your human-readable post will appear here...";
+            updateMeter(0);
+        });
+
+        btnCopy.addEventListener('click', () => {
+            const text = outputArea.textContent;
+            if (text && text !== "Your human-readable post will appear here...") {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast("Copied to clipboard!");
+                });
+            } else {
+                showToast("Nothing to copy!");
+            }
+        });
+
+        // Real-time update as user types
+        inputArea.addEventListener('input', () => {
+            // We only update the meter in real-time to avoid jarring text changes
+            // while typing, but we let the user trigger the full rewrite manually.
+            updateMeter(calculateCringe(inputArea.value));
+        });
+
+        // Initial call to set state
+        updateMeter(0);
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/micro-saas-idea-validator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Micro-SaaS Idea Validator | Find Profitable Pain Points</a>
+    <a href="https://freetoolbox.tools/apps/web-accessibility-heading-structure-vali.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Web Accessibility Heading Structure Validator - Check HTML Hierarchy</a>
+    <a href="https://freetoolbox.tools/apps/pto-day-optimizer-2026.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">PTO Day Optimizer 2026 | Maximize Your Vacation Days</a>
+    <a href="https://freetoolbox.tools/apps/2026-us-midterm-ballot-simplified.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 US Midterm Ballot Simplified | Hyper-Local Voter Guide</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 43 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

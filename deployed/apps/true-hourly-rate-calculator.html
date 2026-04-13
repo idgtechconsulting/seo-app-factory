@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>True Hourly Rate Calculator | Salary to Hourly Rate with Paid Time Off</title>
+    <meta name="description" content="Calculate your true hourly rate by subtracting vacation, holidays, and sick leave from your annual salary. Essential for freelancers and contractors.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="True Hourly Rate Calculator | Salary to Hourly Rate with Paid Time Off">
+    <meta property="og:description" content="Stop undercharging. Find your actual hourly value by accounting for unpaid time off and holidays.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/true-hourly-rate-calculator.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/true-hourly-rate-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "True Hourly Rate Calculator",
+      "description": "A professional tool to calculate the actual hourly value of a salary after subtracting paid time off and holidays.",
+      "applicationCategory": "FinancialApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 400px 1fr;
+            }
+        }
+
+        .calc-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .input-wrapper.no-prefix input {
+            padding-left: 0.75rem;
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .result-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .result-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .comp-box {
+            padding: 1rem;
+            border-radius: 8px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+        }
+
+        .comp-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .comp-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+
+        .highlight-box .result-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .highlight-box .result-value {
+            color: white;
+        }
+
+        .guide-section {
+            margin-top: 3rem;
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .guide-section h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .guide-section p {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .guide-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .guide-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #e0e7ff;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Accessibility: Focus states */
+        input:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <div class="container">
+            <span class="badge">Financial Tool</span>
+            <h1>True Hourly Rate Calculator</h1>
+            <p class="subtitle">Discover your actual hourly value by accounting for holidays, vacation time, and sick leave.</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <!-- Input Section -->
+            <section class="calc-card" aria-labelledby="calc-heading">
+                <h2 id="calc-heading" style="display:none;">Calculator Inputs</h2>
+                
+                <div class="input-group">
+                    <label for="salary">Annual Gross Salary</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="salary" value="60000" step="1000" placeholder="e.g. 60000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="weeklyHours">Hours Worked Per Week</label>
+                    <div class="input-wrapper">
+                        <span>⏱</span>
+                        <input type="number" id="weeklyHours" value="40" step="1" placeholder="e.g. 40">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="daysPerWeek">Working Days Per Week</label>
+                    <div class="input-wrapper">
+                        <span>📅</span>
+                        <input type="number" id="daysPerWeek" value="5" step="1" placeholder="e.g. 5">
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 2rem 0;">
+
+                <div class="input-group">
+                    <label for="vacationDays">Annual Vacation Days</label>
+                    <div class="input-wrapper">
+                        <span>🏖️</span>
+                        <input type="number" id="vacationDays" value="15" step="1" placeholder="e.g. 15">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="holidayDays">Paid Public Holidays</label>
+                    <div class="input-wrapper">
+                        <span>🎆</span>
+                        <input type="number" id="holidayDays" value="10" step="1" placeholder="e.g. 10">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="sickDays">Annual Sick Days / Other Leave</label>
+                    <div class="input-wrapper">
+                        <span>🤒</span>
+                        <input type="number" id="sickDays" value="5" step="1" placeholder="e.g. 5">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-container" aria-live="polite">
+                <div class="result-card highlight-box">
+                    <span class="result-label">Your True Hourly Rate</span>
+                    <div class="result-value" id="trueRate">$0.00</div>
+                    <p style="font-size: 0.9rem; opacity: 0.9;">This is what you actually earn per hour worked.</p>
+                </div>
+
+                <div class="result-card">
+                    <span class="result-label">Comparison Analysis</span>
+                    <div class="comparison-grid">
+                        <div class="comp-box">
+                            <span class="comp-label">Standard Rate (2080h)</span>
+                            <span class="comp-value" id="standardRate">$0.00</span>
+                        </div>
+                        <div class="comp-box">
+                            <span class="comp-label">Actual Annual Hours</span>
+                            <span class="comp-value" id="actualHours">0h</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                        Difference: <span id="rateDiff" style="font-weight: 700; color: var(--accent);">+$0.00</span> per hour
+                    </div>
+                </div>
+
+                <article class="guide-section">
+                    <h2>Why this matters for freelancers</h2>
+                    <p>Most people calculate their hourly rate by dividing their salary by 2,080 hours (40 hours × 52 weeks). However, this is a <strong>mathematical illusion</strong>.</p>
+                    <p>If you are a freelancer or contractor, you don't get paid for:</p>
+                    <ul>
+                        <li>Public holidays (Christmas, New Year's, etc.)</li>
+                        <li>Vacation time to prevent burnout</li>
+                        <li>Sick days and personal emergencies</li>
+                        <li>Administrative time (invoicing, searching for clients)</li>
+                    </ul>
+                    <p>To maintain the same standard of living as a salaried employee, you must increase your hourly rate to cover these "non-billable" hours. This calculator helps you find that <strong>True Hourly Rate</strong>.</p>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="year"></span> True Hourly Rate Calculator. All rights reserved.</p>
+            <p style="margin-top: 0.5rem;">Designed for professional freelancers and independent contractors.</p>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // Elements
+            const inputs = ['salary', 'weeklyHours', 'daysPerWeek', 'vacationDays', 'holidayDays', 'sickDays'];
+            const elements = {};
+            inputs.forEach(id => {
+                elements[id] = document.getElementById(id);
+            });
+
+            const displayTrueRate = document.getElementById('trueRate');
+            const displayStandardRate = document.getElementById('standardRate');
+            const displayActualHours = document.getElementById('actualHours');
+            const displayRateDiff = document.getElementById('rateDiff');
+
+            function formatCurrency(num) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                }).format(num);
+            }
+
+            function calculate() {
+                // Get values
+                const salary = parseFloat(elements.salary.value) || 0;
+                const weeklyHours = parseFloat(elements.weeklyHours.value) || 0;
+                const daysPerWeek = parseFloat(elements.daysPerWeek.value) || 0;
+                const vacationDays = parseFloat(elements.vacationDays.value) || 0;
+                const holidayDays = parseFloat(elements.holidayDays.value) || 0;
+                const sickDays = parseFloat(elements.sickDays.value) || 0;
+
+                if (salary <= 0 || weeklyHours <= 0 || daysPerWeek <= 0) {
+                    displayTrueRate.textContent = '$0.00';
+                    displayStandardRate.textContent = '$0.00';
+                    displayActualHours.textContent = '0h';
+                    displayRateDiff.textContent = '+$0.00';
+                    return;
+                }
+
+                // 1. Standard Calculation (The "Corporate" Way)
+                // Based on 52 weeks, 40 hours (or user defined weekly hours)
+                const standardAnnualHours = 52 * weeklyHours;
+                const standardRate = salary / standardAnnualHours;
+
+                // 2. True Calculation (The "Realistic" Way)
+                // Total potential working days in a year
+                const totalPotentialDays = 52 * daysPerWeek;
+                
+                // Total days actually worked
+                const actualWorkingDays = totalPotentialDays - (vacationDays + holidayDays + sickDays);
+                
+                // Hours per working day
+                const hoursPerDay = weeklyHours / daysPerWeek;
+                
+                // Total annual hours actually worked
+                const actualAnnualHours = actualWorkingDays * hoursPerDay;
+
+                // True hourly rate
+                const trueRate = salary / actualAnnualHours;
+                const diff = trueRate - standardRate;
+
+                // Update UI
+                displayTrueRate.textContent = formatCurrency(trueRate);
+                displayStandardRate.textContent = formatCurrency(standardRate);
+                displayActualHours.textContent = Math.round(actualAnnualHours).toLocaleString() + 'h';
+                displayRateDiff.textContent = (diff >= 0 ? '+' : '') + formatCurrency(diff);
+                
+                // Color the difference
+                displayRateDiff.style.color = diff >= 0 ? 'var(--accent)' : 'var(--danger)';
+            }
+
+            // Add event listeners to all inputs
+            inputs.forEach(id => {
+                elements[id].addEventListener('input', calculate);
+            });
+
+            // Initial calculation
+            calculate();
+        })();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/saas-pricetruth.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">SaaS PriceTruth | SaaS Pricing Side-by-Side Comparator</a>
+    <a href="https://freetoolbox.tools/apps/break-even-roas-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Break-Even ROAS Calculator | Ad Spend Profitability Tool</a>
+    <a href="https://freetoolbox.tools/apps/ai-disclosure-generator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">AI Disclosure Generator | Create Compliant AI Content Labels</a>
+    <a href="https://freetoolbox.tools/apps/fabric-yardage-pattern-waste-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Fabric Yardage &amp; Pattern Waste Calculator | Precision Textile Planner</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 43 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Echo Chamber Visualizer: Analyze your social media following to identify ideological biases and discover bridge accounts to broaden your perspective.">
+    <meta name="keywords" content="echo chamber, social media analysis, political bias, ideological map, filter bubble, bridge accounts">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Echo Chamber Visualizer - Break Your Filter Bubble">
+    <meta property="og:description" content="Visualize the ideological lean of your social network and find rational voices from the other side.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://echochambervisualizer.app">
+    <meta property="og:image" content="https://echochambervisualizer.app/og-image.jpg">
+
+    <title>Echo Chamber Visualizer | Break Your Filter Bubble</title>
+    <link rel="canonical" href="https://echochambervisualizer.app">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Echo Chamber Visualizer",
+      "description": "An analysis tool that categorizes the political/ideological lean of a user's social media network and suggests bridge accounts.",
+      "applicationCategory": "AnalysisTool",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent-left: #ef4444;
+            --accent-right: #3b82f6;
+            --accent-center: #10b981;
+            --border: #334155;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--text-main);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem 4rem 1rem;
+        }
+
+        /* Landing Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 1.125rem;
+            transition: var(--transition);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Loading State */
+        #loading-screen {
+            display: none;
+            text-align: center;
+            padding: 5rem 1rem;
+        }
+
+        .loader {
+            width: 64px;
+            height: 64px;
+            border: 5px solid var(--border);
+            border-bottom-color: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            animation: rotation 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        .loading-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* Analysis Results */
+        #analysis-results {
+            display: none;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Cluster Map */
+        .canvas-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #0f172a;
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+            cursor: crosshair;
+            border: 1px solid var(--border);
+        }
+
+        #cluster-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-legend {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Bridge Suggestions */
+        .bridge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bridge-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .bridge-item:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: var(--primary);
+        }
+
+        .bridge-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+
+        .bridge-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .bridge-info p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-bridge { background: var(--primary); color: white; }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Animations */
+        @keyframes rotation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        /* Persona Selector */
+        .persona-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .persona-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .persona-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="logo">ECHOCAMBER.VIS</span>
+        <nav>
+            <a href="#how-it-works">How it Works</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#about">About</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Landing Section -->
+        <section id="landing" class="hero">
+            <h1>Stop Living in a <br><span style="color: var(--primary)">Digital Mirror.</span></h1>
+            <p>Most social algorithms create echo chambers. We visualize your network's ideological lean and help you find rational voices you're missing.</p>
+            
+            <div class="persona-selector" id="persona-selector">
+                <span style="width: 100%; display: block; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.875rem;">Simulate a profile type:</span>
+                <button class="persona-btn active" data-persona="center">Centrist</button>
+                <button class="persona-btn" data-persona="left">Left-Leaning</button>
+                <button class="persona-btn" data-persona="right">Right-Leaning</button>
+            </div>
+
+            <button id="start-btn" class="btn" aria-label="Analyze my network">Connect Social Account</button>
+        </section>
+
+        <!-- Loading Section -->
+        <section id="loading-screen">
+            <div class="loader"></div>
+            <div class="loading-text" id="loading-status">Connecting to API...</div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="analysis-results">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-nodes">0</span>
+                    <span class="stat-label">Accounts Analyzed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-bias">0%</span>
+                    <span class="stat-label">Echo Chamber Score</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="stat-diversity">Low</span>
+                    <span class="stat-label">Network Diversity</span>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-title">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 7m0 10V7m0 0L9 7"></path></svg>
+                        Ideological Map
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="cluster-canvas"></canvas>
+                        <div class="map-legend">
+                            <div class="legend-item"><div class="dot" style="background: var(--accent-left)"></div> Left</div>
+                            <div class="legend-item"><div class="dot" style="background: var(--accent-center)"></div> Center</div>
+                            <div class="legend-item"><div class="dot" style="background: var(--accent-right)"></div> Right</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Bridge Accounts
+                    </div>
+                    <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                        These accounts are "bridges"—they are rational, high-quality sources that disagree with your primary cluster.
+                    </p>
+                    <div class="bridge-list" id="bridge-list">
+                        <!-- JS populated -->
+                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 2rem; font-size: 0.875rem; padding: 0.75rem;" onclick="location.reload()">Reset Analysis</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Echo Chamber Visualizer. Built for intellectual curiosity.</p>
+        <p style="margin-top: 0.5rem; opacity: 0.6;">This tool uses simulated data for demonstration purposes.</p>
+    </footer>
+
+    <script>
+        /**
+         * App State & Config
+         */
+        const state = {
+            currentPersona: 'center',
+            isAnalyzing: false,
+            nodes: [],
+            bridges: []
+        };
+
+        const PERSONAS = {
+            center: { bias: 'Center', color: '#10b981', clusterX: 0, clusterY: 0, score: 15, diversity: 'High' },
+            left: { bias: 'Left', color: '#ef4444', clusterX: -100, clusterY: 0, score: 78, diversity: 'Low' },
+            right: { bias: 'Right', color: '#3b82f6', clusterX: 100, clusterY: 0, score: 82, diversity: 'Low' }
+        };
+
+        const BRIDGE_POOL = [
+            { name: "Dr. Elena Voss", bio: "Political Scientist specializing in bipartisan consensus.", lean: "Center", avatar: "EV" },
+            { name: "Marcus Thorne", bio: "Classical Liberal focusing on free speech and logic.", lean: "Right", avatar: "MT" },
+            { name: "Sarah Jenkins", bio: "Policy analyst focusing on sustainable economics.", lean: "Left", avatar: "SJ" },
+            { name: "The Moderate Voice", bio: "Daily synthesis of conflicting political viewpoints.", lean: "Center", avatar: "MV" },
+            { name: "Julian Reed", bio: "Former strategist now critiquing ideological purity.", lean: "Center", avatar: "JR" },
+            { name: "Amina Okafor", bio: "Human rights lawyer with a pragmatic approach.", lean: "Left", avatar: "AO" },
+            { name: "David Sterling", bio: "Constitutional scholar and traditionalist.", lean: "Right", avatar: "DS" }
+        ];
+
+        /**
+         * UI Elements
+         */
+        const startBtn = document.getElementById('start-btn');
+        const landing = document.getElementById('landing');
+        const loadingScreen = document.getElementById('loading-screen');
+        const loadingStatus = document.getElementById('loading-status');
+        const results = document.getElementById('analysis-results');
+        const canvas = document.getElementById('cluster-canvas');
+        const ctx = canvas.getContext('2d');
+        const bridgeList = document.getElementById('bridge-list');
+
+        /**
+         * Logic
+         */
+        
+        // Persona Selection
+        document.querySelectorAll('.persona-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.currentPersona = btn.dataset.persona;
+            });
+        });
+
+        startBtn.addEventListener('click', async () => {
+            landing.classList.add('hidden');
+            loadingScreen.style.display = 'block';
+            
+            const steps = [
+                "Authenticating social tokens...",
+                "Fetching following list...",
+                "Analyzing linguistic patterns...",
+                "Mapping ideological coordinates...",
+                "Identifying echo chamber boundaries...",
+                "Calculating bridge opportunities..."
+            ];
+
+            for (let i = 0; i < steps.length; i++) {
+                loadingStatus.innerText = steps[i];
+                await new Promise(r => setTimeout(r, 600 + Math.random() * 800));
+            }
+
+            showResults();
+        });
+
+        function showResults() {
+            loadingScreen.style.display = 'none';
+            results.style.display = 'block';
+            
+            const persona = PERSONAS[state.currentPersona];
+            
+            // Update Stats
+            document.getElementById('stat-nodes').innerText = Math.floor(Math.random() * 500) + 200;
+            document.getElementById('stat-bias').innerText = persona.score + '%';
+            document.getElementById('stat-diversity').innerText = persona.diversity;
+
+            generateNodes(persona);
+            drawGraph();
+            generateBridges();
+        }
+
+        function generateNodes(persona) {
+            state.nodes = [];
+            const nodeCount = 120;
+            
+            for (let i = 0; i < nodeCount; i++) {
+                // Most nodes cluster around the persona's lean
+                const isOutlier = Math.random() > 0.8;
+                let x, y, color;
+
+                if (isOutlier) {
+                    x = (Math.random() - 0.5) * 400;
+                    y = (Math.random() - 0.5) * 400;
+                    color = Math.random() > 0.5 ? '#ef4444' : '#3b82f6';
+                } else {
+                    x = persona.clusterX + (Math.random() - 0.5) * 150;
+                    y = persona.clusterY + (Math.random() - 0.5) * 150;
+                    color = persona.color;
+                }
+                
+                state.nodes.push({ x, y, color, size: Math.random() * 3 + 2 });
+            }
+        }
+
+        function drawGraph() {
+            // Setup canvas size
+            const size = canvas.parentElement.clientWidth;
+            canvas.width = size;
+            canvas.height = size;
+            
+            const centerX = size / 2;
+            const centerY = size / 2;
+
+            ctx.clearRect(0, 0, size, size);
+
+            // Draw connections (subtle lines)
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for (let i = 0; i < state.nodes.length; i++) {
+                for (let j = i + 1; j < state.nodes.length; j++) {
+                    const dx = state.nodes[i].x - state.nodes[j].x;
+                    const dy = state.nodes[i].y - state.nodes[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 60) {
+                        ctx.moveTo(centerX + state.nodes[i].x, centerY + state.nodes[i].y);
+                        ctx.lineTo(centerX + state.nodes[j].x, centerY + state.nodes[j].y);
+                    }
+                }
+            }
+            ctx.stroke();
+
+            // Draw nodes
+            state.nodes.forEach(node => {
+                ctx.fillStyle = node.color;
+                ctx.beginPath();
+                ctx.arc(centerX + node.x, centerY + node.y, node.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Add glow
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = node.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+        }
+
+        function generateBridges() {
+            bridgeList.innerHTML = '';
+            
+            // Pick 5 random bridges from pool
+            const shuffled = [...BRIDGE_POOL].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 5);
+
+            selected.forEach(person => {
+                const el = document.createElement('div');
+                el.className = 'bridge-item';
+                el.innerHTML = `
+                    <div class="bridge-avatar" style="display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-muted); background: var(--border)">
+                        ${person.avatar}
+                    </div>
+                    <div class="bridge-info">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <h4>${person.name}</h4>
+                            <span class="badge badge-bridge">Bridge</span>
+                        </div>
+                        <p>${person.bio}</p>
+                    </div>
+                `;
+                bridgeList.appendChild(el);
+            });
+        }
+
+        // Handle window resize for canvas
+        window.addEventListener('resize', () => {
+            if (results.style.display === 'block') {
+                drawGraph();
+            }
+        });
+
+    </script>
+</body>
+</html>

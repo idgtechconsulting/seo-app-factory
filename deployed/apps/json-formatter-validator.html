@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter & Validator | Professional JSON Tool</title>
+    <meta name="description" content="Free, fast, and secure online JSON formatter and validator. Pretty-print your JSON code and validate its syntax instantly.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="JSON Formatter & Validator">
+    <meta property="og:description" content="Clean, format, and validate your JSON data with a professional developer tool.">
+    <meta property="og:type" content="website">
+    <meta property="og:color" content="#6366f1">
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --success: #22c55e;
+            --error: #ef4444;
+            --border: #334155;
+            --code-key: #f472b6;
+            --code-string: #4ade80;
+            --code-num: #fbbf24;
+            --code-bool: #60a5fa;
+            --code-null: #94a3b8;
+            --font-mono: 'Fira Code', 'Cascadia Code', 'Source Code Pro', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 1rem 2rem;
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            gap: 0;
+            overflow: hidden;
+            padding: 1rem;
+        }
+
+        .editor-container {
+            display: flex;
+            flex: 1;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel-header {
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        textarea {
+            flex: 1;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            padding: 1rem;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        #output-display {
+            flex: 1;
+            padding: 1rem;
+            overflow: auto;
+            white-space: pre;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.5;
+            tab-size: 2;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #334155;
+            color: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover {
+            background: #475569;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .status-bar {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-valid { color: var(--success); }
+        .status-invalid { color: var(--error); }
+
+        /* Syntax Highlighting */
+        .json-key { color: var(--code-key); }
+        .json-string { color: var(--code-string); }
+        .json-number { color: var(--code-num); }
+        .json-boolean { color: var(--code-bool); }
+        .json-null { color: var(--code-null); }
+
+        .error-highlight {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 3px solid var(--error);
+            padding-left: 0.5rem;
+            margin: 0.5rem 0;
+            color: #fca5a5;
+            font-family: sans-serif;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+                overflow: auto;
+            }
+            .editor-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .panel {
+                height: 400px;
+                margin-bottom: 1rem;
+            }
+            body {
+                overflow: auto;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(200%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <a href="#" class="logo"><span>{ }</span> JSON Formatter</a>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">v1.0.0 Stable</div>
+    </header>
+
+    <main>
+        <div class="editor-container">
+            <!-- Input Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    INPUT JSON
+                    <div id="input-stats" style="font-weight: normal;">0 chars</div>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="processJSON('format')">Format</button>
+                    <button class="btn" onclick="processJSON('minify')">Minify</button>
+                    <button class="btn" onclick="clearAll()">Clear</button>
+                    <button class="btn" onclick="loadSample()">Sample</button>
+                </div>
+                <textarea id="json-input" placeholder="Paste your JSON here..." spellcheck="false"></textarea>
+                <div class="status-bar">
+                    <span id="validation-status">Awaiting input...</span>
+                </div>
+            </div>
+
+            <!-- Output Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    PRETTIFIED OUTPUT
+                    <button class="btn" style="padding: 2px 8px; font-size: 0.7rem;" onclick="copyOutput()">Copy</button>
+                </div>
+                <div id="output-display"></div>
+                <div class="status-bar">
+                    <span id="output-stats">0 lines</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast" class="toast">Copied to clipboard!</div>
+
+    <script>
+        const inputArea = document.getElementById('json-input');
+        const outputArea = document.getElementById('output-display');
+        const statusText = document.getElementById('validation-status');
+        const inputStats = document.getElementById('input-stats');
+        const outputStats = document.getElementById('output-stats');
+        const toast = document.getElementById('toast');
+
+        // Update char count on input
+        inputArea.addEventListener('input', () => {
+            inputStats.textContent = `${inputArea.value.length} chars`;
+            if (inputArea.value.trim() === '') {
+                statusText.textContent = 'Awaiting input...';
+                statusText.className = '';
+            }
+        });
+
+        function processJSON(mode) {
+            const rawValue = inputArea.value.trim();
+            
+            if (!rawValue) {
+                showToast('Please enter some JSON first');
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(rawValue);
+                const formatted = mode === 'format' 
+                    ? JSON.stringify(parsed, null, 2) 
+                    : JSON.stringify(parsed);
+                
+                statusText.textContent = '✓ Valid JSON';
+                statusText.className = 'status-valid';
+                
+                if (mode === 'format') {
+                    outputArea.innerHTML = syntaxHighlight(formatted);
+                } else {
+                    outputArea.textContent = formatted;
+                }
+
+                updateOutputStats(formatted);
+            } catch (e) {
+                statusText.textContent = '✗ Invalid JSON';
+                statusText.className = 'status-invalid';
+                
+                const errorMessage = e.message;
+                outputArea.innerHTML = `<div class="error-highlight"><strong>Syntax Error:</strong> ${errorMessage}</div>`;
+                outputStats.textContent = 'Error';
+            }
+        }
+
+        function syntaxHighlight(json) {
+            if (typeof json !== 'string') {
+                json = JSON.stringify(json, undefined, 2);
+            }
+            
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                let cls = 'json-number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'json-key';
+                    } else {
+                        cls = 'json-string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return `<span class="${cls}">${match}</span>`;
+            });
+        }
+
+        function updateOutputStats(text) {
+            const lines = text.split('\n').length;
+            outputStats.textContent = `${lines} lines`;
+        }
+
+        function clearAll() {
+            inputArea.value = '';
+            outputArea.innerHTML = '';
+            statusText.textContent = 'Awaiting input...';
+            statusText.className = '';
+            inputStats.textContent = '0 chars';
+            outputStats.textContent = '0 lines';
+        }
+
+        function loadSample() {
+            const sample = {
+                project: "JSON Formatter",
+                version: 1.0,
+                active: true,
+                features: ["Validation", "Pretty Print", "Minification"],
+                author: {
+                    name: "DevTool",
+                    role: "Frontend Engineer"
+                },
+                tags: null
+            };
+            inputArea.value = JSON.stringify(sample, null, 2);
+            inputStats.textContent = `${inputArea.value.length} chars`;
+            processJSON('format');
+        }
+
+        async function copyOutput() {
+            const text = outputArea.innerText;
+            if (!text) return;
+            
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('Copied to clipboard!');
+            } catch (err) {
+                showToast('Failed to copy');
+            }
+        }
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Allow Tab key in textarea
+        inputArea.addEventListener('keydown', function(e) {
+            if (e.key == 'Tab') {
+                e.preventDefault();
+                var start = this.selectionStart;
+                var end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + "  " + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 2;
+            }
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/freelance-rate-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Freelance Rate Calculator | Professional Pricing Tool</a>
+    <a href="https://freetoolbox.tools/apps/us-tariff-impact-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">US Tariff Impact Calculator | Consumer Price Estimates 2026</a>
+    <a href="https://freetoolbox.tools/apps/textanalyzer-pro.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">TextAnalyzer Pro | Advanced Word Counter &amp; Text Analysis Tool</a>
+    <a href="https://freetoolbox.tools/apps/micro-saas-idea-validator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Micro-SaaS Idea Validator | Find Profitable Pain Points</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 43 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html></html>

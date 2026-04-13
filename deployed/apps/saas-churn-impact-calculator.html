@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Churn Impact Calculator | Measure Revenue Leakage</title>
+    <meta name="description" content="Calculate the true cost of customer churn on your SaaS business. Visualize revenue loss over time and analyze LTV:CAC ratios.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="SaaS Churn Impact Calculator">
+    <meta property="og:description" content="Analyze how churn rates affect your long-term MRR and business growth.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/saas-churn-impact-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SaaS Churn Impact Calculator",
+        "description": "A professional tool for SaaS founders to calculate and visualize the financial impact of customer churn.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-red: #ef4444;
+            --accent-green: #22c55e;
+            --border: #334155;
+            --input-bg: #0f172a;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 380px 1fr;
+            }
+        }
+
+        section {
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.2rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-card {
+            background-color: var(--input-bg);
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .result-card .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .result-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .result-card .value.negative {
+            color: var(--accent-red);
+        }
+
+        .result-card .value.positive {
+            color: var(--accent-green);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin-top: 1rem;
+            background: var(--input-bg);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--accent-red);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            transform: translateY(150%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        nav {
+            display: none; /* Not needed for single tool, but included for semantic HTML */
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <nav aria-label="Main Navigation"></nav>
+
+    <header>
+        <h1>SaaS Churn Impact Calculator</h1>
+        <p>Visualize how customer churn erodes your growth and calculate the lifetime value impact on your bottom line.</p>
+    </header>
+
+    <main>
+        <!-- Input Section -->
+        <section aria-labelledby="inputs-title">
+            <h2 id="inputs-title" style="font-size: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                Business Metrics
+            </h2>
+            
+            <div class="input-group">
+                <label for="mrr">Current Monthly Recurring Revenue (MRR)</label>
+                <div class="input-wrapper">
+                    <span>$</span>
+                    <input type="number" id="mrr" value="50000" step="100" min="0">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="churn">Monthly Churn Rate (%)</label>
+                <div class="input-wrapper">
+                    <span>%</span>
+                    <input type="number" id="churn" value="5" step="0.1" min="0" max="100">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="arpu">Average Revenue Per User (ARPU)</label>
+                <div class="input-wrapper">
+                    <span>$</span>
+                    <input type="number" id="arpu" value="100" step="1" min="0">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="cac">Customer Acquisition Cost (CAC)</label>
+                <div class="input-wrapper">
+                    <span>$</span>
+                    <input type="number" id="cac" value="500" step="10" min="0">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="growth">Monthly Growth Rate (%)</label>
+                <div class="input-wrapper">
+                    <span>%</span>
+                    <input type="number" id="growth" value="8" step="0.1" min="0" max="100">
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section aria-labelledby="results-title">
+            <h2 id="results-title" style="font-size: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                Financial Impact
+            </h2>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <span class="label">Monthly Revenue Loss</span>
+                    <div id="monthly-loss" class="value negative">$0</div>
+                </div>
+                <div class="result-card">
+                    <span class="label">Annual Revenue Loss</span>
+                    <div id="annual-loss" class="value negative">$0</div>
+                </div>
+                <div class="result-card">
+                    <span class="label">Customer LTV</span>
+                    <div id="ltv" class="value">$0</div>
+                </div>
+                <div class="result-card">
+                    <span class="label">LTV : CAC Ratio</span>
+                    <div id="ltv-cac" class="value">$0</div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--primary);"></div>
+                    <span>Projected MRR (With Churn)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--text-muted);"></div>
+                    <span>Ideal MRR (0% Churn)</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="churnChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> SaaS Churn Impact Calculator. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem;">Calculations are based on standard linear churn models.</p>
+    </footer>
+
+    <div id="toast" class="toast" role="alert">Please enter valid positive numbers.</div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const inputs = ['mrr', 'churn', 'arpu', 'cac', 'growth'];
+        const elements = {};
+        inputs.forEach(id => elements[id] = document.getElementById(id));
+
+        const results = {
+            monthlyLoss: document.getElementById('monthly-loss'),
+            annualLoss: document.getElementById('annual-loss'),
+            ltv: document.getElementById('ltv'),
+            ltvCac: document.getElementById('ltv-cac')
+        };
+
+        const canvas = document.getElementById('churnChart');
+        const ctx = canvas.getContext('2d');
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0
+            }).format(val);
+        }
+
+        function calculate() {
+            // Validation
+            let isValid = true;
+            let vals = {};
+            
+            inputs.forEach(id => {
+                const val = parseFloat(elements[id].value);
+                if (isNaN(val) || val < 0) {
+                    isValid = false;
+                }
+                vals[id] = val;
+            });
+
+            if (!isValid) {
+                showToast("Please enter valid positive numbers in all fields.");
+                return;
+            }
+
+            // Calculations
+            const monthlyLoss = vals.mrr * (vals.churn / 100);
+            const annualLoss = monthlyLoss * 12;
+            
+            // LTV = ARPU / Churn Rate
+            const churnDecimal = vals.churn / 100;
+            const ltv = churnDecimal > 0 ? vals.arpu / churnDecimal : Infinity;
+            const ltvCac = vals.cac > 0 ? ltv / vals.cac : Infinity;
+
+            // Update UI
+            results.monthlyLoss.textContent = `-${formatCurrency(monthlyLoss)}`;
+            results.annualLoss.textContent = `-${formatCurrency(annualLoss)}`;
+            results.ltv.textContent = ltv === Infinity ? '∞' : formatCurrency(ltv);
+            results.ltvCac.textContent = ltvCac === Infinity ? '∞' : ltvCac.toFixed(2) + 'x';
+
+            // Update colors for LTV:CAC
+            results.ltvCac.className = 'value ' + (ltvCac >= 3 ? 'positive' : 'negative');
+
+            drawChart(vals);
+        }
+
+        function drawChart(vals) {
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+            canvas.width = width * window.devicePixelRatio;
+            canvas.height = height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+            const padding = 40;
+            const chartWidth = width - padding * 2;
+            const chartHeight = height - padding * 2;
+
+            // Data Projection (12 months)
+            const projectionChurn = [];
+            const projectionIdeal = [];
+            
+            let currentChurnMRR = vals.mrr;
+            let currentIdealMRR = vals.mrr;
+            const growthDecimal = vals.growth / 100;
+            const churnDecimal = vals.churn / 100;
+
+            for (let i = 0; i <= 12; i++) {
+                projectionChurn.push(currentChurnMRR);
+                projectionIdeal.push(currentIdealMRR);
+                
+                // MRR(t+1) = MRR(t) * (1 + growth - churn)
+                currentChurnMRR = currentChurnMRR * (1 + growthDecimal - churnDecimal);
+                currentIdealMRR = currentIdealMRR * (1 + growthDecimal);
+            }
+
+            const maxVal = Math.max(...projectionIdeal);
+            const minVal = Math.min(...projectionChurn);
+
+            function getX(index) {
+                return padding + (index * (chartWidth / 12));
+            }
+
+            function getY(val) {
+                return (height - padding) - ((val - minVal) / (maxVal - minVal) * chartHeight);
+            }
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Grid
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for(let i=0; i<=4; i++) {
+                const y = padding + (i * chartHeight / 4);
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+            }
+            ctx.stroke();
+
+            // Draw Ideal Line (Grey)
+            ctx.beginPath();
+            ctx.strokeStyle = '#94a3b8';
+            ctx.setLineDash([5, 5]);
+            ctx.lineWidth = 2;
+            ctx.moveTo(getX(0), getY(projectionIdeal[0]));
+            for (let i = 1; i <= 12; i++) {
+                ctx.lineTo(getX(i), getY(projectionIdeal[i]));
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw Churn Line (Primary)
+            ctx.beginPath();
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 4;
+            ctx.lineJoin = 'round';
+            ctx.moveTo(getX(0), getY(projectionChurn[0]));
+            for (let i = 1; i <= 12; i++) {
+                ctx.lineTo(getX(i), getY(projectionChurn[i]));
+            }
+            ctx.stroke();
+
+            // Draw Points
+            ctx.fillStyle = '#6366f1';
+            for (let i = 0; i <= 12; i++) {
+                ctx.beginPath();
+                ctx.arc(getX(i), getY(projectionChurn[i]), 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Axis Labels
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '10px Inter';
+            ctx.textAlign = 'center';
+            for(let i=0; i<=12; i+=3) {
+                ctx.fillText(`Mo ${i}`, getX(i), height - 15);
+            }
+            
+            ctx.textAlign = 'right';
+            ctx.fillText(formatCurrency(maxVal), padding - 10, padding);
+            ctx.fillText(formatCurrency(minVal), padding - 10, height - padding);
+        }
+
+        // Listeners
+        inputs.forEach(id => {
+            elements[id].addEventListener('input', calculate);
+        });
+
+        window.addEventListener('resize', calculate);
+
+        // Init
+        calculate();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/subtrack.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">SubTrack | Privacy-First Subscription Expense Tracker</a>
+    <a href="https://freetoolbox.tools/apps/break-even-roas-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Break-Even ROAS Calculator | Ad Spend Profitability Tool</a>
+    <a href="https://freetoolbox.tools/apps/echo-chamber-visualizer.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Echo Chamber Visualizer | Break Your Filter Bubble</a>
+    <a href="https://freetoolbox.tools/apps/fha-loan-pmi-breakeven-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">FHA Loan PMI Breakeven Calculator | Compare Down Payment vs Mortgage Insurance</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 43 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html></html>

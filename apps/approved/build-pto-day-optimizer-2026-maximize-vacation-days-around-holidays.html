@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Maximize your 2026 vacation days with the PTO Day Optimizer. Find the best dates to take off to bridge public holidays and weekends for maximum time away.">
+    <meta name="keywords" content="pto optimizer 2026 maximize vacation days, vacation planner 2026, holiday bridge calculator, maximize time off 2026">
+    <title>PTO Day Optimizer 2026 | Maximize Your Vacation Days</title>
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="PTO Day Optimizer 2026">
+    <meta property="og:description" content="Stop wasting PTO! Find the optimal dates to bridge holidays and weekends in 2026.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/pto-optimizer-2026">
+    
+    <link rel="canonical" href="https://yourdomain.com/pto-optimizer-2026">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PTO Day Optimizer 2026",
+      "description": "A tool to calculate the most efficient way to use paid time off to maximize consecutive vacation days around 2026 public holidays.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f43f5e;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --work-day: #e2e8f0;
+            --weekend-day: #dbeafe;
+            --holiday-day: #bbf7d0;
+            --pto-day: #fdba74;
+            --block-highlight: #fef3c7;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        header p { opacity: 0.9; font-size: 1rem; max-width: 600px; margin: 0 auto; }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .controls-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label { font-weight: 600; color: var(--text-main); font-size: 0.9rem; }
+        select, input {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        select:focus, input:focus { border-color: var(--primary); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .stat-card .value { 
+            display: block; 
+            font-size: 2rem; 
+            font-weight: 800; 
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        .stat-card .label { font-size: 0.875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .month-view {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .month-title {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.2rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+
+        .weekday-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            padding-bottom: 0.5rem;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            cursor: default;
+            position: relative;
+            transition: transform 0.1s;
+        }
+
+        .day:hover { transform: scale(1.1); z-index: 10; }
+        .day.work { background-color: var(--work-day); color: var(--text-muted); }
+        .day.weekend { background-color: var(--weekend-day); color: #1e40af; }
+        .day.holiday { background-color: var(--holiday-day); color: #166534; font-weight: 700; }
+        .day.pto { background-color: var(--pto-day); color: #9a3412; font-weight: 700; box-shadow: inset 0 0 0 2px #ea580c; }
+        .day.empty { background: transparent; }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .share-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn:hover { background-color: var(--primary-dark); }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            .controls-card { padding: 1rem; gap: 1rem; }
+            header h1 { font-size: 1.5rem; }
+            .calendar-container { grid-template-columns: 1fr; }
+        }
+
+        /* Utility for custom holidays */
+        .custom-mode .day.work { cursor: pointer; }
+        .custom-mode .day.work:hover { background-color: #cbd5e1; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PTO Day Optimizer 2026</h1>
+        <p>Strategically plan your time off to maximize your vacation blocks. Bridge the gap between holidays and weekends!</p>
+    </header>
+
+    <main>
+        <section class="controls-card" aria-label="Configuration">
+            <div class="input-group">
+                <label for="country">Select Country</label>
+                <select id="country" onchange="handleCountryChange()">
+                    <option value="US">United States</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="JP">Japan</option>
+                    <option value="custom">Custom / Other</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="pto-count">Total PTO Days Available</label>
+                <input type="number" id="pto-count" value="20" min="0" max="365" oninput="calculateOptimization()">
+            </div>
+        </section>
+
+        <section class="stats-grid" id="stats-container">
+            <div class="stat-card">
+                <span class="value" id="stat-total-off">0</span>
+                <span class="label">Total Days Off</span>
+            </div>
+            <div class="stat-card">
+                <span class="value" id="stat-pto-used">0</span>
+                <span class="label">PTO Days Used</span>
+            </div>
+            <div class="stat-card">
+                <span class="value" id="stat-ratio">0</span>
+                <span class="label">Efficiency Ratio</span>
+            </div>
+        </section>
+
+        <section class="legend">
+            <div class="legend-item"><div class="legend-box" style="background: var(--work-day)"></div> Work Day</div>
+            <div class="legend-item"><div class="legend-box" style="background: var(--weekend-day)"></div> Weekend</div>
+            <div class="legend-item"><div class="legend-box" style="background: var(--holiday-day)"></div> Public Holiday</div>
+            <div class="legend-item"><div class="legend-box" style="background: var(--pto-day)"></div> Optimal PTO</div>
+        </section>
+
+        <section class="calendar-container" id="calendar-grid">
+            <!-- Months injected by JS -->
+        </section>
+
+        <section class="share-section">
+            <button class="btn" onclick="shareResults()">Share My 2026 Strategy</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 PTO Day Optimizer. Optimized for maximum relaxation.</p>
+    </footer>
+
+    <script>
+        const HOLIDAYS_DATA = {
+            US: ['2026-01-01', '2026-01-19', '2026-02-16', '2026-05-25', '2026-06-19', '2026-07-04', '2026-09-07', '2026-10-12', '2026-11-11', '2026-11-26', '2026-12-25'],
+            UK: ['2026-01-01', '2026-04-03', '2026-04-06', '2026-05-04', '2026-05-25', '2026-08-31', '2026-12-25', '2026-12-26'],
+            CA: ['2026-01-01', '2026-02-16', '2026-04-03', '2026-05-18', '2026-07-01', '2026-08-03', '2026-09-07', '2026-10-12', '2026-12-25', '2026-12-26'],
+            AU: ['2026-01-01', '2026-01-26', '2026-04-03', '2026-04-06', '2026-04-25', '2026-06-08', '2026-12-25', '2026-12-26'],
+            DE: ['2026-01-01', '2026-04-03', '2026-04-06', '2026-05-01', '2026-05-14', '2026-05-25', '2026-10-03', '2026-12-25', '2026-12-26'],
+            FR: ['2026-01-01', '2026-04-06', '2026-05-01', '2026-05-08', '2026-05-14', '2026-05-25', '2026-07-14', '2026-08-15', '2026-11-01', '2026-11-11', '2026-12-25'],
+            JP: ['2026-01-01', '2026-01-02', '2026-01-03', '2026-01-12', '2026-02-11', '2026-02-23', '2026-03-20', '2026-04-29', '2026-05-03', '2026-05-04', '2026-05-05', '2026-07-20', '2026-08-11', '2026-09-21', '2026-09-23', '2026-10-12', '2026-11-03', '2026-11-23'],
+            custom: []
+        };
+
+        let currentHolidays = [];
+        let ptoDaysSelected = [];
+
+        function handleCountryChange() {
+            const country = document.getElementById('country').value;
+            currentHolidays = [...HOLIDAYS_DATA[country]];
+            
+            const container = document.getElementById('calendar-grid');
+            if (country === 'custom') {
+                container.classList.add('custom-mode');
+            } else {
+                container.classList.remove('custom-mode');
+            }
+            
+            calculateOptimization();
+        }
+
+        function isWeekend(date) {
+            const day = date.getDay();
+            return day === 0 || day === 6;
+        }
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function calculateOptimization() {
+            const ptoBudget = parseInt(document.getElementById('pto-count').value) || 0;
+            const year = 2026;
+            const allDays = [];
+            
+            // Generate all days of the year
+            const start = new Date(year, 0, 1);
+            const end = new Date(year, 11, 31);
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                const dateStr = formatDate(new Date(d));
+                allDays.push({
+                    date: new Date(d),
+                    dateStr: dateStr,
+                    isWeekend: isWeekend(d),
+                    isHoliday: currentHolidays.includes(dateStr)
+                });
+            }
+
+            // Find "Bridges"
+            // A bridge is a workday that connects a non-working day to another non-working day
+            const bridges = [];
+            for (let i = 0; i < allDays.length; i++) {
+                const day = allDays[i];
+                if (!day.isWeekend && !day.isHoliday) {
+                    // Evaluate efficiency: how many total days off does this specific day create?
+                    // Simple approach: look for clusters of non-working days around it
+                    let gain = 0;
+                    
+                    // Check left
+                    let leftOff = 0;
+                    for (let j = i - 1; j >= 0; j--) {
+                        if (allDays[j].isWeekend || allDays[j].isHoliday) leftOff++;
+                        else break;
+                    }
+                    
+                    // Check right
+                    let rightOff = 0;
+                    for (let j = i + 1; j < allDays.length; j++) {
+                        if (allDays[j].isWeekend || allDays[j].isHoliday) rightOff++;
+                        else break;
+                    }
+
+                    // Efficiency = (LeftOff + RightOff + 1) / 1 day of PTO
+                    // We prioritize days that bridge two blocks of time off
+                    const efficiency = (leftOff + rightOff + 1);
+                    bridges.push({ index: i, efficiency: efficiency, dateStr: day.dateStr });
+                }
+            }
+
+            // Sort bridges by efficiency (descending)
+            bridges.sort((a, b) => b.efficiency - a.efficiency);
+
+            // Select top PTO days based on budget
+            ptoDaysSelected = bridges.slice(0, ptoBudget).map(b => b.dateStr);
+
+            updateStats(allDays, ptoBudget);
+            renderCalendar(allDays);
+        }
+
+        function updateStats(allDays, budget) {
+            let totalOff = 0;
+            let ptoUsed = 0;
+
+            allDays.forEach(day => {
+                if (day.isWeekend || day.isHoliday || ptoDaysSelected.includes(day.dateStr)) {
+                    totalOff++;
+                }
+                if (ptoDaysSelected.includes(day.dateStr)) {
+                    ptoUsed++;
+                }
+            });
+
+            document.getElementById('stat-total-off').innerText = totalOff;
+            document.getElementById('stat-pto-used').innerText = ptoUsed;
+            const ratio = ptoUsed === 0 ? 0 : (totalOff / ptoUsed).toFixed(1);
+            document.getElementById('stat-ratio').innerText = ratio + 'x';
+        }
+
+        function renderCalendar(allDays) {
+            const container = document.getElementById('calendar-grid');
+            container.innerHTML = '';
+
+            for (let month = 0; month < 12; month++) {
+                const monthDiv = document.createElement('div');
+                monthDiv.className = 'month-view';
+                
+                const monthName = new Date(2026, month).toLocaleString('default', { month: 'long' });
+                monthDiv.innerHTML = `<div class="month-title">${monthName}</div>`;
+                
+                const grid = document.createElement('div');
+                grid.className = 'calendar-grid';
+                
+                // Weekday headers
+                ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(day => {
+                    grid.innerHTML += `<div class="weekday-label">${day}</div>`;
+                });
+
+                const firstDayOfMonth = new Date(2026, month, 1).getDay();
+                const daysInMonth = new Date(2026, month + 1, 0).getDate();
+
+                // Empty cells for start of month
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    grid.innerHTML += `<div class="day empty"></div>`;
+                }
+
+                // Actual days
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const date = new Date(2026, month, d);
+                    const dateStr = formatDate(date);
+                    const dayObj = allDays.find(day => day.dateStr === dateStr);
+                    
+                    let className = 'day';
+                    if (ptoDaysSelected.includes(dateStr)) className += ' pto';
+                    else if (dayObj.isHoliday) className += ' holiday';
+                    else if (dayObj.isWeekend) className += ' weekend';
+                    else className += ' work';
+
+                    const dayEl = document.createElement('div');
+                    dayEl.className = className;
+                    dayEl.innerText = d;
+                    
+                    if (document.getElementById('country').value === 'custom' && className.includes('work')) {
+                        dayEl.onclick = () => toggleCustomHoliday(dateStr);
+                    }
+
+                    grid.appendChild(dayEl);
+                }
+
+                monthDiv.appendChild(grid);
+                container.appendChild(monthDiv);
+            }
+        }
+
+        function toggleCustomHoliday(dateStr) {
+            const index = currentHolidays.indexOf(dateStr);
+            if (index > -1) {
+                currentHolidays.splice(index, 1);
+            } else {
+                currentHolidays.push(dateStr);
+            }
+            calculateOptimization();
+        }
+
+        function shareResults() {
+            const total = document.getElementById('stat-total-off').innerText;
+            const used = document.getElementById('stat-pto-used').innerText;
+            const text = `I just optimized my 2026 vacation! I'm getting ${total} total days off using only ${used} PTO days. Check yours out at PTO Day Optimizer!`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My 2026 Vacation Strategy',
+                    text: text,
+                    url: window.location.href
+                });
+            } else {
+                alert('Copied to clipboard: ' + text);
+                navigator.clipboard.writeText(text);
+            }
+        }
+
+        // Init
+        handleCountryChange();
+    </script>
+</body>
+</html>

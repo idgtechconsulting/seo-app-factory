@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify Shipping Profit Calculator | Calculate Net Shipping Margins</title>
+    <meta name="description" content="Free Shopify shipping profit calculator to find the net profit or loss per order by comparing shipping charged to customers versus actual carrier costs.">
+    <meta name="keywords" content="Shopify shipping profit calculator, shipping margin tool, carrier cost analysis, e-commerce shipping profit">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Shopify Shipping Profit Calculator">
+    <meta property="og:description" content="Stop losing money on shipping. Calculate your exact shipping margins per order instantly.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/shopify-shipping-profit-calculator.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/shopify-shipping-profit-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Shopify Shipping Profit Calculator",
+      "description": "A tool to calculate the net profit or loss per order by comparing shipping charged to customers versus actual carrier costs.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #008060; /* Shopify Green */
+            --primary-dark: #005e46;
+            --secondary: #f6f6f7;
+            --text-main: #202223;
+            --text-muted: #6d7175;
+            --white: #ffffff;
+            --error: #d72c0d;
+            --success: #008060;
+            --border: #e1e3e5;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 1.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--secondary);
+            color: var(--text-main);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-card .label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .value.positive { color: var(--success); }
+        .value.negative { color: var(--error); }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--secondary);
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-profit { background: #e6f4ea; color: #1e7e34; }
+        .badge-loss { background: #fce8e6; color: #d93025; }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: underline;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .affiliate-banner {
+            background: linear-gradient(135deg, #008060, #004d38);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .affiliate-banner h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .affiliate-banner p {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .btn-white:hover {
+            background: #f0f0f0;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>Shopify Shipping Profit Calculator</h1>
+        <p>Analyze your shipping margins. Compare what you charge your customers versus what carriers actually charge you to identify leaks in your profit.</p>
+    </header>
+
+    <main>
+        <div class="affiliate-banner">
+            <h3>Tired of overpaying for shipping?</h3>
+            <p>Use a shipping aggregator to get commercial rates and increase your margins automatically.</p>
+            <a href="#" class="btn-white">Compare Shipping Rates &rarr;</a>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <span class="label">Total Shipping Charged</span>
+                <div id="stat-charged" class="value">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <span class="label">Total Carrier Cost</span>
+                <div id="stat-cost" class="value">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <span class="label">Net Shipping Profit/Loss</span>
+                <div id="stat-net" class="value">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <span class="label">Avg. Margin %</span>
+                <div id="stat-margin" class="value">0%</div>
+            </div>
+        </div>
+
+        <div class="calculator-grid">
+            <!-- Input Section -->
+            <section class="card">
+                <h2>Add New Order</h2>
+                <form id="shipping-form">
+                    <div class="form-group">
+                        <label for="order-id">Order Number / Reference</label>
+                        <input type="text" id="order-id" placeholder="e.g. #1001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="charged">Amount Charged to Customer</label>
+                        <div class="input-wrapper">
+                            <span>$</span>
+                            <input type="number" id="charged" step="0.01" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="actual">Actual Carrier Cost</label>
+                        <div class="input-wrapper">
+                            <span>$</span>
+                            <input type="number" id="actual" step="0.01" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add to Analysis</button>
+                </form>
+                <button id="clear-all" class="btn btn-outline">Clear All Data</button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="card">
+                <h2>Order Breakdown</h2>
+                <div class="table-container">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Charged</th>
+                                <th>Cost</th>
+                                <th>Net</th>
+                                <th>Margin</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                    <div id="empty-state" class="empty-state">
+                        No orders added yet. Start by adding an order on the left.
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Shopify Shipping Profit Calculator. Professional tool for e-commerce business owners.</p>
+    </footer>
+
+    <script>
+        // State Management
+        let orders = JSON.parse(localStorage.getItem('shipping_orders')) || [];
+
+        const form = document.getElementById('shipping-form');
+        const tableBody = document.getElementById('table-body');
+        const emptyState = document.getElementById('empty-state');
+        const clearBtn = document.getElementById('clear-all');
+
+        // Stats Elements
+        const statCharged = document.getElementById('stat-charged');
+        const statCost = document.getElementById('stat-cost');
+        const statNet = document.getElementById('stat-net');
+        const statMargin = document.getElementById('stat-margin');
+
+        function init() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            updateUI();
+        }
+
+        function saveToLocal() {
+            localStorage.setItem('shipping_orders', JSON.stringify(orders));
+        }
+
+        function calculateNet(charged, cost) {
+            return (charged - cost).toFixed(2);
+        }
+
+        function calculateMargin(charged, cost) {
+            if (charged === 0) return 0;
+            return (((charged - cost) / charged) * 100).toFixed(1);
+        }
+
+        function updateUI() {
+            // Update Table
+            tableBody.innerHTML = '';
+            
+            if (orders.length === 0) {
+                emptyState.style.display = 'block';
+                document.getElementById('results-table').style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                document.getElementById('results-table').style.display = 'table';
+
+                orders.forEach((order, index) => {
+                    const net = calculateNet(order.charged, order.cost);
+                    const margin = calculateMargin(order.charged, order.cost);
+                    const isProfit = net >= 0;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${order.id}</strong></td>
+                        <td>$${order.charged.toFixed(2)}</td>
+                        <td>$${order.cost.toFixed(2)}</td>
+                        <td>
+                            <span class="badge ${isProfit ? 'badge-profit' : 'badge-loss'}">
+                                ${isProfit ? '+' : ''}$${net}
+                            </span>
+                        </td>
+                        <td>${margin}%</td>
+                        <td><button class="action-btn" onclick="deleteOrder(${index})">Delete</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Update Stats
+            const totalCharged = orders.reduce((sum, o) => sum + o.charged, 0);
+            const totalCost = orders.reduce((sum, o) => sum + o.cost, 0);
+            const totalNet = totalCharged - totalCost;
+            const avgMargin = totalCharged === 0 ? 0 : (totalNet / totalCharged) * 100;
+
+            statCharged.textContent = `$${totalCharged.toFixed(2)}`;
+            statCost.textContent = `$${totalCost.toFixed(2)}`;
+            
+            statNet.textContent = `${totalNet >= 0 ? '+' : ''}$${totalNet.toFixed(2)}`;
+            statNet.className = `value ${totalNet >= 0 ? 'positive' : 'negative'}`;
+
+            statMargin.textContent = `${avgMargin.toFixed(1)}%`;
+            statMargin.className = `value ${avgMargin >= 0 ? 'positive' : 'negative'}`;
+        }
+
+        function deleteOrder(index) {
+            orders.splice(index, 1);
+            saveToLocal();
+            updateUI();
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const orderId = document.getElementById('order-id').value;
+            const charged = parseFloat(document.getElementById('charged').value);
+            const cost = parseFloat(document.getElementById('actual').value);
+
+            if (isNaN(charged) || isNaN(cost)) return;
+
+            orders.push({
+                id: orderId,
+                charged: charged,
+                cost: cost
+            });
+
+            saveToLocal();
+            updateUI();
+            form.reset();
+            document.getElementById('order-id').focus();
+        });
+
+        clearBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all order data?')) {
+                orders = [];
+                saveToLocal();
+                updateUI();
+            }
+        });
+
+        // Initialize app
+        init();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/textanalyzer-pro.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">TextAnalyzer Pro | Advanced Word Counter &amp; Text Analysis Tool</a>
+    <a href="https://freetoolbox.tools/apps/chromaconvert.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">ChromaConvert | Professional Color Picker &amp; Converter</a>
+    <a href="https://freetoolbox.tools/apps/2026-us-midterm-ballot-simplified.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 US Midterm Ballot Simplified | Hyper-Local Voter Guide</a>
+    <a href="https://freetoolbox.tools/apps/pro-percentage-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Pro Percentage Calculator | Precise &amp; Fast Calculations</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 43 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

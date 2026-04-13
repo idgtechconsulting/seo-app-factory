@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS LTV to CAC Ratio Calculator | Measure Unit Economics Health</title>
+    <meta name="description" content="Free SaaS LTV to CAC ratio calculator. Input your ARPU, churn rate, and CAC to determine your customer lifetime value and business health score instantly.">
+    <meta name="keywords" content="SaaS LTV to CAC ratio calculator, LTV CAC ratio, customer lifetime value calculator, SaaS unit economics, CAC calculator">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="SaaS LTV to CAC Ratio Calculator | Measure Unit Economics Health">
+    <meta property="og:description" content="Calculate your SaaS LTV:CAC ratio and health score to ensure sustainable growth and efficient customer acquisition.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/saas-ltv-to-cac-ratio-calculator.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/saas-ltv-to-cac-ratio-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SaaS LTV to CAC Ratio Calculator",
+      "description": "A professional tool for SaaS founders to calculate the LTV:CAC ratio and determine the health of their customer acquisition strategy.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 400px 1fr;
+            }
+        }
+
+        .calculator-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.2rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, ring 0.2s;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .input-wrapper.percent input {
+            padding-left: 1rem;
+            padding-right: 2.2rem;
+        }
+
+        .input-wrapper.percent span {
+            left: auto;
+            right: 1rem;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .result-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .result-card .label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .result-card .value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .health-indicator {
+            padding: 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .health-critical { background-color: #fef2f2; color: #991b1b; border-color: #fecaca; }
+        .health-warning { background-color: #fffbeb; color: #92400e; border-color: #fef3c7; }
+        .health-healthy { background-color: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+        .health-excellent { background-color: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+
+        .health-indicator h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .health-indicator p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .info-section {
+            margin-top: 2rem;
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .info-section h3 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .info-section p {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #333;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: none;
+            animation: slideUp 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>SaaS LTV:CAC Calculator</h1>
+    </header>
+
+    <main>
+        <section class="calculator-card">
+            <form id="calcForm">
+                <div class="input-group">
+                    <label for="arpu">Avg. Revenue Per User (ARPU)</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="arpu" step="0.01" placeholder="0.00" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="churn">Monthly Churn Rate</label>
+                    <div class="input-wrapper percent">
+                        <input type="number" id="churn" step="0.1" placeholder="0.0" required aria-required="true">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="cac">Customer Acquisition Cost (CAC)</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="cac" step="0.01" placeholder="0.00" required aria-required="true">
+                    </div>
+                </div>
+
+                <button type="submit" id="calculateBtn">Calculate Unit Economics</button>
+            </form>
+        </section>
+
+        <section class="results-container">
+            <div class="result-grid">
+                <div class="result-card">
+                    <span class="label">Lifetime Value (LTV)</span>
+                    <div class="value" id="ltvResult">$0.00</div>
+                </div>
+                <div class="result-card">
+                    <span class="label">LTV:CAC Ratio</span>
+                    <div class="value" id="ratioResult">0.0x</div>
+                </div>
+            </div>
+
+            <div id="healthIndicator" class="health-indicator" style="display: none;">
+                <h2 id="healthTitle">Analyzing...</h2>
+                <p id="healthDesc">Enter your data to see your business health score.</p>
+            </div>
+
+            <article class="info-section">
+                <h3>Understanding Your Metrics</h3>
+                <p><strong>LTV (Lifetime Value)</strong> is the total revenue you expect to earn from a single customer over the duration of their relationship with your product. Formula: <code>ARPU / Monthly Churn Rate</code>.</p>
+                <p><strong>CAC (Customer Acquisition Cost)</strong> is the total cost of sales and marketing efforts required to acquire a new customer.</p>
+                <p><strong>LTV:CAC Ratio</strong> measures the efficiency of your acquisition. A ratio of 3:1 is generally considered the benchmark for a healthy, growing SaaS business.</p>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> SaaS Economics Tool. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem;">Disclaimer: This calculator provides estimates based on standard formulas. Consult with a financial advisor for official business reporting.</p>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const form = document.getElementById('calcForm');
+        const toast = document.getElementById('toast');
+        
+        const ltvDisplay = document.getElementById('ltvResult');
+        const ratioDisplay = document.getElementById('ratioResult');
+        const healthIndicator = document.getElementById('healthIndicator');
+        const healthTitle = document.getElementById('healthTitle');
+        const healthDesc = document.getElementById('healthDesc');
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        function calculate() {
+            const arpu = parseFloat(document.getElementById('arpu').value);
+            const churn = parseFloat(document.getElementById('churn').value) / 100;
+            const cac = parseFloat(document.getElementById('cac').value);
+
+            // Validation
+            if (isNaN(arpu) || isNaN(churn) || isNaN(cac)) {
+                showToast('Please fill in all fields with valid numbers.');
+                return;
+            }
+
+            if (churn <= 0) {
+                showToast('Churn rate must be greater than 0% for LTV calculation.');
+                return;
+            }
+
+            if (cac <= 0) {
+                showToast('CAC must be greater than 0.');
+                return;
+            }
+
+            // LTV = ARPU / Churn
+            const ltv = arpu / churn;
+            // Ratio = LTV / CAC
+            const ratio = ltv / cac;
+
+            // Update UI
+            ltvDisplay.textContent = new Intl.NumberFormat('en-US', { 
+                style: 'currency', 
+                currency: 'USD' 
+            }).format(ltv);
+
+            ratioDisplay.textContent = ratio.toFixed(2) + 'x';
+
+            // Health Score Logic
+            healthIndicator.style.display = 'block';
+            healthIndicator.className = 'health-indicator'; // Reset classes
+
+            if (ratio < 1) {
+                healthIndicator.classList.add('health-critical');
+                healthTitle.textContent = 'Critical Health';
+                healthDesc.textContent = 'You are spending more to acquire customers than they are worth. Your current growth model is unsustainable.';
+            } else if (ratio < 3) {
+                healthIndicator.classList.add('health-warning');
+                healthTitle.textContent = 'Warning';
+                healthDesc.textContent = 'Your unit economics are marginal. You should focus on reducing churn or lowering acquisition costs.';
+            } else if (ratio < 5) {
+                healthIndicator.classList.add('health-healthy');
+                healthTitle.textContent = 'Healthy Growth';
+                healthDesc.textContent = 'You have a solid LTV:CAC ratio. This is the industry standard for sustainable SaaS scaling.';
+            } else {
+                healthIndicator.classList.add('health-excellent');
+                healthTitle.textContent = 'Excellent Efficiency';
+                healthDesc.textContent = 'Your acquisition is highly efficient. You may actually be under-investing in growth and could afford to spend more to grow faster.';
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            calculate();
+        });
+
+        // Real-time calculation for better UX
+        form.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                // We only auto-calculate if all fields are filled to avoid "NaN" flashes
+                const allFilled = Array.from(form.querySelectorAll('input')).every(i => i.value !== '');
+                if (allFilled) {
+                    calculate();
+                }
+            });
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/echo-chamber-visualizer.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Echo Chamber Visualizer | Break Your Filter Bubble</a>
+    <a href="https://freetoolbox.tools/apps/freelance-rate-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Freelance Rate Calculator | Professional Pricing Tool</a>
+    <a href="https://freetoolbox.tools/apps/pto-day-optimizer-2026.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">PTO Day Optimizer 2026 | Maximize Your Vacation Days</a>
+    <a href="https://freetoolbox.tools/apps/ai-disclosure-generator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">AI Disclosure Generator | Create Compliant AI Content Labels</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 43 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

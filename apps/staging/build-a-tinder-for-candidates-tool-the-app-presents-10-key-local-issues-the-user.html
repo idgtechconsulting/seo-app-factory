@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Candidate Stance Matcher | Find Your Perfect Political Match</title>
+    <meta name="description" content="Stop guessing who to vote for. Use our Local Candidate Stance Matcher to align your views on key city issues with candidates' platforms.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Local Candidate Stance Matcher">
+    <meta property="og:description" content="Match your political beliefs with local candidates through a simple swipe-to-agree interface.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/local-candidate-stance-matcher">
+    
+    <link rel="canonical" href="https://example.com/local-candidate-stance-matcher">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Local Candidate Stance Matcher",
+        "description": "A tool to match voters with local candidates based on issue alignment.",
+        "applicationCategory": "Political Tool",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 1.5rem;
+            text-align: center;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #334155;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            position: relative;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Intro Screen */
+        .intro-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+        }
+
+        .intro-card h2 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .intro-card p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            cursor: pointer;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Swiper Screen */
+        .swiper-container {
+            position: relative;
+            height: 450px;
+            width: 100%;
+            perspective: 1000px;
+        }
+
+        .issue-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-card);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .issue-card:active {
+            cursor: grabbing;
+        }
+
+        .issue-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .swipe-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .ctrl-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: var(--transition);
+            color: white;
+        }
+
+        .btn-disagree { background: var(--danger); }
+        .btn-agree { background: var(--success); }
+        .ctrl-btn:hover { transform: scale(1.1); }
+
+        /* Results Screen */
+        .results-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        .match-header {
+            margin-bottom: 2rem;
+        }
+
+        .match-percentage {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--success);
+            margin: 1rem 0;
+        }
+
+        .candidate-list {
+            text-align: left;
+            margin-top: 2rem;
+        }
+
+        .candidate-item {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #334155;
+        }
+
+        .candidate-info h4 {
+            font-size: 1.1rem;
+        }
+
+        .candidate-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .match-score {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #334155;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .issue-card h3 { font-size: 1.2rem; }
+            .match-percentage { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Local Candidate Stance Matcher</h1>
+    </header>
+
+    <main>
+        <!-- Intro Screen -->
+        <section id="screen-intro" class="screen active">
+            <article class="intro-card">
+                <h2>Find Your Political Twin</h2>
+                <p>Tired of vague campaign promises? Swipe through 10 key local issues to see which candidate actually shares your vision for the city.</p>
+                <button class="btn btn-primary" onclick="app.start()">Start Matching</button>
+            </article>
+        </section>
+
+        <!-- Swiper Screen -->
+        <section id="screen-swipe" class="screen">
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <div class="swiper-container" id="card-stack">
+                <!-- Cards injected by JS -->
+            </div>
+            <div class="swipe-controls">
+                <button class="ctrl-btn btn-disagree" onclick="app.handleAnswer(0)" aria-label="Disagree">✕</button>
+                <button class="ctrl-btn btn-agree" onclick="app.handleAnswer(1)" aria-label="Agree">✓</button>
+            </div>
+        </section>
+
+        <!-- Results Screen -->
+        <section id="screen-results" class="screen">
+            <article class="results-card">
+                <div class="match-header">
+                    <h2>Your Best Match</h2>
+                    <div id="best-match-name" style="font-size: 1.5rem; font-weight: 600; margin-top: 0.5rem;">Calculating...</div>
+                    <div class="match-percentage" id="best-match-percent">0%</div>
+                    <p id="match-description" style="color: var(--text-muted);">Based on your alignment with local policy stances.</p>
+                </div>
+                
+                <div class="candidate-list" id="all-candidates">
+                    <!-- All candidates listed here -->
+                </div>
+                
+                <button class="btn btn-primary" style="margin-top: 2rem;" onclick="location.reload()">Start Over</button>
+            </article>
+        </section>
+    </main>
+
+    <div id="toast"></div>
+
+    <footer>
+        &copy; <span id="year"></span> Local Candidate Stance Matcher. Data based on published platforms.
+    </footer>
+
+    <script>
+        const app = {
+            // Data
+            issues: [
+                "Expand protected bike lanes across the downtown core",
+                "Implement strict rent control for all new apartments",
+                "Increase property taxes to fund public library expansion",
+                "Convert unused municipal parking lots into green spaces",
+                "Mandate composting for all residential households",
+                "Shift 10% of police budget to community social services",
+                "Allow mixed-use zoning in residential neighborhoods",
+                "Increase funding for K-12 public school arts programs",
+                "Expand light rail transit to the outer suburbs",
+                "Provide grants for small businesses to transition to solar"
+            ],
+            candidates: [
+                {
+                    name: "Sarah Jenkins",
+                    description: "Progressive Urbanist",
+                    stances: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] // All Agree
+                },
+                {
+                    name: "Robert Thorne",
+                    description: "Fiscal Conservative",
+                    stances: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] // All Disagree
+                },
+                {
+                    name: "Maya Patel",
+                    description: "Moderate Centrist",
+                    stances: [1, 0, 0, 1, 1, 0, 1, 1, 0, 1] // Mixed
+                },
+                {
+                    name: "David Chen",
+                    description: "Infrastructure Focused",
+                    stances: [1, 0, 1, 0, 0, 0, 1, 0, 1, 1] // Mixed
+                }
+            ],
+            userAnswers: [],
+            currentIndex: 0,
+            touchStartX: 0,
+            touchEndX: 0,
+
+            init() {
+                document.getElementById('year').textContent = new Date().getFullYear();
+                this.setupCards();
+            },
+
+            setupCards() {
+                const stack = document.getElementById('card-stack');
+                stack.innerHTML = '';
+                
+                this.issues.forEach((issue, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'issue-card';
+                    card.id = `card-${index}`;
+                    card.style.zIndex = this.issues.length - index;
+                    card.innerHTML = `<h3>${issue}</h3>`;
+                    
+                    // Touch events for swiping
+                    card.addEventListener('touchstart', (e) => this.touchStart(e), {passive: true});
+                    card.addEventListener('touchend', (e) => this.touchEnd(e), {passive: true});
+                    
+                    // Mouse events for desktop
+                    card.addEventListener('mousedown', (e) => this.mouseStart(e));
+                    
+                    stack.appendChild(card);
+                });
+            },
+
+            start() {
+                this.switchScreen('screen-swipe');
+                this.updateProgress();
+            },
+
+            switchScreen(id) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+            },
+
+            updateProgress() {
+                const fill = document.getElementById('progress-fill');
+                const percent = (this.currentIndex / this.issues.length) * 100;
+                fill.style.width = `${percent}%`;
+            },
+
+            handleAnswer(value) {
+                if (this.currentIndex >= this.issues.length) return;
+
+                this.userAnswers.push(value);
+                this.animateCardOut(value);
+                
+                this.currentIndex++;
+                this.updateProgress();
+
+                if (this.currentIndex === this.issues.length) {
+                    setTimeout(() => this.showResults(), 500);
+                }
+            },
+
+            animateCardOut(value) {
+                const card = document.getElementById(`card-${this.currentIndex}`);
+                if (!card) return;
+
+                const xOffset = value === 1 ? 500 : -500;
+                const rotation = value === 1 ? 20 : -20;
+
+                card.style.transform = `translateX(${xOffset}px) rotate(${rotation}deg)`;
+                card.style.opacity = '0';
+                card.style.pointerEvents = 'none';
+            },
+
+            // Interaction Logic
+            touchStart(e) {
+                this.touchStartX = e.changedTouches[0].screenX;
+            },
+
+            touchEnd(e) {
+                this.touchEndX = e.changedTouches[0].screenX;
+                this.handleSwipe();
+            },
+
+            mouseStart(e) {
+                this.touchStartX = e.screenX;
+                const moveHandler = (moveEvent) => {
+                    const card = document.getElementById(`card-${this.currentIndex}`);
+                    if (card) {
+                        const diff = moveEvent.screenX - this.touchStartX;
+                        card.style.transform = `translateX(${diff}px) rotate(${diff/10}deg)`;
+                    }
+                };
+                const upHandler = (upEvent) => {
+                    this.touchEndX = upEvent.screenX;
+                    this.handleSwipe();
+                    window.removeEventListener('mousemove', moveHandler);
+                    window.removeEventListener('mouseup', upHandler);
+                };
+                window.addEventListener('mousemove', moveHandler);
+                window.addEventListener('mouseup', upHandler);
+            },
+
+            handleSwipe() {
+                const threshold = 100;
+                const diff = this.touchEndX - this.touchStartX;
+
+                if (Math.abs(diff) > threshold) {
+                    this.handleAnswer(diff > 0 ? 1 : 0);
+                } else {
+                    // Reset card position
+                    const card = document.getElementById(`card-${this.currentIndex}`);
+                    if (card) card.style.transform = 'translateX(0) rotate(0)';
+                }
+            },
+
+            showResults() {
+                this.switchScreen('screen-results');
+                
+                const matches = this.candidates.map(candidate => {
+                    let score = 0;
+                    candidate.stances.forEach((stance, idx) => {
+                        if (stance === this.userAnswers[idx]) score++;
+                    });
+                    return {
+                        ...candidate,
+                        matchPercent: Math.round((score / this.issues.length) * 100)
+                    };
+                });
+
+                // Sort by highest match
+                matches.sort((a, b) => b.matchPercent - a.matchPercent);
+
+                const best = matches[0];
+                document.getElementById('best-match-name').textContent = best.name;
+                document.getElementById('best-match-percent').textContent = `${best.matchPercent}%`;
+
+                const listContainer = document.getElementById('all-candidates');
+                listContainer.innerHTML = '<h3 style="margin-bottom: 1rem; font-size: 1rem; color: var(--text-muted);">All Candidates:</h3>';
+                
+                matches.forEach(c => {
+                    const item = document.createElement('div');
+                    item.className = 'candidate-item';
+                    item.innerHTML = `
+                        <div class="candidate-info">
+                            <h4>${c.name}</h4>
+                            <p>${c.description}</p>
+                        </div>
+                        <div class="match-score">${c.matchPercent}%</div>
+                    `;
+                    listContainer.appendChild(item);
+                });
+
+                this.showToast(`Matched with ${best.name}!`);
+            },
+
+            showToast(msg) {
+                const toast = document.getElementById('toast');
+                toast.textContent = msg;
+                toast.style.opacity = '1';
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                }, 3000);
+            }
+        };
+
+        window.onload = () => app.init();
+    </script>
+</body>
+</html>

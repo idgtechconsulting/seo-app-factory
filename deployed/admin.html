@@ -101,6 +101,15 @@
 </head>
 <body>
 
+<div id="local-banner" style="display:none;background:#1a1a2e;border-bottom:2px solid #6c63ff;padding:10px 20px;text-align:center;font-family:system-ui,sans-serif;font-size:13px;color:#a0a3b5">
+  📡 For live pipeline data, open this dashboard at <a href="http://localhost:4000/admin" style="color:#6c63ff">http://localhost:4000/admin</a>
+</div>
+<script>
+  if(window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    document.getElementById('local-banner').style.display = 'block';
+  }
+</script>
+
 <!-- Auth Screen -->
 <div id="auth-screen">
   <div class="auth-box">
@@ -238,7 +247,9 @@
 </div>
 
 <script>
-const BRIDGE = 'http://localhost:4000';
+const BRIDGE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? '' // relative URLs when served from bridge
+  : 'http://localhost:4000'; // fallback for direct file access
 const BASE_URL = 'https://freetoolbox.tools';
 const CORRECT_PW = 'ginga2026';
 

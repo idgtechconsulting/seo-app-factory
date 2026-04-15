@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Pricing Comparison Matrix Generator | Professional Feature Checklist Tool</title>
+    <meta name="description" content="Create professional SaaS pricing comparison matrices side-by-side. Easily compare software features, products, and pricing plans for B2B buyers and researchers.">
+    <meta name="keywords" content="SaaS Pricing Comparison Matrix, feature comparison table, software comparison tool, B2B pricing matrix, feature checklist generator">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="SaaS Pricing Comparison Matrix Generator">
+    <meta property="og:description" content="Stop switching tabs. Create a professional side-by-side feature comparison table for your software research or pricing page.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/saas-pricing-comparison-matrix-generator.html">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://freetoolbox.tools/apps/saas-pricing-comparison-matrix-generator.html">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SaaS Pricing Comparison Matrix Generator",
+      "description": "A tool for B2B buyers and software researchers to create clean, professional feature comparison tables.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 4rem;
+        }
+
+        /* Layout */
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 350px 1fr;
+                align-items: start;
+            }
+        }
+
+        /* Components */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.625rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 0.625rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: var(--bg-main); }
+        .btn-danger { background: #fee2e2; color: var(--danger); }
+        .btn-danger:hover { background: #fecaca; }
+        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            gap: 0.5rem;
+        }
+
+        .list-item:last-child { border-bottom: none; }
+
+        /* Editor Grid */
+        .editor-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+
+        .matrix-table th, .matrix-table td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .matrix-table th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .checkbox-cell {
+            text-align: center;
+            width: 60px;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        /* Preview Table Styles */
+        .preview-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        .final-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .final-table th {
+            background: #f8fafc;
+            padding: 1.25rem;
+            font-size: 1.125rem;
+            border-bottom: 2px solid var(--border);
+            text-align: center;
+        }
+
+        .final-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .final-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            width: 30%;
+            background: #fcfcfc;
+        }
+
+        .icon-check {
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .icon-cross {
+            color: #cbd5e1;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        /* Toast Notification */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: #1e293b;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            margin-top: 0.5rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Print Styles */
+        @media print {
+            header, .config-panel, .btn, .input-group, #toast-container {
+                display: none !important;
+            }
+            body { background: white; }
+            main { display: block; }
+            .preview-container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+            }
+            .final-table { border: 1px solid #000; }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>SaaS Pricing Comparison Matrix</h1>
+        <p>Create a professional, side-by-side feature checklist to simplify B2B software research and purchasing decisions.</p>
+    </header>
+
+    <main>
+        <!-- Configuration Panel -->
+        <section class="config-panel">
+            <div class="card">
+                <div class="card-title">
+                    Products (Columns)
+                    <span id="product-count" class="btn btn-outline btn-sm">0</span>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="product-input" placeholder="e.g. Basic Plan, Pro Plan..." aria-label="Product Name">
+                    <button class="btn btn-primary" onclick="app.addProduct()" aria-label="Add Product">Add</button>
+                </div>
+                <div id="product-list"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Features (Rows)
+                    <span id="feature-count" class="btn btn-outline btn-sm">0</span>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="feature-input" placeholder="e.g. API Access, 24/7 Support..." aria-label="Feature Name">
+                    <button class="btn btn-primary" onclick="app.addFeature()" aria-label="Add Feature">Add</button>
+                </div>
+                <div id="feature-list"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Actions</div>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <button class="btn btn-outline" onclick="app.printTable()">
+                        🖨️ Print / Save as PDF
+                    </button>
+                    <button class="btn btn-danger" onclick="app.resetAll()">
+                        🗑️ Reset All Data
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Editor and Preview Section -->
+        <section class="display-panel">
+            <div class="card">
+                <div class="card-title">Matrix Editor</div>
+                <div class="editor-container" id="editor-container">
+                    <div class="empty-state">Add products and features to start building your matrix.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Final Preview</div>
+                <div class="preview-container" id="preview-container">
+                    <div class="empty-state">Your professional comparison table will appear here.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <script>
+        const app = {
+            state: {
+                products: [],
+                features: [],
+                matrix: {} // Key format: "productIndex-featureIndex"
+            },
+
+            init() {
+                this.loadData();
+                this.renderAll();
+            },
+
+            // Data Management
+            addProduct() {
+                const input = document.getElementById('product-input');
+                const val = input.value.trim();
+                if (!val) return this.showToast('Please enter a product name');
+                
+                this.state.products.push(val);
+                input.value = '';
+                this.saveData();
+                this.renderAll();
+            },
+
+            removeProduct(index) {
+                this.state.products.splice(index, 1);
+                // Clean up matrix data for this product
+                Object.keys(this.state.matrix).forEach(key => {
+                    if (key.startsWith(`${index}-`)) delete this.state.matrix[key];
+                });
+                // Shift indices for remaining products
+                const newMatrix = {};
+                Object.keys(this.state.matrix).forEach(key => {
+                    const [pIdx, fIdx] = key.split('-');
+                    let newPIdx = parseInt(pIdx);
+                    if (newPIdx > index) newPIdx--;
+                    newMatrix[`${newPIdx}-${fIdx}`] = this.state.matrix[key];
+                });
+                this.state.matrix = newMatrix;
+                this.saveData();
+                this.renderAll();
+            },
+
+            addFeature() {
+                const input = document.getElementById('feature-input');
+                const val = input.value.trim();
+                if (!val) return this.showToast('Please enter a feature name');
+                
+                this.state.features.push(val);
+                input.value = '';
+                this.saveData();
+                this.renderAll();
+            },
+
+            removeFeature(index) {
+                this.state.features.splice(index, 1);
+                // Clean up matrix data for this feature
+                Object.keys(this.state.matrix).forEach(key => {
+                    if (key.endsWith(`-${index}`)) delete this.state.matrix[key];
+                });
+                // Shift indices for remaining features
+                const newMatrix = {};
+                Object.keys(this.state.matrix).forEach(key => {
+                    const [pIdx, fIdx] = key.split('-');
+                    let newFIdx = parseInt(fIdx);
+                    if (newFIdx > index) newFIdx--;
+                    newMatrix[`${pIdx}-${newFIdx}`] = this.state.matrix[key];
+                });
+                this.state.matrix = newMatrix;
+                this.saveData();
+                this.renderAll();
+            },
+
+            toggleCell(pIdx, fIdx) {
+                const key = `${pIdx}-${fIdx}`;
+                this.state.matrix[key] = !this.state.matrix[key];
+                this.saveData();
+                this.renderPreview();
+            },
+
+            resetAll() {
+                if (confirm('Are you sure you want to clear all data?')) {
+                    this.state = { products: [], features: [], matrix: {} };
+                    this.saveData();
+                    this.renderAll();
+                    this.showToast('All data cleared');
+                }
+            },
+
+            saveData() {
+                localStorage.setItem('saas_matrix_data', JSON.stringify(this.state));
+            },
+
+            loadData() {
+                const saved = localStorage.getItem('saas_matrix_data');
+                if (saved) {
+                    try {
+                        this.state = JSON.parse(saved);
+                    } catch (e) {
+                        console.error('Failed to load saved data');
+                    }
+                }
+            },
+
+            // Rendering
+            renderAll() {
+                this.renderLists();
+                this.renderEditor();
+                this.renderPreview();
+            },
+
+            renderLists() {
+                const pList = document.getElementById('product-list');
+                const fList = document.getElementById('feature-list');
+                const pCount = document.getElementById('product-count');
+                const fCount = document.getElementById('feature-count');
+
+                pCount.textContent = this.state.products.length;
+                fCount.textContent = this.state.features.length;
+
+                pList.innerHTML = this.state.products.map((p, i) => `
+                    <div class="list-item">
+                        <span>${this.escapeHtml(p)}</span>
+                        <button class="btn btn-danger btn-sm" onclick="app.removeProduct(${i})" aria-label="Remove Product">×</button>
+                    </div>
+                `).join('');
+
+                fList.innerHTML = this.state.features.map((f, i) => `
+                    <div class="list-item">
+                        <span>${this.escapeHtml(f)}</span>
+                        <button class="btn btn-danger btn-sm" onclick="app.removeFeature(${i})" aria-label="Remove Feature">×</button>
+                    </div>
+                `).join('');
+            },
+
+            renderEditor() {
+                const container = document.getElementById('editor-container');
+                if (this.state.products.length === 0 || this.state.features.length === 0) {
+                    container.innerHTML = '<div class="empty-state">Add products and features to start building your matrix.</div>';
+                    return;
+                }
+
+                let html = `<table class="matrix-table"><thead><tr><th>Features</th>`;
+                this.state.products.forEach(p => {
+                    html += `<th>${this.escapeHtml(p)}</th>`;
+                });
+                html += `</tr></thead><tbody>`;
+
+                this.state.features.forEach((f, fIdx) => {
+                    html += `<tr><td><strong>${this.escapeHtml(f)}</strong></td>`;
+                    this.state.products.forEach((p, pIdx) => {
+                        const checked = this.state.matrix[`${pIdx}-${fIdx}`] ? 'checked' : '';
+                        html += `<td class="checkbox-cell"><input type="checkbox" class="custom-checkbox" ${checked} onchange="app.toggleCell(${pIdx}, ${fIdx})"></td>`;
+                    });
+                    html += `</tr>`;
+                });
+
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            },
+
+            renderPreview() {
+                const container = document.getElementById('preview-container');
+                if (this.state.products.length === 0 || this.state.features.length === 0) {
+                    container.innerHTML = '<div class="empty-state">Your professional comparison table will appear here.</div>';
+                    return;
+                }
+
+                let html = `<table class="final-table"><thead><tr><th>Feature</th>`;
+                this.state.products.forEach(p => {
+                    html += `<th>${this.escapeHtml(p)}</th>`;
+                });
+                html += `</tr></thead><tbody>`;
+
+                this.state.features.forEach((f, fIdx) => {
+                    html += `<tr><td>${this.escapeHtml(f)}</td>`;
+                    this.state.products.forEach((p, pIdx) => {
+                        const isChecked = this.state.matrix[`${pIdx}-${fIdx}`];
+                        html += `<td>${isChecked ? '<span class="icon-check">✓</span>' : '<span class="icon-cross">✕</span>'}</td>`;
+                    });
+                    html += `</tr>`;
+                });
+
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            },
+
+            printTable() {
+                window.print();
+            },
+
+            // Utilities
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            showToast(msg) {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = msg;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(100%)';
+                    toast.style.transition = 'all 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+        };
+
+        // Initialize the app
+        window.onload = () => app.init();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/shopify-shipping-profit-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Shopify Shipping Profit Calculator</a>
+    <a href="https://freetoolbox.tools/apps/fabric-yardage-pattern-waste-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Fabric Yardage &amp; Pattern Waste Calculator</a>
+    <a href="https://freetoolbox.tools/apps/fha-loan-pmi-breakeven-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">FHA Loan PMI Breakeven Calculator</a>
+    <a href="https://freetoolbox.tools/apps/svg-path-data-visualizer.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">SVG Path Data Visualizer - Instant Path Rendering Tool</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 45 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

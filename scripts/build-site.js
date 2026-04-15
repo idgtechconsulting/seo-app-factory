@@ -167,7 +167,10 @@ function main() {
     const html = fs.readFileSync(srcPath, 'utf8');
     const { title, description } = extractMeta(html);
 
-    let slug = title ? titleToSlug(title) : path.basename(filename, '.html').slice(0, 40);
+    // Strip title bloat (subtitle after | or —)
+    const cleanTitle = title ? title.split(/\s*[|]\s*|\s+—\s+/)[0].trim() : null;
+
+    let slug = cleanTitle ? titleToSlug(cleanTitle) : path.basename(filename, '.html').slice(0, 40);
     if (!slug) slug = path.basename(filename, '.html').slice(0, 40);
 
     if (slugsSeen.has(slug)) {
@@ -177,8 +180,8 @@ function main() {
     }
     slugsSeen.add(slug);
 
-    const category = inferCategory(title || '', description || '');
-    apps.push({ slug, title: title || slug, description: description || '', filename, category, srcPath, html });
+    const category = inferCategory(cleanTitle || title || '', description || '');
+    apps.push({ slug, title: cleanTitle || title || slug, description: description || '', filename, category, srcPath, html });
   }
 
   apps.sort((a, b) => a.title.localeCompare(b.title));

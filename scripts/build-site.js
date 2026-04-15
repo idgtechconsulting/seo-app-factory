@@ -240,7 +240,7 @@ function main() {
         <article class="card">
           <h2><a href="apps/${app.slug}.html">${escHtml(app.title)}</a></h2>
           <p>${escHtml(app.description)}</p>
-          <a class="btn" href="apps/${app.slug}.html">Open Tool →</a>
+          <a class="btn" href="apps/${app.slug}.html" aria-label="Open ${escHtml(app.title)}">${escHtml(app.title)} →</a>
         </article>`).join('');
       return `
   <section class="category-section" id="cat-${cat}">
@@ -254,7 +254,7 @@ function main() {
       <article class="card" data-category="${app.category}">
         <h2><a href="apps/${app.slug}.html">${escHtml(app.title)}</a></h2>
         <p>${escHtml(app.description)}</p>
-        <a class="btn" href="apps/${app.slug}.html">Open Tool →</a>
+        <a class="btn" href="apps/${app.slug}.html" aria-label="Open ${escHtml(app.title)}">${escHtml(app.title)} →</a>
       </article>`).join('\n');
 
   // ── FAQ ───────────────────────────────────────────────────────────────────

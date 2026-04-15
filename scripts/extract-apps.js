@@ -69,9 +69,9 @@ async function main() {
   // Fetch all issues
   const issues = await fetchJSON(`${PAPERCLIP_BASE}/api/companies/${companyId}/issues`);
 
-  // Filter: status "in_progress" and title starts with "Build"
+  // Filter: status "in_progress" or "done" and title starts with "Build"
   const appIssues = issues.filter(issue =>
-    issue.status === 'in_progress' &&
+    (issue.status === 'in_progress' || issue.status === 'done') &&
     /^Build\b/i.test(issue.title)
   );
 

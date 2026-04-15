@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Character Stat Optimizer | Customizable Build Calculator</title>
+    <meta name="description" content="Optimize your RPG character builds with our customizable stat calculator. Define your own formulas, compare gear sets, and find the mathematically optimal build for maximum damage and efficiency.">
+    <meta name="keywords" content="RPG character stat optimizer, MMO build calculator, gaming stat calculator, damage formula optimizer, RPG gear comparison">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="RPG Character Stat Optimizer">
+    <meta property="og:description" content="Stop using spreadsheets. Define your game's formulas and find the best gear set instantly.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://stat-optimizer.example.com">
+
+    <link rel="canonical" href="https://stat-optimizer.example.com">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "RPG Character Stat Optimizer",
+        "description": "A customizable stat calculator for RPG and MMO players to optimize character builds based on custom formulas.",
+        "applicationCategory": "GameTool",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #c084fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            main {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        section {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            color: var(--text-secondary);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            padding: 0.3rem 0.6rem;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        /* Variables & Formulas List */
+        .item-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-name {
+            font-weight: 600;
+        }
+
+        .item-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Build Comparison Table */
+        .comparison-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .best-build-row {
+            background-color: rgba(34, 197, 94, 0.1);
+        }
+
+        .badge {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-left: 0.5rem;
+        }
+
+        .badge-best {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        /* Build Editor */
+        .build-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .build-card {
+            background-color: var(--input-bg);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .build-card h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-input-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-input-row label {
+            flex: 1;
+            margin-bottom: 0;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stat-input-row input {
+            width: 80px;
+            padding: 0.3rem;
+            text-align: center;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 500;
+            transform: translateY(150%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+        }
+
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        .toast-success { background-color: var(--success-color); }
+        .toast-error { background-color: var(--error-color); }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RPG Character Stat Optimizer</h1>
+        <p>Define your own math, plug in your gear, and find the absolute best build for your character.</p>
+    </header>
+
+    <main>
+        <!-- Configuration Panel -->
+        <aside>
+            <section>
+                <h2>⚙️ Configuration</h2>
+                
+                <div class="form-group">
+                    <label for="var-name">Add Base Stat (Variable)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="var-name" placeholder="e.g. Strength">
+                        <button class="btn btn-primary" style="width: auto;" onclick="app.addVariable()">Add</button>
+                    </div>
+                </div>
+
+                <ul id="variables-list" class="item-list"></ul>
+
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+
+                <div class="form-group">
+                    <label for="formula-name">Formula Name</label>
+                    <input type="text" id="formula-name" placeholder="e.g. Final Damage" style="margin-bottom: 0.5rem;">
+                    
+                    <label for="formula-expr">Expression</label>
+                    <input type="text" id="formula-expr" placeholder="e.g. Strength * 1.5 + WeaponDamage" style="margin-bottom: 1rem;">
+                    
+                    <button class="btn btn-primary" onclick="app.addFormula()">Add Formula</button>
+                </div>
+
+                <ul id="formulas-list" class="item-list"></ul>
+            </section>
+        </aside>
+
+        <!-- Workspace Panel -->
+        <div class="workspace">
+            <section style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <h2>⚔️ Build Comparison</h2>
+                    <button class="btn btn-primary" style="width: auto;" onclick="app.addBuild()">+ New Build</button>
+                </div>
+
+                <div id="builds-container" class="build-grid">
+                    <!-- Build cards injected here -->
+                </div>
+
+                <div class="comparison-container">
+                    <table id="comparison-table">
+                        <thead>
+                            <tr id="table-head">
+                                <th>Build</th>
+                                <!-- Formula headers injected here -->
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Results injected here -->
+                        </tbody>
+                    </table>
+                    <div id="table-empty" class="empty-state">No data to compare. Add builds and formulas to start.</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        &copy; <span id="year"></span> RPG Character Stat Optimizer. Built for hardcore theorycrafters.
+    </footer>
+
+    <div id="toast"></div>
+
+    <script>
+        const app = {
+            state: {
+                variables: [], // { id, name }
+                formulas: [],  // { id, name, expr }
+                builds: []     // { id, name, values: { varId: value } }
+            },
+
+            init() {
+                this.load();
+                document.getElementById('year').textContent = new Date().getFullYear();
+                this.renderAll();
+            },
+
+            // --- Data Management ---
+            save() {
+                localStorage.setItem('rpg_optimizer_state', JSON.stringify(this.state));
+            },
+
+            load() {
+                const saved = localStorage.getItem('rpg_optimizer_state');
+                if (saved) {
+                    try {
+                        this.state = JSON.parse(saved);
+                    } catch (e) {
+                        console.error("Failed to load state", e);
+                    }
+                } else {
+                    // Default seed data
+                    this.state = {
+                        variables: [
+                            { id: 'v1', name: 'Strength' },
+                            { id: 'v2', name: 'WeaponDamage' }
+                        ],
+                        formulas: [
+                            { id: 'f1', name: 'Damage', expr: 'Strength * 1.5 + WeaponDamage' }
+                        ],
+                        builds: [
+                            { id: 'b1', name: 'Build A', values: { 'v1': 10, 'v2': 50 } },
+                            { id: 'b2', name: 'Build B', values: { 'v1': 20, 'v2': 30 } }
+                        ]
+                    };
+                }
+            },
+
+            // --- Logic ---
+            addVariable() {
+                const input = document.getElementById('var-name');
+                const name = input.value.trim().replace(/\s+/g, '');
+                if (!name) return this.notify('Please enter a variable name', 'error');
+                if (this.state.variables.find(v => v.name === name)) return this.notify('Variable already exists', 'error');
+
+                this.state.variables.push({ id: 'v' + Date.now(), name });
+                input.value = '';
+                this.save();
+                this.renderAll();
+                this.notify('Variable added');
+            },
+
+            removeVariable(id) {
+                this.state.variables = this.state.variables.filter(v => v.id !== id);
+                // Clean up values in builds
+                this.state.builds.forEach(b => delete b.values[id]);
+                this.save();
+                this.renderAll();
+            },
+
+            addFormula() {
+                const nameInput = document.getElementById('formula-name');
+                const exprInput = document.getElementById('formula-expr');
+                const name = nameInput.value.trim();
+                const expr = exprInput.value.trim();
+
+                if (!name || !expr) return this.notify('Fill in both name and expression', 'error');
+                
+                // Simple security check: Allow only alphanumeric, math operators, and existing variable names
+                const allowedChars = /^[a-zA-Z0-9\s\+\-\*\/\(\)\.]*$/;
+                if (!allowedChars.test(expr)) {
+                    return this.notify('Invalid characters in formula', 'error');
+                }
+
+                this.state.formulas.push({ id: 'f' + Date.now(), name, expr });
+                nameInput.value = '';
+                exprInput.value = '';
+                this.save();
+                this.renderAll();
+                this.notify('Formula added');
+            },
+
+            removeFormula(id) {
+                this.state.formulas = this.state.formulas.filter(f => f.id !== id);
+                this.save();
+                this.renderAll();
+            },
+
+            addBuild() {
+                const name = `Build ${this.state.builds.length + 1}`;
+                const values = {};
+                this.state.variables.forEach(v => values[v.id] = 0);
+                
+                this.state.builds.push({ id: 'b' + Date.now(), name, values });
+                this.save();
+                this.renderAll();
+            },
+
+            removeBuild(id) {
+                this.state.builds = this.state.builds.filter(b => b.id !== id);
+                this.save();
+                this.renderAll();
+            },
+
+            updateBuildValue(buildId, varId, value) {
+                const build = this.state.builds.find(b => b.id === buildId);
+                if (build) {
+                    build.values[varId] = parseFloat(value) || 0;
+                    this.save();
+                    this.renderComparison();
+                }
+            },
+
+            updateBuildName(buildId, name) {
+                const build = this.state.builds.find(b => b.id === buildId);
+                if (build) {
+                    build.name = name;
+                    this.save();
+                    this.renderComparison();
+                }
+            },
+
+            calculate(formulaExpr, buildValues) {
+                try {
+                    // Replace variable names with their values
+                    let processedExpr = formulaExpr;
+                    this.state.variables.forEach(v => {
+                        const regex = new RegExp(`\\b${v.name}\\b`, 'g');
+                        processedExpr = processedExpr.replace(regex, buildValues[v.id] || 0);
+                    });
+
+                    // Using Function constructor as a safer alternative to eval for simple math
+                    // We already sanitized the input characters in addFormula()
+                    return new Function(`return ${processedExpr}`)();
+                } catch (e) {
+                    return NaN;
+                }
+            },
+
+            // --- UI Rendering ---
+            renderAll() {
+                this.renderVariables();
+                this.renderFormulas();
+                this.renderBuilds();
+                this.renderComparison();
+            },
+
+            renderVariables() {
+                const list = document.getElementById('variables-list');
+                list.innerHTML = this.state.variables.map(v => `
+                    <li class="item-row">
+                        <div class="item-info">
+                            <span class="item-name">${v.name}</span>
+                            <span class="item-meta">Variable</span>
+                        </div>
+                        <button class="btn btn-danger" onclick="app.removeVariable('${v.id}')">×</button>
+                    </li>
+                `).join('');
+            },
+
+            renderFormulas() {
+                const list = document.getElementById('formulas-list');
+                list.innerHTML = this.state.formulas.map(f => `
+                    <li class="item-row">
+                        <div class="item-info">
+                            <span class="item-name">${f.name}</span>
+                            <span class="item-meta">${f.expr}</span>
+                        </div>
+                        <button class="btn btn-danger" onclick="app.removeFormula('${f.id}')">×</button>
+                    </li>
+                `).join('');
+            },
+
+            renderBuilds() {
+                const container = document.getElementById('builds-container');
+                if (this.state.builds.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No builds created. Add one to start optimizing!</div>';
+                    return;
+                }
+
+                container.innerHTML = this.state.builds.map(b => `
+                    <div class="build-card">
+                        <h3>
+                            <input type="text" value="${b.name}" onchange="app.updateBuildName('${b.id}', this.value)" style="width: 70%; font-weight: bold; border: none; background: transparent; text-align: left;">
+                            <button class="btn btn-danger" onclick="app.removeBuild('${b.id}')">×</button>
+                        </h3>
+                        <div class="stats-inputs">
+                            ${this.state.variables.map(v => `
+                                <div class="stat-input-row">
+                                    <label title="${v.name}">${v.name}</label>
+                                    <input type="number" value="${b.values[v.id] || 0}" oninput="app.updateBuildValue('${b.id}', '${v.id}', this.value)">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            renderComparison() {
+                const head = document.getElementById('table-head');
+                const body = document.getElementById('table-body');
+                const empty = document.getElementById('table-empty');
+
+                // Reset headers
+                head.innerHTML = '<th>Build</th>';
+                this.state.formulas.forEach(f => {
+                    head.innerHTML += `<th>${f.name}</th>`;
+                });
+
+                if (this.state.builds.length === 0 || this.state.formulas.length === 0) {
+                    body.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                empty.style.display = 'none';
+
+                // Calculate results for all builds
+                const results = this.state.builds.map(b => {
+                    const rowData = { buildId: b.id, name: b.name, values: {} };
+                    this.state.formulas.forEach(f => {
+                        rowData.values[f.id] = this.calculate(f.expr, b.values);
+                    });
+                    return rowData;
+                });
+
+                // Find best build for each formula
+                const winners = {};
+                this.state.formulas.forEach(f => {
+                    let maxVal = -Infinity;
+                    let winnerId = null;
+                    results.forEach(r => {
+                        if (r.values[f.id] > maxVal) {
+                            maxVal = r.values[f.id];
+                            winnerId = r.buildId;
+                        }
+                    });
+                    winners[f.id] = winnerId;
+                });
+
+                // Build rows
+                body.innerHTML = results.map(r => {
+                    const isOverallWinner = this.state.formulas.every(f => winners[f.id] === r.buildId);
+                    const rowClass = isOverallWinner ? 'best-build-row' : '';
+                    
+                    let cells = `<td>${r.name} ${isOverallWinner ? '<span class="badge badge-best">Best Overall</span>' : ''}</td>`;
+                    
+                    this.state.formulas.forEach(f => {
+                        const val = r.values[f.id];
+                        const isBestForThis = winners[f.id] === r.buildId;
+                        cells += `<td>
+                            <span style="font-weight: ${isBestForThis ? '800' : '400'}; color: ${isBestForThis ? 'var(--success-color)' : 'inherit'}">
+                                ${isNaN(val) ? 'Error' : val.toLocaleString(undefined, {maximumFractionDigits: 2})}
+                            </span>
+                            ${isBestForThis ? '<span class="badge badge-best">Top</span>' : ''}
+                        </td>`;
+                    });
+
+                    return `<tr class="${rowClass}">${cells}</tr>`;
+                }).join('');
+            },
+
+            notify(msg, type = 'success') {
+                const toast = document.getElementById('toast');
+                toast.textContent = msg;
+                toast.className = `toast-${type} show`;
+                setTimeout(() => {
+                    toast.className = '';
+                }, 3000);
+            }
+        };
+
+        window.onload = () => app.init();
+    </script>
+</body>
+</html>

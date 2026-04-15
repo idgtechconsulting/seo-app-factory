@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Workout Routine Generator - Custom Home Workouts</title>
+    <meta name="description" content="Generate a balanced, random home workout routine based on the equipment you have. Create custom Push/Pull/Legs routines instantly for free.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Random Workout Routine Generator">
+    <meta property="og:description" content="Stop guessing your workout. Generate a balanced routine based on your home equipment.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://freetoolbox.tools/apps/random-workout-routine-generator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Random Workout Routine Generator",
+      "description": "A tool to generate balanced home workout routines based on available equipment.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid #334155;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .config-card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .checkbox-wrapper:hover {
+            border-color: var(--primary);
+        }
+
+        .checkbox-wrapper.active {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-wrapper input {
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            background-color: var(--primary);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-generate:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-generate:active {
+            transform: translateY(0);
+        }
+
+        #workout-result {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .routine-category {
+            margin-bottom: 2rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            border-bottom: 2px solid #334155;
+            padding-bottom: 0.5rem;
+        }
+
+        .exercise-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .exercise-item {
+            background-color: var(--card-bg);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .exercise-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .exercise-info p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .exercise-meta {
+            text-align: right;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #0f172a;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid #334155;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--card-bg);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary);
+            transform: translateY(200%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.75rem; }
+            .exercise-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .exercise-meta {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+  <meta property="og:url" content="https://freetoolbox.tools/apps/random-workout-routine-generator.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>Workout Generator</h1>
+        <p class="subtitle">Get a balanced, random home routine based on the equipment you actually have.</p>
+    </header>
+
+    <main>
+        <section class="config-card">
+            <h2 class="section-title">Select Your Equipment</h2>
+            <div class="equipment-grid">
+                <label class="checkbox-wrapper" id="label-none">
+                    <input type="checkbox" value="none" checked>
+                    <span>Bodyweight Only</span>
+                </label>
+                <label class="checkbox-wrapper" id="label-dumbbells">
+                    <input type="checkbox" value="dumbbells">
+                    <span>Dumbbells</span>
+                </label>
+                <label class="checkbox-wrapper" id="label-pullup">
+                    <input type="checkbox" value="pullup">
+                    <span>Pull-up Bar</span>
+                </label>
+            </div>
+            <button class="btn-generate" id="generate-btn">Generate Routine</button>
+        </section>
+
+        <section id="workout-result">
+            <!-- Dynamic Content Here -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Workout Generator. Stay consistent, stay strong.</p>
+    </footer>
+
+    <div id="toast">Routine generated!</div>
+
+    <script>
+        // Exercise Library
+        const EXERCISES = {
+            push: [
+                { name: "Standard Push-ups", eq: "none", reps: "10-15", sets: "3" },
+                { name: "Diamond Push-ups", eq: "none", reps: "8-12", sets: "3" },
+                { name: "Chair Dips", eq: "none", reps: "10-15", sets: "3" },
+                { name: "Pike Push-ups", eq: "none", reps: "8-12", sets: "3" },
+                { name: "DB Chest Press", eq: "dumbbells", reps: "8-12", sets: "3" },
+                { name: "DB Shoulder Press", eq: "dumbbells", reps: "8-12", sets: "3" },
+                { name: "DB Lateral Raises", eq: "dumbbells", reps: "12-15", sets: "3" },
+                { name: "DB Floor Flys", eq: "dumbbells", reps: "10-12", sets: "3" },
+                { name: "DB Overhead Extension", eq: "dumbbells", reps: "10-12", sets: "3" }
+            ],
+            pull: [
+                { name: "Superman Holds", eq: "none", reps: "12-15", sets: "3" },
+                { name: "Doorway Rows", eq: "none", reps: "12-15", sets: "3" },
+                { name: "Pull-ups", eq: "pullup", reps: "Max", sets: "3" },
+                { name: "Chin-ups", eq: "pullup", reps: "Max", sets: "3" },
+                { name: "Hanging Leg Raises", eq: "pullup", reps: "10-12", sets: "3" },
+                { name: "DB Single Arm Row", eq: "dumbbells", reps: "8-12", sets: "3" },
+                { name: "DB Bicep Curls", eq: "dumbbells", reps: "10-12", sets: "3" },
+                { name: "DB Rear Delt Flys", eq: "dumbbells", reps: "12-15", sets: "3" },
+                { name: "DB Hammer Curls", eq: "dumbbells", reps: "10-12", sets: "3" }
+            ],
+            legs: [
+                { name: "Air Squats", eq: "none", reps: "15-20", sets: "3" },
+                { name: "Walking Lunges", eq: "none", reps: "12 per leg", sets: "3" },
+                { name: "Glute Bridges", eq: "none", reps: "15-20", sets: "3" },
+                { name: "Bulgarian Split Squats", eq: "none", reps: "10 per leg", sets: "3" },
+                { name: "DB Goblet Squats", eq: "dumbbells", reps: "10-12", sets: "3" },
+                { name: "DB Romanian Deadlifts", eq: "dumbbells", reps: "10-12", sets: "3" },
+                { name: "DB Weighted Lunges", eq: "dumbbells", reps: "10 per leg", sets: "3" },
+                { name: "DB Calf Raises", eq: "dumbbells", reps: "15-20", sets: "3" }
+            ]
+        };
+
+        // Utility for cryptographically secure random number
+        function secureRandomInt(max) {
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array);
+            return array[0] % max;
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function updateCheckboxStyles() {
+            document.querySelectorAll('.checkbox-wrapper').forEach(wrapper => {
+                const input = wrapper.querySelector('input');
+                if (input.checked) {
+                    wrapper.classList.add('active');
+                } else {
+                    wrapper.classList.remove('active');
+                }
+            });
+        }
+
+        function generateWorkout() {
+            const selectedEq = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+                                    .map(cb => cb.value);
+            
+            if (selectedEq.length === 0) {
+                showToast("Please select at least one equipment option!");
+                return;
+            }
+
+            const resultContainer = document.getElementById('workout-result');
+            resultContainer.innerHTML = '';
+            resultContainer.style.display = 'block';
+
+            const categories = [
+                { id: 'push', label: 'Push (Chest, Shoulders, Triceps)', icon: '💪' },
+                { id: 'pull', label: 'Pull (Back, Biceps, Core)', icon: '🧗' },
+                { id: 'legs', label: 'Legs (Quads, Hamstrings, Calves)', icon: '🦵' }
+            ];
+
+            categories.forEach(cat => {
+                // Filter exercises by selected equipment
+                const pool = EXERCISES[cat.id].filter(ex => selectedEq.includes(ex.eq));
+                
+                if (pool.length === 0) return;
+
+                // Pick 2-3 random exercises from the filtered pool
+                const numToPick = Math.min(pool.length, 2 + (secureRandomInt(2))); // 2 or 3
+                const selectedExercises = [];
+                const tempPool = [...pool];
+
+                for (let i = 0; i < numToPick; i++) {
+                    const randomIndex = secureRandomInt(tempPool.length);
+                    selectedExercises.push(tempPool.splice(randomIndex, 1)[0]);
+                }
+
+                // Build HTML
+                const catSection = document.createElement('div');
+                catSection.className = 'routine-category';
+                
+                let exercisesHTML = selectedExercises.map(ex => `
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <h3>${ex.name}</h3>
+                            <p>${ex.eq === 'none' ? 'Bodyweight' : ex.eq.charAt(0).toUpperCase() + ex.eq.slice(1)}</p>
+                        </div>
+                        <div class="exercise-meta">
+                            ${ex.sets} Sets × ${ex.reps}
+                        </div>
+                    </div>
+                `).join('');
+
+                catSection.innerHTML = `
+                    <div class="category-header">${cat.icon} ${cat.label}</div>
+                    <div class="exercise-list">${exercisesHTML}</div>
+                `;
+                
+                resultContainer.appendChild(catSection);
+            });
+
+            if (resultContainer.innerHTML === '') {
+                resultContainer.innerHTML = '<p style="text-align:center; color:var(--text-muted);">No exercises found for the selected equipment. Try adding more!</p>';
+            } else {
+                showToast("Routine generated successfully!");
+            }
+            
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Event Listeners
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', updateCheckboxStyles);
+        });
+
+        document.getElementById('generate-btn').addEventListener('click', generateWorkout);
+
+        // Initialize
+        document.getElementById('year').textContent = new Date().getFullYear();
+        updateCheckboxStyles();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/svg-path-data-visualizer.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">SVG Path Data Visualizer - Instant Path Rendering Tool</a>
+    <a href="https://freetoolbox.tools/apps/world-cup-match-conflict-checker.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">World Cup Match Conflict Checker</a>
+    <a href="https://freetoolbox.tools/apps/promptcompare.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">PromptCompare</a>
+    <a href="https://freetoolbox.tools/apps/wcag-non-text-contrast-checker.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">WCAG Non-Text Contrast Checker</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 104 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

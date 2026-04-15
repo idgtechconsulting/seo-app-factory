@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 US Midterm Candidate Stance Comparator | Compare Policy Side-by-Side</title>
+    <meta name="description" content="Easily compare candidate stances for the 2026 US Midterm elections. Paste policy bullet points and create a side-by-side comparison matrix for quick analysis and social sharing.">
+    <meta name="keywords" content="2026 US midterm candidate stance comparator, policy comparison tool, candidate stance matrix, voter guide tool, compare political platforms">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="2026 US Midterm Candidate Stance Comparator">
+    <meta property="og:description" content="The simplest way to compare political candidate platforms side-by-side. No more PDFs—just pure policy comparison.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://candidate-comparator.example.com">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://candidate-comparator.example.com">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "2026 US Midterm Candidate Stance Comparator",
+      "description": "A side-by-side comparison matrix for comparing political candidates' stances on various policy categories.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-red: #ef4444;
+            --accent-green: #22c55e;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 8px;
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.3s ease;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Controls */
+        .controls-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--border-color);
+        }
+
+        .btn-danger {
+            background-color: var(--accent-red);
+            color: white;
+        }
+
+        /* Setup Section */
+        .setup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--bg-main);
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Category Management */
+        .category-section {
+            margin-top: 2rem;
+        }
+
+        .category-item {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr 60px;
+            gap: 1rem;
+            align-items: start;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .category-item-label {
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Comparison Matrix View */
+        .matrix-view {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .matrix-table-container {
+            overflow-x: auto;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            table-layout: fixed;
+        }
+
+        th, td {
+            padding: 1.2rem;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+        }
+
+        .col-category {
+            width: 20%;
+            background-color: var(--bg-main);
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .col-candidate {
+            width: 40%;
+        }
+
+        .policy-text {
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+        }
+
+        /* Toast Notifications */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 1rem 1.5rem;
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            margin-top: 10px;
+            animation: slideIn 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .setup-grid {
+                grid-template-columns: 1fr;
+            }
+            .category-item {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            .category-item-label {
+                font-size: 1.1rem;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 0.5rem;
+            }
+            .col-category {
+                width: 30%;
+            }
+            th, td {
+                padding: 0.8rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Print/Screenshot Optimization */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+                color: black;
+            }
+            .matrix-table-container {
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+            th {
+                background-color: #eee !important;
+                color: black !important;
+                border: 1px solid #000;
+            }
+            td {
+                border: 1px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="no-print">
+        <div class="container">
+            <h1>2026 US Midterm Candidate Stance Comparator</h1>
+            <p class="subtitle">Compare policy bullet points side-by-side. Paste, compare, and share the facts.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="controls-bar no-print">
+            <button class="btn btn-outline" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle dark mode">🌙 Dark Mode</button>
+            <button class="btn btn-outline" onclick="clearAllData()" aria-label="Clear all data">🗑️ Reset</button>
+        </div>
+
+        <!-- Setup View -->
+        <section id="setup-view" class="no-print">
+            <div class="setup-grid">
+                <div class="card">
+                    <div class="form-group">
+                        <label for="candA-name">Candidate A Name</label>
+                        <input type="text" id="candA-name" placeholder="e.g. Jane Doe" oninput="saveState()">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label for="candB-name">Candidate B Name</label>
+                        <input type="text" id="candB-name" placeholder="e.g. John Smith" oninput="saveState()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 style="font-size: 1.25rem;">Policy Categories</h2>
+                    <button class="btn btn-primary" onclick="addCategory()">+ Add Category</button>
+                </div>
+                
+                <div id="categories-list">
+                    <!-- Dynamic Categories Here -->
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;" onclick="generateMatrix()">
+                    🚀 Generate Comparison Matrix
+                </button>
+            </div>
+        </section>
+
+        <!-- Matrix View -->
+        <section id="matrix-view" class="matrix-view">
+            <div class="controls-bar no-print">
+                <button class="btn btn-outline" onclick="showSetup()">⬅️ Back to Edit</button>
+                <button class="btn btn-primary" onclick="window.print()">📸 Save as PDF / Screenshot</button>
+            </div>
+
+            <div class="matrix-table-container">
+                <table id="comparison-table">
+                    <thead>
+                        <tr id="table-header">
+                            <!-- Dynamic Headers -->
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <p class="no-print" style="text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
+                Tip: Use <strong>Ctrl+P</strong> or <strong>Cmd+P</strong> and "Save as PDF" to export this comparison.
+            </p>
+        </section>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <script>
+        // --- State Management ---
+        let state = {
+            candidateA: '',
+            candidateB: '',
+            categories: [
+                { id: Date.now(), name: 'Healthcare', textA: '', textB: '' },
+                { id: Date.now() + 1, name: 'Economy', textA: '', textB: '' }
+            ]
+        };
+
+        // Load from LocalStorage
+        function loadState() {
+            const saved = localStorage.getItem('midterm_comparator_state');
+            if (saved) {
+                try {
+                    state = JSON.parse(saved);
+                    document.getElementById('candA-name').value = state.candidateA;
+                    document.getElementById('candB-name').value = state.candidateB;
+                    renderCategories();
+                } catch (e) {
+                    console.error("Failed to load state", e);
+                }
+            } else {
+                renderCategories();
+            }
+        }
+
+        function saveState() {
+            state.candidateA = document.getElementById('candA-name').value;
+            state.candidateB = document.getElementById('candB-name').value;
+            
+            // Update category values from inputs
+            const catElements = document.querySelectorAll('.category-item');
+            state.categories = Array.from(catElements).map(el => {
+                return {
+                    id: parseInt(el.dataset.id),
+                    name: el.querySelector('.cat-name').value,
+                    textA: el.querySelector('.text-a').value,
+                    textB: el.querySelector('.text-b').value
+                };
+            });
+
+            localStorage.setItem('midterm_comparator_state', JSON.stringify(state));
+        }
+
+        // --- Category Logic ---
+        function addCategory() {
+            state.categories.push({
+                id: Date.now(),
+                name: '',
+                textA: '',
+                textB: ''
+            });
+            renderCategories();
+            saveState();
+            showToast('Category added');
+        }
+
+        function removeCategory(id) {
+            state.categories = state.categories.filter(cat => cat.id !== id);
+            renderCategories();
+            saveState();
+            showToast('Category removed');
+        }
+
+        function renderCategories() {
+            const list = document.getElementById('categories-list');
+            list.innerHTML = '';
+
+            state.categories.forEach(cat => {
+                const div = document.createElement('div');
+                div.className = 'category-item';
+                div.dataset.id = cat.id;
+                div.innerHTML = `
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" class="cat-name" value="${cat.name}" placeholder="e.g. Education" oninput="saveState()">
+                    </div>
+                    <div class="form-group">
+                        <label>${state.candidateA || 'Candidate A'}</label>
+                        <textarea class="text-a" placeholder="Paste policy points..." oninput="saveState()">${cat.textA}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>${state.candidateB || 'Candidate B'}</label>
+                        <textarea class="text-b" placeholder="Paste policy points..." oninput="saveState()">${cat.textB}</textarea>
+                    </div>
+                    <div style="display: flex; align-items: center; height: 100%;">
+                        <button class="btn btn-danger" onclick="removeCategory(${cat.id})" aria-label="Remove category">✕</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        // --- View Logic ---
+        function generateMatrix() {
+            // Validation
+            if (state.categories.length === 0) {
+                showToast('Please add at least one category', 'error');
+                return;
+            }
+
+            const header = document.getElementById('table-header');
+            const body = document.getElementById('table-body');
+            
+            const candA = document.getElementById('candA-name').value || 'Candidate A';
+            const candB = document.getElementById('candB-name').value || 'Candidate B';
+
+            header.innerHTML = `
+                <th class="col-category">Policy Issue</th>
+                <th class="col-candidate">${candA}</th>
+                <th class="col-candidate">${candB}</th>
+            `;
+
+            body.innerHTML = '';
+            state.categories.forEach(cat => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="col-category">${cat.name || 'Unnamed Category'}</td>
+                    <td class="col-candidate"><div class="policy-text">${cat.textA || 'No data provided'}</div></td>
+                    <td class="col-candidate"><div class="policy-text">${cat.textB || 'No data provided'}</div></td>
+                `;
+                body.appendChild(row);
+            });
+
+            document.getElementById('setup-view').style.display = 'none';
+            document.getElementById('matrix-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function showSetup() {
+            document.getElementById('setup-view').style.display = 'block';
+            document.getElementById('matrix-view').style.display = 'none';
+        }
+
+        // --- Utilities ---
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-toggle');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                btn.innerText = '🌙 Dark Mode';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                btn.innerText = '☀️ Light Mode';
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all entered data?')) {
+                localStorage.removeItem('midterm_comparator_state');
+                state = {
+                    candidateA: '',
+                    candidateB: '',
+                    categories: [
+                        { id: Date.now(), name: 'Healthcare', textA: '', textB: '' },
+                        { id: Date.now() + 1, name: 'Economy', textA: '', textB: '' }
+                    ]
+                };
+                document.getElementById('candA-name').value = '';
+                document.getElementById('candB-name').value = '';
+                renderCategories();
+                showToast('Data reset successfully');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if (type === 'error') toast.style.borderLeftColor = 'var(--accent-red)';
+            toast.innerText = message;
+            toast.onclick = () => toast.remove();
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Initialize
+        window.onload = loadState;
+    </script>
+</body>
+</html>

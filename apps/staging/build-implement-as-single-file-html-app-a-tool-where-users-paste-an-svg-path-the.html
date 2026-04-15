@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Path Animation Generator</title>
+    <meta name="description" content="Easily generate CSS keyframes and stroke-dasharray values for SVG line-drawing animations. Paste your path data and get instant production-ready code.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="SVG Path Animation Generator">
+    <meta property="og:description" content="Calculate SVG path length and generate CSS drawing animations instantly.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/svg-path-animation-generator">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://example.com/svg-path-animation-generator">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SVG Path Animation Generator",
+      "description": "A tool for frontend developers to calculate SVG path lengths and generate CSS line-drawing animations.",
+      "applicationCategory": "DeveloperTool",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #f8fafc;
+            --accent: #10b981;
+            --radius: 8px;
+            --transition: all 0.2s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --card-bg: #1e293b;
+                --text-main: #f1f5f9;
+                --text-muted: #94a3b8;
+                --border: #334155;
+                --code-bg: #020617;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            main {
+                grid-template-columns: 400px 1fr;
+                align-items: start;
+            }
+        }
+
+        section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg);
+            color: var(--text-main);
+            font-size: 0.875rem;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .svg-preview-box {
+            background: white; /* Keep white for SVG contrast usually, or match bg */
+            background-image: 
+                linear-gradient(45deg, #eee 25%, transparent 25%), 
+                linear-gradient(-45deg, #eee 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #eee 75%), 
+                linear-gradient(-45deg, transparent 75%, #eee 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .svg-preview-box svg {
+            max-width: 90%;
+            max-height: 90%;
+            height: auto;
+        }
+
+        .code-block {
+            position: relative;
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-family: 'Fira Code', 'Cascadia Code', 'Source Code Pro', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .copy-btn.success {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .stat-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Animation Classes */
+        .drawing-path {
+            stroke-dasharray: var(--path-length);
+            stroke-dashoffset: var(--path-length);
+            animation: draw-svg var(--duration) var(--easing) forwards;
+        }
+
+        @keyframes draw-svg {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SVG Path Animation Generator</h1>
+        <p class="subtitle">Calculate precise path lengths and generate CSS keyframes for the "line-drawing" effect.</p>
+    </header>
+
+    <main>
+        <section aria-labelledby="input-heading">
+            <h2 id="input-heading" style="display:none">Input Settings</h2>
+            
+            <div class="form-group">
+                <label for="pathData">SVG Path Data (d attribute)</label>
+                <textarea id="pathData" placeholder="M10 10 L90 10 L90 90 L10 90 Z" spellcheck="false">M 20,80 C 20,80 40,20 80,20 S 140,80 160,80</textarea>
+                <div id="errorMsg" class="error-msg">Invalid SVG path data provided.</div>
+            </div>
+
+            <div class="settings-grid">
+                <div class="form-group">
+                    <label for="duration">Duration (s)</label>
+                    <input type="number" id="duration" value="2" step="0.1" min="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="easing">Easing</label>
+                    <select id="easing">
+                        <option value="ease">Ease</option>
+                        <option value="linear">Linear</option>
+                        <option value="ease-in">Ease-In</option>
+                        <option value="ease-out">Ease-Out</option>
+                        <option value="ease-in-out">Ease-In-Out</option>
+                        <option value="cubic-bezier(0.4, 0, 0.2, 1)">Cubic Bezier</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="strokeColor">Stroke Color</label>
+                <input type="color" id="strokeColor" value="#6366f1" style="width:100%; height:40px; border:none; padding:0; cursor:pointer;">
+            </div>
+        </section>
+
+        <div class="preview-container">
+            <section>
+                <div id="lengthBadge" class="stat-badge">Length: 0px</div>
+                <div class="svg-preview-box" id="previewBox">
+                    <!-- SVG injected here -->
+                </div>
+            </section>
+
+            <section>
+                <label>CSS Implementation</label>
+                
+                <div class="code-block" id="cssElementCode">
+                    <button class="copy-btn" onclick="copyCode('cssElementCode')">Copy</button>
+                    <code><!-- CSS will appear here --></code>
+                </div>
+
+                <div class="code-block" id="cssKeyframeCode">
+                    <button class="copy-btn" onclick="copyCode('cssKeyframeCode')">Copy</button>
+                    <code><!-- CSS will appear here --></code>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        &copy; <span id="year"></span> SVG Path Animation Generator &bull; Built for Frontend Developers
+    </footer>
+
+    <script>
+        const pathInput = document.getElementById('pathData');
+        const durationInput = document.getElementById('duration');
+        const easingInput = document.getElementById('easing');
+        const colorInput = document.getElementById('strokeColor');
+        const previewBox = document.getElementById('previewBox');
+        const lengthBadge = document.getElementById('lengthBadge');
+        const errorMsg = document.getElementById('errorMsg');
+        const cssElementCode = document.getElementById('cssElementCode');
+        const cssKeyframeCode = document.getElementById('cssKeyframeCode');
+
+        function updateYear() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+        }
+
+        async function copyCode(elementId) {
+            const element = document.getElementById(elementId);
+            const code = element.querySelector('code').innerText;
+            const btn = element.querySelector('.copy-btn');
+            
+            try {
+                await navigator.clipboard.writeText(code);
+                btn.textContent = 'Copied!';
+                btn.classList.add('success');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('success');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy!', err);
+            }
+        }
+
+        function calculatePathLength(d) {
+            // Create a temporary SVG element to use getTotalLength()
+            const svgNS = "http://www.w3.org/2000/svg";
+            const path = document.createElementNS(svgNS, "path");
+            path.setAttribute("d", d);
+            
+            // Append to body briefly to ensure it's part of the DOM for some browsers, 
+            // though modern browsers support it off-DOM.
+            const hiddenContainer = document.createElement('div');
+            hiddenContainer.style.position = 'absolute';
+            hiddenContainer.style.visibility = 'hidden';
+            hiddenContainer.appendChild(document.createElementNS(svgNS, "svg"));
+            hiddenContainer.firstChild.appendChild(path);
+            document.body.appendChild(hiddenContainer);
+            
+            const length = path.getTotalLength();
+            document.body.removeChild(hiddenContainer);
+            
+            return length;
+        }
+
+        function generate() {
+            const d = pathInput.value.trim();
+            const duration = durationInput.value || 2;
+            const easing = easingInput.value;
+            const color = colorInput.value;
+
+            if (!d) {
+                errorMsg.style.display = 'none';
+                return;
+            }
+
+            try {
+                const length = calculatePathLength(d);
+                if (isNaN(length)) throw new Error("Invalid Length");
+                
+                errorMsg.style.display = 'none';
+                lengthBadge.textContent = `Length: ${length.toFixed(2)}px`;
+
+                // Update Preview
+                const svgNS = "http://www.w3.org/2000/svg";
+                previewBox.innerHTML = '';
+                
+                // Determine a reasonable viewBox
+                // We create a temporary path to get its bounding box
+                const tempSvg = document.createElementNS(svgNS, "svg");
+                const tempPath = document.createElementNS(svgNS, "path");
+                tempPath.setAttribute("d", d);
+                tempSvg.appendChild(tempPath);
+                document.body.appendChild(tempSvg);
+                const bbox = tempPath.getBBox();
+                document.body.removeChild(tempSvg);
+
+                const svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("viewBox", `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
+                
+                const path = document.createElementNS(svgNS, "path");
+                path.setAttribute("d", d);
+                path.setAttribute("fill", "none");
+                path.setAttribute("stroke", color);
+                path.setAttribute("stroke-width", "2");
+                path.setAttribute("stroke-linecap", "round");
+                path.setAttribute("stroke-linejoin", "round");
+                path.classList.add('drawing-path');
+                
+                // Apply dynamic CSS variables for the preview animation
+                path.style.setProperty('--path-length', `${length}px`);
+                path.style.setProperty('--duration', `${duration}s`);
+                path.style.setProperty('--easing', easing);
+
+                svg.appendChild(path);
+                previewBox.appendChild(svg);
+
+                // Generate Code
+                const elementCss = `.path-animation {\n  stroke-dasharray: ${length.toFixed(2)};\n  stroke-dashoffset: ${length.toFixed(2)};\n  animation: draw ${duration}s ${easing} forwards;\n}`;
+                const keyframeCss = `@keyframes draw {\n  from { stroke-dashoffset: ${length.toFixed(2)}; }\n  to { stroke-dashoffset: 0; }\n}`;
+
+                cssElementCode.querySelector('code').textContent = elementCss;
+                cssKeyframeCode.querySelector('code').textContent = keyframeCss;
+
+            } catch (e) {
+                console.error(e);
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Listeners
+        [pathInput, durationInput, easingInput, colorInput].forEach(el => {
+            el.addEventListener('input', generate);
+        });
+
+        // Init
+        updateYear();
+        generate();
+    </script>
+</body>
+</html>

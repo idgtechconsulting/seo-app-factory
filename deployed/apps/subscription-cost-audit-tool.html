@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Cost Audit Tool | Track & Optimize Your Monthly Spending</title>
+    <meta name="description" content="Stop overpaying for apps you don't use. Use our free Subscription Cost Audit Tool to list your services, calculate annual spending, and identify wasted costs.">
+    <meta name="keywords" content="Subscription Cost Audit Tool, subscription tracker, budget app, cost optimizer, monthly expenses">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Subscription Cost Audit Tool - Track Your Spending">
+    <meta property="og:description" content="Identify wasted subscription costs and optimize your monthly budget with this simple audit tool.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/subscription-cost-audit-tool.html">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://freetoolbox.tools/apps/subscription-cost-audit-tool.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Subscription Cost Audit Tool",
+      "description": "A dashboard to list subscriptions, calculate total costs, and identify wasteful spending.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-red: #ef4444;
+            --accent-green: #22c55e;
+            --accent-yellow: #f59e0b;
+            --border: #334155;
+            --radius: 12px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        .value-monthly { color: var(--text-main); }
+        .value-annual { color: var(--primary); }
+        .value-waste { color: var(--accent-red); }
+
+        /* Input Section */
+        .input-section {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .input-section h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            height: 46px;
+        }
+
+        .btn-add:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Table Section */
+        .list-section {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 1rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sub-name {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .sub-cost {
+            font-family: monospace;
+            font-size: 1rem;
+        }
+
+        /* Waste Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #475569;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-red);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* Toast Notification */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease-out forwards;
+            min-width: 250px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            th:nth-child(3), td:nth-child(3) {
+                display: none; /* Hide billing cycle on mobile */
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>Subscription Cost Audit Tool</h1>
+        <p>Stop the "leakage" in your bank account. Track every subscription and identify exactly how much you can save by cutting the waste.</p>
+    </header>
+
+    <main>
+        <!-- Summary Section -->
+        <section class="summary-grid" aria-label="Financial Summary">
+            <article class="card">
+                <div class="card-label">Monthly Total</div>
+                <div class="card-value value-monthly" id="total-monthly">$0.00</div>
+            </article>
+            <article class="card">
+                <div class="card-label">Annual Total</div>
+                <div class="card-value value-annual" id="total-annual">$0.00</div>
+            </article>
+            <article class="card">
+                <div class="card-label">Potential Yearly Savings</div>
+                <div class="card-value value-waste" id="total-waste">$0.00</div>
+            </article>
+        </section>
+
+        <!-- Input Section -->
+        <section class="input-section">
+            <h2>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+                Add Subscription
+            </h2>
+            <form id="sub-form" class="form-grid">
+                <div class="form-group">
+                    <label for="sub-name">Service Name</label>
+                    <input type="text" id="sub-name" placeholder="e.g. Netflix, Adobe CC" required>
+                </div>
+                <div class="form-group">
+                    <label for="sub-cost">Cost</label>
+                    <input type="number" id="sub-cost" step="0.01" min="0" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label for="sub-cycle">Billing Cycle</label>
+                    <select id="sub-cycle">
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-add">Add Sub</button>
+            </form>
+        </section>
+
+        <!-- List Section -->
+        <section class="list-section">
+            <table id="sub-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Cost</th>
+                        <th>Cycle</th>
+                        <th>Waste?</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="sub-list">
+                    <!-- Rows injected by JS -->
+                </tbody>
+            </table>
+            <div id="empty-state" class="empty-state">
+                <p>No subscriptions added yet. Start by adding one above!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Subscription Cost Audit Tool. All data is stored locally in your browser.</p>
+    </footer>
+
+    <div id="toast-container"></div>
+
+    <script>
+        // State Management
+        let subscriptions = JSON.parse(localStorage.getItem('sub_audit_data')) || [];
+
+        const elements = {
+            form: document.getElementById('sub-form'),
+            nameInput: document.getElementById('sub-name'),
+            costInput: document.getElementById('sub-cost'),
+            cycleInput: document.getElementById('sub-cycle'),
+            list: document.getElementById('sub-list'),
+            emptyState: document.getElementById('empty-state'),
+            totalMonthly: document.getElementById('total-monthly'),
+            totalAnnual: document.getElementById('total-annual'),
+            totalWaste: document.getElementById('total-waste'),
+            toastContainer: document.getElementById('toast-container'),
+            year: document.getElementById('year')
+        };
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            elements.year.textContent = new Date().getFullYear();
+            render();
+        });
+
+        // Form Submission
+        elements.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = elements.nameInput.value.trim();
+            const cost = parseFloat(elements.costInput.value);
+            const cycle = elements.cycleInput.value;
+
+            if (!name || isNaN(cost) || cost < 0) {
+                showToast('Please enter a valid name and cost.', 'error');
+                return;
+            }
+
+            const newSub = {
+                id: crypto.randomUUID(),
+                name,
+                cost,
+                cycle,
+                isWaste: false
+            };
+
+            subscriptions.push(newSub);
+            saveAndRender();
+            elements.form.reset();
+            showToast(`${name} added successfully!`);
+        });
+
+        function toggleWaste(id) {
+            subscriptions = subscriptions.map(sub => 
+                sub.id === id ? { ...sub, isWaste: !sub.isWaste } : sub
+            );
+            saveAndRender();
+        }
+
+        function deleteSub(id) {
+            subscriptions = subscriptions.filter(sub => sub.id !== id);
+            saveAndRender();
+            showToast('Subscription removed');
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('sub_audit_data', JSON.stringify(subscriptions));
+            render();
+        }
+
+        function render() {
+            // Update List
+            elements.list.innerHTML = '';
+            
+            if (subscriptions.length === 0) {
+                elements.emptyState.style.display = 'block';
+                document.getElementById('sub-table').style.display = 'none';
+            } else {
+                elements.emptyState.style.display = 'none';
+                document.getElementById('sub-table').style.display = 'table';
+                
+                subscriptions.forEach(sub => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="sub-name">${escapeHtml(sub.name)}</td>
+                        <td class="sub-cost">$${sub.cost.toFixed(2)}</td>
+                        <td>${sub.cycle}</td>
+                        <td>
+                            <label class="switch">
+                                <input type="checkbox" ${sub.isWaste ? 'checked' : ''} onchange="toggleWaste('${sub.id}')">
+                                <span class="slider"></span>
+                            </label>
+                        </td>
+                        <td>
+                            <button class="btn-delete" onclick="deleteSub('${sub.id}')">Delete</button>
+                        </td>
+                    `;
+                    elements.list.appendChild(row);
+                });
+            }
+
+            calculateTotals();
+        }
+
+        function calculateTotals() {
+            let monthlyTotal = 0;
+            let wasteAnnual = 0;
+
+            subscriptions.forEach(sub => {
+                const monthlyCost = sub.cycle === 'monthly' ? sub.cost : sub.cost / 12;
+                monthlyTotal += monthlyCost;
+                
+                if (sub.isWaste) {
+                    wasteAnnual += (sub.cycle === 'monthly' ? sub.cost * 12 : sub.cost);
+                }
+            });
+
+            const annualTotal = monthlyTotal * 12;
+
+            elements.totalMonthly.textContent = `$${monthlyTotal.toFixed(2)}`;
+            elements.totalAnnual.textContent = `$${annualTotal.toFixed(2)}`;
+            elements.totalWaste.textContent = `$${wasteAnnual.toFixed(2)}`;
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if (type === 'error') toast.style.borderLeftColor = 'var(--accent-red)';
+            toast.textContent = message;
+            
+            elements.toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/subtrack.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">SubTrack</a>
+    <a href="https://freetoolbox.tools/apps/midterm-election-ballot-strategy-planner.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Midterm Election Ballot Strategy Planner</a>
+    <a href="https://freetoolbox.tools/apps/echo-chamber-visualizer.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Echo Chamber Visualizer</a>
+    <a href="https://freetoolbox.tools/apps/2026-us-midterm-ballot-simplified.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 US Midterm Ballot Simplified</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 104 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

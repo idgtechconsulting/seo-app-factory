@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WCAG Non-Text Contrast Checker</title>
+    <meta name="description" content="Verify if your UI components and graphical objects meet the WCAG 2.1 non-text contrast requirement of 3:1.">
+    <meta property="og:title" content="WCAG Non-Text Contrast Checker">
+    <meta property="og:description" content="Verify if your UI components and graphical objects meet the WCAG 2.1 non-text contrast requirement of 3:1.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://freetoolbox.tools/apps/wcag-non-text-contrast-checker.html">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "WCAG Non-Text Contrast Checker",
+        "description": "A tool to check the contrast ratio of non-text elements against WCAG 2.1 standards.",
+        "applicationCategory": "Accessibility Tool",
+        "operatingSystem": "Any"
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            transition: background-color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .checker-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .checker-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .color-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text-main);
+        }
+
+        .result-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .ratio-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 1rem 0;
+            line-height: 1;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1.5rem;
+            border-radius: 999px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        .status-pass {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-fail {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .preview-area {
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .preview-element {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .preview-icon {
+            width: 30px;
+            height: 30px;
+            fill: currentColor;
+        }
+
+        .info-section {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .info-section h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-section p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #334155;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+    </style>
+  <meta property="og:url" content="https://freetoolbox.tools/apps/wcag-non-text-contrast-checker.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark Mode">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </button>
+
+    <header>
+        <h1>WCAG Non-Text Contrast Checker</h1>
+        <p class="subtitle">Ensure your UI components, icons, and borders meet the WCAG 2.1 Success Criterion 1.4.11 (3:1 contrast ratio).</p>
+    </header>
+
+    <main>
+        <div class="checker-grid">
+            <section class="card">
+                <div class="input-group">
+                    <label for="fgColor">Foreground Color (Component)</label>
+                    <div class="color-controls">
+                        <input type="color" id="fgPicker" value="#2563eb" aria-label="Foreground color picker">
+                        <input type="text" id="fgHex" value="#2563eb" spellcheck="false" aria-label="Foreground hex code">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="bgColor">Background Color</label>
+                    <div class="color-controls">
+                        <input type="color" id="bgPicker" value="#ffffff" aria-label="Background color picker">
+                        <input type="text" id="bgHex" value="#ffffff" spellcheck="false" aria-label="Background hex code">
+                    </div>
+                </div>
+            </section>
+
+            <section class="card result-card">
+                <label>Contrast Ratio</label>
+                <div class="ratio-display" id="ratioValue">4.6:1</div>
+                <div class="status-badge status-pass" id="statusBadge">PASS</div>
+            </section>
+        </div>
+
+        <section class="preview-area" id="previewArea">
+            <label style="color: var(--text-muted); font-weight: normal;">Visual Preview</label>
+            <div class="preview-element" id="previewElement">
+                <svg class="preview-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+                Example of a UI component (border and icon) against background.
+            </div>
+        </section>
+
+        <article class="info-section">
+            <h2>What is Non-Text Contrast?</h2>
+            <p>
+                WCAG 2.1 Success Criterion 1.4.11 requires a contrast ratio of at least <strong>3:1</strong> against adjacent colors for:
+            </p>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                <li>User Interface Components (e.g., focus indicators, borders of input fields)</li>
+                <li>Graphical Objects (e.g., icons that convey meaning, parts of a chart)</li>
+            </ul>
+            <p>
+                This differs from the 4.5:1 ratio required for standard body text, as graphical elements are typically larger or have more visual weight than a single character of text.
+            </p>
+        </article>
+    </main>
+
+    <footer>
+        &copy; <span id="year"></span> WCAG Non-Text Contrast Checker. Built for accessibility.
+    </footer>
+
+    <div id="toast" class="toast">Invalid hex color</div>
+
+    <script>
+        const fgPicker = document.getElementById('fgPicker');
+        const fgHex = document.getElementById('fgHex');
+        const bgPicker = document.getElementById('bgPicker');
+        const bgHex = document.getElementById('bgHex');
+        const ratioValue = document.getElementById('ratioValue');
+        const statusBadge = document.getElementById('statusBadge');
+        const previewArea = document.getElementById('previewArea');
+        const previewElement = document.getElementById('previewElement');
+        const themeToggle = document.getElementById('themeToggle');
+        const toast = document.getElementById('toast');
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // --- Color Logic ---
+
+        function hexToRgb(hex) {
+            const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+            hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function getLuminance(r, g, b) {
+            const a = [r, g, b].map(v => {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+            return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
+
+        function calculateContrast(hex1, hex2) {
+            const rgb1 = hexToRgb(hex1);
+            const rgb2 = hexToRgb(hex2);
+            if (!rgb1 || !rgb2) return null;
+
+            const l1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+            const l2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+            
+            const brighter = Math.max(l1, l2);
+            const darker = Math.min(l1, l2);
+            return (brighter + 0.05) / (darker + 0.05);
+        }
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function updateUI() {
+            const fg = fgHex.value;
+            const bg = bgHex.value;
+
+            const ratio = calculateContrast(fg, bg);
+
+            if (ratio === null) {
+                showToast("Please enter valid hex colors");
+                return;
+            }
+
+            const ratioFixed = ratio.toFixed(2);
+            ratioValue.textContent = `${ratioFixed}:1`;
+
+            if (ratio >= 3) {
+                statusBadge.textContent = "PASS";
+                statusBadge.className = "status-badge status-pass";
+            } else {
+                statusBadge.textContent = "FAIL";
+                statusBadge.className = "status-badge status-fail";
+            }
+
+            // Update Preview
+            previewArea.style.backgroundColor = bg;
+            previewElement.style.borderColor = fg;
+            previewElement.style.color = fg;
+        }
+
+        // --- Event Listeners ---
+
+        fgPicker.addEventListener('input', (e) => {
+            fgHex.value = e.target.value.toUpperCase();
+            updateUI();
+        });
+
+        fgHex.addEventListener('input', (e) => {
+            let val = e.target.value;
+            if (!val.startsWith('#')) val = '#' + val;
+            if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(val)) {
+                fgPicker.value = val;
+                updateUI();
+            }
+        });
+
+        bgPicker.addEventListener('input', (e) => {
+            bgHex.value = e.target.value.toUpperCase();
+            updateUI();
+        });
+
+        bgHex.addEventListener('input', (e) => {
+            let val = e.target.value;
+            if (!val.startsWith('#')) val = '#' + val;
+            if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(val)) {
+                bgPicker.value = val;
+                updateUI();
+            }
+        });
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const target = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', target);
+            themeToggle.innerHTML = target === 'dark' 
+                ? '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>' 
+                : '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+        });
+
+        // Initialize
+        updateUI();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/2026-freelancer-tax-estimator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 Freelancer Tax Estimator</a>
+    <a href="https://freetoolbox.tools/apps/password-entropy-visualizer.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Password Entropy Visualizer</a>
+    <a href="https://freetoolbox.tools/apps/omnicalc-rpg.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">OmniCalc RPG</a>
+    <a href="https://freetoolbox.tools/apps/2026-us-midterm-ballot-simplified.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 US Midterm Ballot Simplified</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 104 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

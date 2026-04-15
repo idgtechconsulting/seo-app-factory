@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Ingredient Scaler | Scale Your Ingredients Instantly</title>
+    <meta name="description" content="Easily scale your recipe ingredients. Paste your list, set your serving size, and instantly calculate precise measurements for any number of people.">
+    <meta name="keywords" content="recipe ingredient scaler, scale recipe, ingredient calculator, cooking tool, adjust servings">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Recipe Ingredient Scaler - Adjust Servings Instantly">
+    <meta property="og:description" content="Stop doing manual math in the kitchen. Paste your ingredients and scale them to any serving size automatically.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://recipe-scaler.app">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://recipe-scaler.app">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Recipe Ingredient Scaler",
+      "description": "A text-processing tool that scales recipe ingredient quantities based on serving size.",
+      "applicationCategory": "CookingTool",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #e67e22;
+            --primary-dark: #d35400;
+            --secondary: #2c3e50;
+            --bg: #fdfcfb;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #dddddd;
+            --success: #27ae60;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 3px solid var(--primary);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            color: var(--secondary);
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tool-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        input[type="number"], textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2);
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .action-area {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1a252f;
+        }
+
+        .result-area {
+            margin-top: 2rem;
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-header h2 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .output-box {
+            background-color: #f9f9f9;
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: var(--radius);
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            min-height: 100px;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--secondary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        #toast.show {
+            opacity: 1;
+            bottom: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .tool-container {
+                padding: 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Recipe Ingredient Scaler</h1>
+        <p>Instantly adjust your ingredients for any number of guests. No more manual math in the kitchen!</p>
+    </header>
+
+    <main>
+        <section class="tool-container">
+            <div class="input-group">
+                <div class="field">
+                    <label for="original-servings">Original Servings</label>
+                    <input type="number" id="original-servings" value="4" min="0.1" step="any" aria-label="Original serving size">
+                </div>
+                <div class="field">
+                    <label for="target-servings">Desired Servings</label>
+                    <input type="number" id="target-servings" value="7" min="0.1" step="any" aria-label="Desired serving size">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="ingredients-input">Paste Ingredients List</label>
+                <textarea id="ingredients-input" placeholder="Example:&#10;1 1/2 cups flour&#10;2 eggs&#10;0.5 tsp salt&#10;1/4 cup butter" aria-label="Ingredients list"></textarea>
+            </div>
+
+            <div class="action-area">
+                <button class="btn" id="scale-btn">Scale Ingredients</button>
+            </div>
+
+            <div class="result-area" id="result-area">
+                <div class="result-header">
+                    <h2>Scaled Ingredients</h2>
+                </div>
+                <div class="output-box" id="output-box"></div>
+                <button class="btn btn-secondary" id="copy-btn">Copy to Clipboard</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Recipe Ingredient Scaler. Simple. Precise. Delicious.</p>
+    </footer>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const scaleBtn = document.getElementById('scale-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const ingredientsInput = document.getElementById('ingredients-input');
+        const originalServings = document.getElementById('original-servings');
+        const targetServings = document.getElementById('target-servings');
+        const resultArea = document.getElementById('result-area');
+        const outputBox = document.getElementById('output-box');
+        const toast = document.getElementById('toast');
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function parseFraction(fractionStr) {
+            const parts = fractionStr.split('/');
+            if (parts.length !== 2) return parseFloat(fractionStr);
+            return parseFloat(parts[0]) / parseFloat(parts[1]);
+        }
+
+        function formatNumber(num) {
+            // Round to 2 decimal places
+            const rounded = Math.round(num * 100) / 100;
+            // If it's a whole number, remove decimal
+            return Number.isInteger(rounded) ? rounded.toString() : rounded.toString();
+        }
+
+        function scaleIngredients() {
+            const text = ingredientsInput.value.trim();
+            const original = parseFloat(originalServings.value);
+            const target = parseFloat(targetServings.value);
+
+            if (!text) {
+                showToast('Please enter some ingredients first.');
+                return;
+            }
+
+            if (isNaN(original) || isNaN(target) || original <= 0 || target <= 0) {
+                showToast('Please enter valid serving sizes.');
+                return;
+            }
+
+            const factor = target / original;
+
+            /**
+             * Regex breakdown:
+             * ((\d+\s+)?\d+/\d+) : Matches mixed fractions (1 1/2) or simple fractions (1/2)
+             * |(\d*\.\d+)        : Matches decimals (.5 or 1.5)
+             * |(\d+)             : Matches integers (2)
+             */
+            const regex = /((\d+\s+)?\d+\/\d+)|(\d*\.\d+)|(\d+)/g;
+
+            const scaledText = text.replace(regex, (match) => {
+                let value = 0;
+
+                if (match.includes('/')) {
+                    // Handle fractions and mixed numbers
+                    const parts = match.split(/\s+/);
+                    if (parts.length === 2) {
+                        // Mixed number: "1 1/2"
+                        value = parseFloat(parts[0]) + parseFraction(parts[1]);
+                    } else {
+                        // Simple fraction: "1/2"
+                        value = parseFraction(match);
+                    }
+                } else {
+                    // Decimal or Integer
+                    value = parseFloat(match);
+                }
+
+                const scaledValue = value * factor;
+                return formatNumber(scaledValue);
+            });
+
+            outputBox.textContent = scaledText;
+            resultArea.style.display = 'block';
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function copyToClipboard() {
+            const text = outputBox.textContent;
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('Copied to clipboard!');
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Copied to clipboard!');
+            }
+        }
+
+        scaleBtn.addEventListener('click', scaleIngredients);
+        copyBtn.addEventListener('click', copyToClipboard);
+
+        // Allow scaling on Enter key in numeric inputs
+        [originalServings, targetServings].forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') scaleIngredients();
+            });
+        });
+    </script>
+</body>
+</html></html>

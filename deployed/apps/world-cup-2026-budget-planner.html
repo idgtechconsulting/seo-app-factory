@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup 2026 Budget Planner | North America Travel Calculator</title>
+    <meta name="description" content="Plan your trip to the FIFA World Cup 2026. Calculate travel costs for USA, Canada, and Mexico with our comprehensive budget planner including hotels, food, and transit.">
+    <meta name="keywords" content="World Cup 2026 budget planner, 2026 World Cup travel costs, North America travel budget, FIFA 2026 expenses">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="World Cup 2026 Budget Planner">
+    <meta property="og:description" content="Comprehensive cost estimator for international football fans visiting USA, Canada, and Mexico in 2026.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/world-cup-2026-budget-planner.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "World Cup 2026 Budget Planner",
+        "description": "A comprehensive travel budget calculator for the 2026 World Cup in North America.",
+        "applicationCategory": "TravelApplication",
+        "operatingSystem": "All",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #eab308; /* Gold */
+            --primary-dark: #ca8a04;
+            --secondary: #1e293b; /* Slate 800 */
+            --accent: #3b82f6; /* Blue */
+            --bg-dark: #0f172a; /* Slate 900 */
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --border: #334155;
+            --radius: 12px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--bg-dark));
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .logo-area h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-area p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2);
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 0.4rem 0.8rem;
+            width: auto;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* City Items List */
+        .city-item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .city-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .city-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .city-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Results Section */
+        .summary-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid var(--primary);
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .total-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        .total-label {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .breakdown-table th, .breakdown-table td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breakdown-table th {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.4);
+            transform: translateY(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            padding: 2rem 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--border);
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+  <meta property="og:url" content="https://freetoolbox.tools/apps/world-cup-2026-budget-planner.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <div class="logo-area">
+            <h1>🏆 World Cup 2026 Budget Planner</h1>
+            <p>Plan your ultimate football journey through USA, Canada, and Mexico. Get accurate cost estimates and manage your travel funds in one place.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="grid">
+            <!-- Configuration Section -->
+            <section class="card">
+                <div class="card-title">⚙️ Trip Settings</div>
+                
+                <div class="form-group">
+                    <label for="homeCurrency">Your Home Currency</label>
+                    <select id="homeCurrency" onchange="updateCalculations()">
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="MXN">MXN - Mexican Peso</option>
+                        <option value="INR">INR - Indian Rupee</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                        <option value="BRL">BRL - Brazilian Real</option>
+                        <option value="CNY">CNY - Chinese Yuan</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="citySelector">Add Destination City</label>
+                    <select id="citySelector">
+                        <optgroup label="🇺🇸 USA">
+                            <option value="NYC">New York City</option>
+                            <option value="LAX">Los Angeles</option>
+                            <option value="DAL">Dallas</option>
+                            <option value="MIA">Miami</option>
+                            <option value="ATL">Atlanta</option>
+                            <option value="SFO">San Francisco</option>
+                            <option value="SEA">Seattle</option>
+                            <option value="KC">Kansas City</option>
+                            <option value="HOU">Houston</option>
+                            <option value="PHI">Philadelphia</option>
+                        </optgroup>
+                        <optgroup label="🇨🇦 Canada">
+                            <option value="VAN">Vancouver</option>
+                            <option value="TOR">Toronto</option>
+                        </optgroup>
+                        <optgroup label="🇲🇽 Mexico">
+                            <option value="MEX">Mexico City</option>
+                            <option value="GDL">Guadalajara</option>
+                            <option value="MTY">Monterrey</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="addCity()">
+                    <span>➕</span> Add to Itinerary
+                </button>
+
+                <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                    <button class="btn btn-outline" onclick="exportSummary()">
+                        <span>📄</span> Export Summary
+                    </button>
+                </div>
+            </section>
+
+            <!-- Itinerary and Results Section -->
+            <section>
+                <div class="summary-box">
+                    <span class="total-label">Estimated Trip Total</span>
+                    <span class="total-amount" id="grandTotal">$0.00</span>
+                    <span id="usdEquivalent" style="color: var(--text-muted); font-size: 0.9rem;">(USD 0.00)</span>
+                </div>
+
+                <div class="card-title">📍 Your Itinerary</div>
+                <div id="itineraryList">
+                    <div class="empty-state">
+                        No cities added yet. Start by adding destinations from the settings panel!
+                    </div>
+                </div>
+
+                <div id="resultsDetails" style="display: none; margin-top: 2rem;" class="card">
+                    <div class="card-title">📊 Cost Breakdown</div>
+                    <div style="overflow-x: auto;">
+                        <table class="breakdown-table">
+                            <thead>
+                                <tr>
+                                    <th>City</th>
+                                    <th>Days</th>
+                                    <th>Daily Avg</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="breakdownBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 World Cup 2026 Budget Planner. All estimates based on projected 2026 inflation and event-period pricing.</p>
+    </footer>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        // --- DATA ---
+        const CURRENCY_RATES = {
+            USD: 1,
+            EUR: 0.92,
+            GBP: 0.79,
+            JPY: 150.45,
+            CAD: 1.35,
+            MXN: 17.10,
+            INR: 83.12,
+            AUD: 1.52,
+            BRL: 4.96,
+            CNY: 7.21
+        };
+
+        const CITY_DATA = {
+            // USA
+            NYC: { name: 'New York City', country: 'USA', hotel: 350, food: 90, transit: 40 },
+            LAX: { name: 'Los Angeles', country: 'USA', hotel: 300, food: 80, transit: 50 },
+            DAL: { name: 'Dallas', country: 'USA', hotel: 220, food: 60, transit: 30 },
+            MIA: { name: 'Miami', country: 'USA', hotel: 280, food: 70, transit: 30 },
+            ATL: { name: 'Atlanta', country: 'USA', hotel: 200, food: 60, transit: 30 },
+            SFO: { name: 'San Francisco', country: 'USA', hotel: 320, food: 80, transit: 40 },
+            SEA: { name: 'Seattle', country: 'USA', hotel: 250, food: 70, transit: 30 },
+            KC: { name: 'Kansas City', country: 'USA', hotel: 180, food: 50, transit: 20 },
+            HOU: { name: 'Houston', country: 'USA', hotel: 190, food: 50, transit: 30 },
+            PHI: { name: 'Philadelphia', country: 'USA', hotel: 240, food: 60, transit: 30 },
+            // Canada
+            VAN: { name: 'Vancouver', country: 'Canada', hotel: 220, food: 60, transit: 30 },
+            TOR: { name: 'Toronto', country: 'Canada', hotel: 250, food: 60, transit: 30 },
+            // Mexico
+            MEX: { name: 'Mexico City', country: 'Mexico', hotel: 120, food: 30, transit: 15 },
+            GDL: { name: 'Guadalajara', country: 'Mexico', hotel: 90, food: 25, transit: 10 },
+            MTY: { name: 'Monterrey', country: 'Mexico', hotel: 110, food: 25, transit: 15 },
+        };
+
+        const BUDGET_LEVELS = {
+            budget: 0.7,
+            mid: 1.0,
+            luxury: 1.8
+        };
+
+        let itinerary = [];
+
+        // --- LOGIC ---
+
+        function addCity() {
+            const cityCode = document.getElementById('citySelector').value;
+            const cityInfo = CITY_DATA[cityCode];
+            
+            // Prevent duplicates for simplicity
+            if (itinerary.find(item => item.code === cityCode)) {
+                showToast("City already in itinerary!");
+                return;
+            }
+
+            itinerary.push({
+                code: cityCode,
+                name: cityInfo.name,
+                country: cityInfo.country,
+                days: 3,
+                level: 'mid',
+                hotelBase: cityInfo.hotel,
+                foodBase: cityInfo.food,
+                transitBase: cityInfo.transit
+            });
+
+            renderItinerary();
+            updateCalculations();
+        }
+
+        function removeCity(index) {
+            itinerary.splice(index, 1);
+            renderItinerary();
+            updateCalculations();
+        }
+
+        function updateCityDays(index, value) {
+            const days = parseInt(value);
+            if (isNaN(days) || days < 1) return;
+            itinerary[index].days = days;
+            updateCalculations();
+        }
+
+        function updateCityLevel(index, value) {
+            itinerary[index].level = value;
+            updateCalculations();
+        }
+
+        function formatCurrency(amount, currencyCode) {
+            const symbols = {
+                USD: '$', EUR: '€', GBP: '£', JPY: '¥', 
+                CAD: 'C$', MXN: 'Mex$', INR: '₹', AUD: 'A$', 
+                BRL: 'R$', CNY: '¥'
+            };
+            const symbol = symbols[currencyCode] || '$';
+            return `${symbol}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        function updateCalculations() {
+            const homeCurrency = document.getElementById('homeCurrency').value;
+            const rate = CURRENCY_RATES[homeCurrency];
+            let grandTotalUSD = 0;
+
+            const breakdownBody = document.getElementById('breakdownBody');
+            breakdownBody.innerHTML = '';
+
+            if (itinerary.length === 0) {
+                document.getElementById('resultsDetails').style.display = 'none';
+                document.getElementById('grandTotal').innerText = formatCurrency(0, homeCurrency);
+                document.getElementById('usdEquivalent').innerText = '(USD 0.00)';
+                return;
+            }
+
+            document.getElementById('resultsDetails').style.display = 'block';
+
+            itinerary.forEach((item, index) => {
+                const multiplier = BUDGET_LEVELS[item.level];
+                const dailyUSD = (item.hotelBase + item.foodBase + item.transitBase) * multiplier;
+                const subtotalUSD = dailyUSD * item.days;
+                grandTotalUSD += subtotalUSD;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.days}</td>
+                    <td>${formatCurrency(dailyUSD, 'USD')}</td>
+                    <td>${formatCurrency(subtotalUSD, 'USD')}</td>
+                `;
+                breakdownBody.appendChild(row);
+            });
+
+            const grandTotalHome = grandTotalUSD * rate;
+            document.getElementById('grandTotal').innerText = formatCurrency(grandTotalHome, homeCurrency);
+            document.getElementById('usdEquivalent').innerText = `(USD ${grandTotalUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+        }
+
+        function renderItinerary() {
+            const container = document.getElementById('itineraryList');
+            if (itinerary.length === 0) {
+                container.innerHTML = `<div class="empty-state">No cities added yet. Start by adding destinations from the settings panel!</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            itinerary.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'city-item';
+                div.innerHTML = `
+                    <div class="city-header">
+                        <span class="city-name">${item.name} <span class="badge">${item.country}</span></span>
+                        <button class="btn btn-danger" onclick="removeCity(${index})">Remove</button>
+                    </div>
+                    <div class="city-controls">
+                        <div class="form-group">
+                            <label>Days</label>
+                            <input type="number" min="1" value="${item.days}" onchange="updateCityDays(${index}, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Budget Level</label>
+                            <select onchange="updateCityLevel(${index}, this.value)">
+                                <option value="budget" ${item.level === 'budget' ? 'selected' : ''}>Budget</option>
+                                <option value="mid" ${item.level === 'mid' ? 'selected' : ''}>Mid-Range</option>
+                                <option value="luxury" ${item.level === 'luxury' ? 'selected' : ''}>Luxury</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function exportSummary() {
+            if (itinerary.length === 0) {
+                showToast("Add some cities first!");
+                return;
+            }
+
+            const homeCurrency = document.getElementById('homeCurrency').value;
+            const totalText = document.getElementById('grandTotal').innerText;
+            const usdText = document.getElementById('usdEquivalent').innerText;
+
+            let summary = `🏆 WORLD CUP 2026 TRIP BUDGET\n`;
+            summary += `==============================\n`;
+            summary += `Home Currency: ${homeCurrency}\n`;
+            summary += `Estimated Total: ${totalText} ${usdText}\n\n`;
+            summary += `ITINERARY:\n`;
+            
+            itinerary.forEach(item => {
+                const multiplier = BUDGET_LEVELS[item.level];
+                const daily = (item.hotelBase + item.foodBase + item.transitBase) * multiplier;
+                summary += `- ${item.name} (${item.country}): ${item.days} days @ $${daily.toFixed(2)}/day\n`;
+            });
+
+            summary += `\nNote: These are estimates for the 2026 event period. Prices may fluctuate.`;
+
+            navigator.clipboard.writeText(summary).then(() => {
+                showToast("Summary copied to clipboard!");
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize
+        window.onload = () => {
+            updateCalculations();
+        };
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/screen-time-activity-swapper.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Screen-Time Activity Swapper</a>
+    <a href="https://freetoolbox.tools/apps/fanroute-2026.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">FanRoute 2026</a>
+    <a href="https://freetoolbox.tools/apps/2026-world-cup-budget-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 World Cup Budget Calculator</a>
+    <a href="https://freetoolbox.tools/apps/knitting-and-crochet-unit-converter.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Knitting and Crochet Unit Converter</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 104 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

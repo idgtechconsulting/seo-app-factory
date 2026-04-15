@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup 2026 Travel Budget Calculator | Plan Your North American Trip</title>
+    <meta name="description" content="Plan your World Cup 2026 journey with our free travel budget calculator. Estimate costs for flights, hotels, and food across USA, Canada, and Mexico host cities.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="World Cup 2026 Travel Budget Calculator">
+    <meta property="og:description" content="Estimate your total spending for the 2026 World Cup across North America. Budget, Mid-range, and Luxury options.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/world-cup-2026-travel-budget-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "World Cup 2026 Travel Budget Calculator",
+        "description": "A comprehensive budget estimator for football fans attending the 2026 World Cup in USA, Canada, and Mexico.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #004d3d; /* Deep Football Green */
+            --primary-light: #007a61;
+            --secondary: #ffd700; /* Trophy Gold */
+            --accent: #e63946;
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #f5f5f5;
+            --text-muted: #b0b0b0;
+            --border: #333;
+            --success: #4caf50;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #002a22);
+            padding: 3rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--secondary);
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-content p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-main);
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: -2rem auto 0;
+            padding: 0 1rem;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            .calculator-grid {
+                grid-template-columns: 1.5fr 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.8rem;
+            background: #2a2a2a;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(0, 122, 97, 0.3);
+        }
+
+        .comfort-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .comfort-option {
+            position: relative;
+        }
+
+        .comfort-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .comfort-label {
+            display: block;
+            text-align: center;
+            padding: 0.8rem;
+            background: #2a2a2a;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .comfort-option input:checked + .comfort-label {
+            background: var(--primary-light);
+            border-color: var(--secondary);
+            color: white;
+        }
+
+        .city-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .city-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border-radius: 4px;
+        }
+
+        .city-item:hover {
+            background: #333;
+        }
+
+        .city-item input {
+            width: auto;
+        }
+
+        .results-card {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+            border-top: 5px solid var(--secondary);
+        }
+
+        .total-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            color: var(--secondary);
+            margin: 1rem 0;
+        }
+
+        .breakdown-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 1rem;
+        }
+
+        .breakdown-item span:last-child {
+            font-weight: bold;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-light);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: translateY(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .info-tag {
+            display: inline-block;
+            background: #333;
+            color: var(--secondary);
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .city-group-label {
+            grid-column: 1 / -1;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 1rem 0 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+    </style>
+  <meta property="og:url" content="https://freetoolbox.tools/apps/world-cup-2026-travel-budget-calculator.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <div class="header-content">
+            <h1>World Cup 2026 Budget Calculator</h1>
+            <p>Plan your ultimate football adventure across North America. Get instant estimates for lodging, transport, and daily expenses.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="calculator-grid">
+            <!-- Input Section -->
+            <section class="card">
+                <h2>Trip Parameters</h2>
+                
+                <div class="form-group">
+                    <label for="home-region">Departure Region</label>
+                    <select id="home-region" onchange="updateBudget()">
+                        <option value="north_america">North America (Domestic)</option>
+                        <option value="europe">Europe</option>
+                        <option value="south_america">South America</option>
+                        <option value="asia">Asia / Oceania</option>
+                        <option value="africa">Africa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Comfort Level</label>
+                    <div class="comfort-grid">
+                        <div class="comfort-option">
+                            <input type="radio" name="comfort" id="budget" value="budget" checked onchange="updateBudget()">
+                            <label for="budget" class="comfort-label">Budget</label>
+                        </div>
+                        <div class="comfort-option">
+                            <input type="radio" name="comfort" id="mid" value="mid" onchange="updateBudget()">
+                            <label for="mid" class="comfort-label">Mid-Range</label>
+                        </div>
+                        <div class="comfort-option">
+                            <input type="radio" name="comfort" id="luxury" value="luxury" onchange="updateBudget()">
+                            <label for="luxury" class="comfort-label">Luxury</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Host Cities to Visit</label>
+                    <div class="city-selector" id="city-selector">
+                        <!-- Cities will be injected by JS -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="days-per-city">Estimated Days per City <span class="info-tag">Avg</span></label>
+                    <input type="number" id="days-per-city" value="4" min="1" max="30" oninput="updateBudget()">
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="card results-card">
+                <h2>Estimated Budget</h2>
+                <div class="total-amount" id="total-cost">$0</div>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Estimated Total USD</p>
+                
+                <ul class="breakdown-list">
+                    <li class="breakdown-item">
+                        <span>International Flights</span>
+                        <span id="cost-flights">$0</span>
+                    </li>
+                    <li class="breakdown-item">
+                        <span>Inter-City Travel</span>
+                        <span id="cost-intercity">$0</span>
+                    </li>
+                    <li class="breakdown-item">
+                        <span>Lodging</span>
+                        <span id="cost-lodging">$0</span>
+                    </li>
+                    <li class="breakdown-item">
+                        <span>Food & Entertainment</span>
+                        <span id="cost-food">$0</span>
+                    </li>
+                    <li class="breakdown-item">
+                        <span>Local Transport</span>
+                        <span id="cost-local">$0</span>
+                    </li>
+                </ul>
+
+                <div style="margin-top: 2rem; font-size: 0.8rem; color: var(--text-muted); font-style: italic; text-align: center;">
+                    * Estimates based on average historical costs. Actual prices during the tournament will likely be higher.
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 World Cup 2026 Budget Tool. Not affiliated with FIFA.</p>
+        <p>Designed for football fans worldwide.</p>
+    </footer>
+
+    <div id="toast" class="toast">Budget updated!</div>
+
+    <script>
+        // Data definitions
+        const CITY_DATA = {
+            USA: [
+                { name: 'New York/NJ', multiplier: 1.4 },
+                { name: 'Dallas', multiplier: 1.1 },
+                { name: 'Kansas City', multiplier: 0.9 },
+                { name: 'Houston', multiplier: 1.0 },
+                { name: 'Atlanta', multiplier: 1.1 },
+                { name: 'Los Angeles', multiplier: 1.4 },
+                { name: 'San Francisco', multiplier: 1.4 },
+                { name: 'Seattle', multiplier: 1.2 },
+                { name: 'Miami', multiplier: 1.3 },
+                { name: 'Boston', multiplier: 1.3 },
+                { name: 'Philadelphia', multiplier: 1.2 }
+            ],
+            Canada: [
+                { name: 'Toronto', multiplier: 1.2 },
+                { name: 'Vancouver', multiplier: 1.3 }
+            ],
+            Mexico: [
+                { name: 'Mexico City', multiplier: 0.7 },
+                { name: 'Guadalajara', multiplier: 0.6 },
+                { name: 'Monterrey', multiplier: 0.8 }
+            ]
+        };
+
+        const BASE_COSTS = {
+            budget: {
+                lodging: 45,
+                food: 30,
+                local: 15,
+                flight_intl: {
+                    north_america: 300,
+                    europe: 800,
+                    south_america: 700,
+                    asia: 1100,
+                    africa: 1200
+                },
+                intercity: 150
+            },
+            mid: {
+                lodging: 160,
+                food: 70,
+                local: 40,
+                flight_intl: {
+                    north_america: 500,
+                    europe: 1300,
+                    south_america: 1100,
+                    asia: 1600,
+                    africa: 1800
+                },
+                intercity: 350
+            },
+            luxury: {
+                lodging: 450,
+                food: 200,
+                local: 120,
+                flight_intl: {
+                    north_america: 1200,
+                    europe: 3500,
+                    south_america: 3000,
+                    asia: 4500,
+                    africa: 4000
+                },
+                intercity: 800
+            }
+        };
+
+        // Initialize City Selector
+        function initCitySelector() {
+            const container = document.getElementById('city-selector');
+            let html = '';
+
+            for (const [country, cities] of Object.entries(CITY_DATA)) {
+                html += `<div class="city-group-label">${country}</div>`;
+                cities.forEach(city => {
+                    html += `
+                        <label class="city-item">
+                            <input type="checkbox" class="city-checkbox" value="${city.name}" data-multiplier="${city.multiplier}" onchange="updateBudget()">
+                            ${city.name}
+                        </label>
+                    `;
+                });
+            }
+            container.innerHTML = html;
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0
+            }).format(num);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function updateBudget() {
+            // Get Inputs
+            const region = document.getElementById('home-region').value;
+            const comfort = document.querySelector('input[name="comfort"]:checked').value;
+            const daysPerCity = parseInt(document.getElementById('days-per-city').value) || 0;
+            const selectedCities = Array.from(document.querySelectorAll('.city-checkbox:checked'));
+            
+            const costs = BASE_COSTS[comfort];
+            
+            // 1. Flight Costs
+            const flightIntl = costs.flight_intl[region];
+            
+            // 2. Inter-city Costs
+            // If visiting N cities, they need N-1 inter-city trips
+            const intercityTotal = selectedCities.length > 1 ? (selectedCities.length - 1) * costs.intercity : 0;
+            
+            // 3. City-specific Daily Costs
+            let lodgingTotal = 0;
+            let foodTotal = 0;
+            let localTotal = 0;
+
+            selectedCities.forEach(cityEl => {
+                const multiplier = parseFloat(cityEl.dataset.multiplier);
+                const cityDays = daysPerCity;
+                
+                lodgingTotal += costs.lodging * multiplier * cityDays;
+                foodTotal += costs.food * multiplier * cityDays;
+                localTotal += costs.local * multiplier * cityDays;
+            });
+
+            const grandTotal = flightIntl + intercityTotal + lodgingTotal + foodTotal + localTotal;
+
+            // Update UI
+            document.getElementById('total-cost').innerText = formatCurrency(grandTotal);
+            document.getElementById('cost-flights').innerText = formatCurrency(flightIntl);
+            document.getElementById('cost-intercity').innerText = formatCurrency(intercityTotal);
+            document.getElementById('cost-lodging').innerText = formatCurrency(lodgingTotal);
+            document.getElementById('cost-food').innerText = formatCurrency(foodTotal);
+            document.getElementById('cost-local').innerText = formatCurrency(localTotal);
+        }
+
+        // Run on load
+        window.onload = () => {
+            initCitySelector();
+            updateBudget();
+        };
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/us-tariff-impact-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">US Tariff Impact Calculator</a>
+    <a href="https://freetoolbox.tools/apps/base64-master.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Base64 Master</a>
+    <a href="https://freetoolbox.tools/apps/freelance-hourly-rate-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Freelance Hourly Rate Calculator</a>
+    <a href="https://freetoolbox.tools/apps/chromaconvert.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">ChromaConvert</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 104 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

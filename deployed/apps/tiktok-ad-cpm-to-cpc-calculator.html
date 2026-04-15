@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Ad CPM to CPC Calculator | Convert Ad Costs Instantly</title>
+    <meta name="description" content="Free TikTok ad CPM to CPC calculator. Easily convert Cost Per Mille (CPM) to Cost Per Click (CPC) and vice versa using your Click-Through Rate (CTR).">
+    <meta name="keywords" content="TikTok ad CPM to CPC calculator, CPM to CPC, CPC to CPM, TikTok ads calculator, ad cost converter, CTR calculator">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="TikTok Ad CPM to CPC Calculator">
+    <meta property="og:description" content="Convert your TikTok ad spend metrics instantly. Calculate implied CPC from CPM or vice versa based on CTR.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/tiktok-ad-cpm-to-cpc-calculator.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/tiktok-ad-cpm-to-cpc-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "TikTok Ad CPM to CPC Calculator",
+      "description": "A professional tool for TikTok advertisers to convert between CPM and CPC based on CTR.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #ff0050; /* TikTok Red */
+            --secondary: #00f2ea; /* TikTok Cyan */
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --input-bg: #2a2a2a;
+            --border-color: #333333;
+            --accent-gradient: linear-gradient(45deg, #ff0050, #00f2ea);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--border-color);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        nav {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .calc-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calc-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-gradient);
+        }
+
+        .calc-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+        }
+
+        .calc-card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 12px 12px 30px;
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(0, 242, 234, 0.2);
+        }
+
+        .result-box {
+            margin-top: auto;
+            padding: 1.5rem;
+            background-color: rgba(0, 242, 234, 0.05);
+            border-radius: 12px;
+            text-align: center;
+            border: 1px dashed var(--secondary);
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        .info-section {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 3rem;
+        }
+
+        .info-section h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-item h3 {
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .info-item p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .disclaimer {
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 600px) {
+            .hero-section h1 {
+                font-size: 1.8rem;
+            }
+            .calc-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <div class="logo">AdMetric Tool</div>
+        <nav>
+            <a href="#cpm-to-cpc">CPM → CPC</a>
+            <a href="#cpc-to-cpm">CPC → CPM</a>
+            <a href="#guide">Guide</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <h1>TikTok Ad CPM to CPC Calculator</h1>
+            <p>Stop doing manual math. Instantly calculate your implied cost per click based on your CPM and click-through rate.</p>
+        </section>
+
+        <div class="calculator-grid">
+            <!-- CPM to CPC Calculator -->
+            <article class="calc-card" id="cpm-to-cpc">
+                <h2><span>📉</span> CPM to CPC</h2>
+                
+                <div class="input-group">
+                    <label for="cpm-input">Cost Per Mille (CPM)</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="cpm-input" placeholder="0.00" step="0.01" min="0" aria-label="Enter CPM value">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="ctr-input-1">Click-Through Rate (CTR %)</label>
+                    <div class="input-wrapper">
+                        <span style="left: auto; right: 12px;">%</span>
+                        <input type="number" id="ctr-input-1" placeholder="0.00" step="0.01" min="0" style="padding-left: 12px;" aria-label="Enter CTR percentage">
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Implied Cost Per Click (CPC)</div>
+                    <div class="result-value" id="cpc-result">$0.00</div>
+                </div>
+            </article>
+
+            <!-- CPC to CPM Calculator -->
+            <article class="calc-card" id="cpc-to-cpm">
+                <h2><span>📈</span> CPC to CPM</h2>
+                
+                <div class="input-group">
+                    <label for="cpc-input">Cost Per Click (CPC)</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="cpc-input" placeholder="0.00" step="0.01" min="0" aria-label="Enter CPC value">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="ctr-input-2">Click-Through Rate (CTR %)</label>
+                    <div class="input-wrapper">
+                        <span style="left: auto; right: 12px;">%</span>
+                        <input type="number" id="ctr-input-2" placeholder="0.00" step="0.01" min="0" style="padding-left: 12px;" aria-label="Enter CTR percentage">
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Implied Cost Per Mille (CPM)</div>
+                    <div class="result-value" id="cpm-result">$0.00</div>
+                </div>
+            </article>
+        </div>
+
+        <section class="info-section" id="guide">
+            <h2>Understanding Your Metrics</h2>
+            <div class="info-grid">
+                <article class="info-item">
+                    <h3>What is CPM?</h3>
+                    <p>CPM stands for "Cost Per Mille" (mille is Latin for thousand). It is the cost an advertiser pays for every 1,000 views or impressions of an ad. It's the primary metric for brand awareness campaigns.</p>
+                </article>
+                <article class="info-item">
+                    <h3>What is CPC?</h3>
+                    <p>CPC stands for "Cost Per Click." It is the actual price you pay for each click in your ad campaign. This is the key metric for performance-driven campaigns focusing on conversions.</p>
+                </article>
+                <article class="info-item">
+                    <h3>What is CTR?</h3>
+                    <p>CTR (Click-Through Rate) is the percentage of people who click your ad after seeing it. Formula: (Total Clicks / Total Impressions) × 100. Higher CTR usually lowers your implied CPC.</p>
+                </article>
+            </div>
+            
+            <div style="margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <h3 style="margin-bottom: 1rem; text-align: center;">The Magic Formula</h3>
+                <p style="text-align: center; color: var(--text-muted); font-family: monospace; font-size: 1.1rem;">
+                    CPC = CPM / (CTR * 10) <br>
+                    CPM = CPC * CTR * 10
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="disclaimer">Disclaimer: This calculator provides mathematical estimates based on the inputs provided. Actual TikTok ad costs may vary based on bidding strategies, audience targeting, and platform algorithms.</p>
+        <p>&copy; <span id="year"></span> AdMetric Tool. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // Elements for CPM to CPC
+            const cpmInput = document.getElementById('cpm-input');
+            const ctrInput1 = document.getElementById('ctr-input-1');
+            const cpcResult = document.getElementById('cpc-result');
+
+            // Elements for CPC to CPM
+            const cpcInput = document.getElementById('cpc-input');
+            const ctrInput2 = document.getElementById('ctr-input-2');
+            const cpmResult = document.getElementById('cpm-result');
+
+            // Calculation logic: CPM to CPC
+            // Formula: CPC = CPM / (CTR * 10)
+            function calculateCPC() {
+                const cpm = parseFloat(cpmInput.value);
+                const ctr = parseFloat(ctrInput1.value);
+
+                if (!isNaN(cpm) && !isNaN(ctr) && ctr > 0) {
+                    const result = cpm / (ctr * 10);
+                    cpcResult.textContent = `$${result.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                } else {
+                    cpcResult.textContent = '$0.00';
+                }
+            }
+
+            // Calculation logic: CPC to CPM
+            // Formula: CPM = CPC * CTR * 10
+            function calculateCPM() {
+                const cpc = parseFloat(cpcInput.value);
+                const ctr = parseFloat(ctrInput2.value);
+
+                if (!isNaN(cpc) && !isNaN(ctr)) {
+                    const result = cpc * ctr * 10;
+                    cpmResult.textContent = `$${result.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                } else {
+                    cpmResult.textContent = '$0.00';
+                }
+            }
+
+            // Event Listeners for real-time updates
+            cpmInput.addEventListener('input', calculateCPC);
+            ctrInput1.addEventListener('input', calculateCPC);
+            cpcInput.addEventListener('input', calculateCPM);
+            ctrInput2.addEventListener('input', calculateCPM);
+
+            // Handle keyboard accessibility
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.target.blur();
+                    }
+                });
+            });
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/randomized-guest-list-filter.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Randomized Guest List Filter</a>
+    <a href="https://freetoolbox.tools/apps/dora-compliance-self-assessment-tool.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">DORA Compliance Self-Assessment Tool</a>
+    <a href="https://freetoolbox.tools/apps/2026-us-midterm-ballot-organizer.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 US Midterm Ballot Organizer</a>
+    <a href="https://freetoolbox.tools/apps/local-candidate-stance-matcher.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Local Candidate Stance Matcher</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 104 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

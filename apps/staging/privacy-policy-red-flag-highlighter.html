@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy Red-Flag Highlighter — Risk Scanner</title>
+    <meta name="description" content="Instantly analyze privacy policies to detect predatory language, third-party data sharing, and data retention red flags.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Privacy Policy Red-Flag Highlighter — Risk Scanner">
+    <meta property="og:description" content="Paste any privacy policy and instantly identify the 'scary parts' with our red-flag risk scanner.">
+    <meta property="og:type" content="website">
+    
+    <link rel="canonical" href="https://example.com/privacy-policy-red-flag-highlighter">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Privacy Policy Red-Flag Highlighter",
+      "description": "A tool that scans privacy policies for predatory keywords and calculates a risk score.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+            --success: #10b981;
+            --success-bg: #d1fae5;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            line-height: 1.6;
+            padding: 0;
+        }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        h1 { 
+            font-size: 2rem; 
+            font-weight: 800; 
+            color: var(--text-main); 
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle { 
+            color: var(--text-muted); 
+            font-size: 1.1rem; 
+            max-width: 600px; 
+            margin: 0 auto; 
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .input-section {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.2s, ring 0.2s;
+            margin-bottom: 1.5rem;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            gap: 0.5rem;
+        }
+
+        .btn:hover { background: var(--primary-hover); }
+        .btn:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.7; }
+
+        .results-section {
+            display: none;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .score-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .score-label {
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .analysis-output {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            white-space: pre-wrap;
+            font-size: 1rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .flag-high {
+            background-color: var(--danger-bg);
+            color: #991b1b;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--danger);
+        }
+
+        .flag-med {
+            background-color: var(--warning-bg);
+            color: #92400e;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--warning);
+        }
+
+        .legend {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-high { background: var(--danger); }
+        .dot-med { background: var(--warning); }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 1.5rem; }
+            .analysis-output { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Privacy Policy Red-Flag Highlighter</h1>
+            <p class="subtitle">Stop reading 50-page legal documents. Paste the text below to instantly reveal predatory clauses and data risks.</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <section class="input-section">
+                <label for="policyText">Paste Privacy Policy Text</label>
+                <textarea id="policyText" placeholder="Paste the full text of the privacy policy here..."></textarea>
+                <button id="analyzeBtn" class="btn">
+                    <span class="spinner loading-spinner" id="spinner"></span>
+                    <span id="btnText">Analyze Policy</span>
+                </button>
+            </section>
+
+            <section id="results" class="results-section">
+                <div class="score-card">
+                    <div class="card">
+                        <span id="riskScore" class="score-value">0</span>
+                        <span class="score-label">Risk Score</span>
+                    </div>
+                    <div class="card">
+                        <span id="riskLevel" class="score-value" style="font-size: 2rem;">Low</span>
+                        <span class="score-label">Risk Level</span>
+                    </div>
+                    <div class="card">
+                        <span id="flagCount" class="score-value">0</span>
+                        <span class="score-label">Red Flags Found</span>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item"><span class="dot dot-high"></span> High Risk (Predatory)</div>
+                    <div class="legend-item"><span class="dot dot-med"></span> Medium Risk (Caution)</div>
+                </div>
+
+                <article id="output" class="analysis-output"></article>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="year"></span> Privacy Policy Red-Flag Highlighter. <br>
+            <strong>Disclaimer:</strong> This tool is for informational purposes only and does not constitute legal advice. Always consult a legal professional for binding interpretations of legal documents.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const RED_FLAGS = {
+            high: [
+                /sell\s+your\s+data/gi,
+                /third\s+party\s+sharing/gi,
+                /without\s+your\s+consent/gi,
+                /indefinitely/gi,
+                /forever/gi,
+                /waive\s+your\s+right/gi,
+                /binding\s+arbitration/gi,
+                /track\s+your\s+location\s+always/gi,
+                /biometric\s+data/gi,
+                /credit\s+score/gi,
+                /share\s+with\s+affiliates/gi,
+                /transfer\s+to\s+third\s+parties/gi,
+                /monetize\s+your\s+information/gi,
+                /not\s+responsible\s+for\s+data\s+breaches/gi,
+                /unrestricted\s+access/gi
+            ],
+            medium: [
+                /cookies/gi,
+                /marketing\s+purposes/gi,
+                /service\s+providers/gi,
+                /aggregate\s+data/gi,
+                /may\s+share/gi,
+                /improve\s+user\s+experience/gi,
+                /legal\s+requirements/gi,
+                /personalized\s+ads/gi,
+                /data\s+retention/gi,
+                /behavioral\s+tracking/gi,
+                /partner\s+companies/gi,
+                /collect\s+information/gi
+            ]
+        };
+
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+        const policyInput = document.getElementById('policyText');
+        const resultsSection = document.getElementById('results');
+        const output = document.getElementById('output');
+        const riskScoreEl = document.getElementById('riskScore');
+        const riskLevelEl = document.getElementById('riskLevel');
+        const flagCountEl = document.getElementById('flagCount');
+
+        analyzeBtn.addEventListener('click', async () => {
+            const text = policyInput.value.trim();
+            if (!text) {
+                alert('Please paste a privacy policy first.');
+                return;
+            }
+
+            // UI Loading State
+            analyzeBtn.disabled = true;
+            btnText.textContent = 'Analyzing...';
+            spinner.style.display = 'inline-block';
+            resultsSection.style.display = 'none';
+
+            // Simulate processing delay for UX
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            let highlightedText = text;
+            let totalScore = 0;
+            let totalFlags = 0;
+
+            // We process high flags first, then medium, but to avoid nested HTML tags 
+            // we'll use a map of replacements or a single pass approach.
+            // For simplicity and accuracy in this implementation, we'll use a temporary token system.
+            
+            const replacements = [];
+
+            // Find all matches
+            RED_FLAGS.high.forEach((regex, idx) => {
+                const matches = text.match(regex);
+                if (matches) {
+                    totalScore += (matches.length * 10);
+                    totalFlags += matches.length;
+                }
+            });
+
+            RED_FLAGS.medium.forEach((regex, idx) => {
+                const matches = text.match(regex);
+                if (matches) {
+                    totalScore += (matches.length * 3);
+                    totalFlags += matches.length;
+                }
+            });
+
+            // Perform Highlighting
+            // We use a function in replace to avoid regex collisions
+            let finalHtml = text;
+            
+            // Combine all regex into one big alternation for a single pass
+            const allHigh = RED_FLAGS.high.map(r => r.source).join('|');
+            const allMed = RED_FLAGS.medium.map(r => r.source).join('|');
+            const masterRegex = new RegExp(`(${allHigh})|(${allMed})`, 'gi');
+
+            finalHtml = finalHtml.replace(masterRegex, (match, high, med) => {
+                if (high) return `<span class="flag-high">${match}</span>`;
+                if (med) return `<span class="flag-med">${match}</span>`;
+                return match;
+            });
+
+            // Calculate Risk Level
+            let level = 'Low';
+            let levelColor = 'var(--success)';
+            
+            if (totalScore > 100) {
+                level = 'Critical';
+                levelColor = 'var(--danger)';
+            } else if (totalScore > 40) {
+                level = 'Medium';
+                levelColor = 'var(--warning)';
+            } else if (totalScore > 0) {
+                level = 'Low';
+                levelColor = 'var(--success)';
+            }
+
+            // Update UI
+            riskScoreEl.textContent = totalScore;
+            riskLevelEl.textContent = level;
+            riskLevelEl.style.color = levelColor;
+            flagCountEl.textContent = totalFlags;
+            output.innerHTML = finalHtml;
+
+            resultsSection.style.display = 'block';
+            analyzeBtn.disabled = false;
+            btnText.textContent = 'Analyze Policy';
+            spinner.style.display = 'none';
+            
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

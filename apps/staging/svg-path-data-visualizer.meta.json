@@ -1,0 +1,8 @@
+{
+  "issueId": "57927bdc-dd09-4d46-9708-c44f81d9f957",
+  "title": "Build: A tool where developers paste an SVG 'd' attribute and it instantly renders the path on a coordinate grid.",
+  "slug": "svg-path-data-visualizer",
+  "keywordTarget": "Build: A tool where developers paste an SVG 'd' attribute and it instantly renders the path on a coordinate grid.",
+  "timestamp": "2026-04-16T22:34:07.381Z",
+  "sourceIssueUrl": "http://localhost:3100/issues/57927bdc-dd09-4d46-9708-c44f81d9f957"
+}

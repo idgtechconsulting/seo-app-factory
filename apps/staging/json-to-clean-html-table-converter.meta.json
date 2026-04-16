@@ -1,0 +1,8 @@
+{
+  "issueId": "d243e748-ed26-4f71-a031-fb4246442c94",
+  "title": "Build: A simple utility where users paste a JSON array. The JS parses the keys to create table headers and the values to create",
+  "slug": "json-to-clean-html-table-converter",
+  "keywordTarget": "Build: A simple utility where users paste a JSON array. The JS parses the keys to create table headers and the values to create",
+  "timestamp": "2026-04-16T22:34:07.316Z",
+  "sourceIssueUrl": "http://localhost:3100/issues/d243e748-ed26-4f71-a031-fb4246442c94"
+}

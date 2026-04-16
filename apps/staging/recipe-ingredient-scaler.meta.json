@@ -1,0 +1,8 @@
+{
+  "issueId": "6c045d10-ec6a-4e0f-a059-94653b89482e",
+  "title": "Build: A text-processing tool. User pastes a list of ingredients. The tool uses regex to find numbers (including fractions like",
+  "slug": "recipe-ingredient-scaler",
+  "keywordTarget": "Build: A text-processing tool. User pastes a list of ingredients. The tool uses regex to find numbers (including fractions like",
+  "timestamp": "2026-04-16T22:34:07.263Z",
+  "sourceIssueUrl": "http://localhost:3100/issues/6c045d10-ec6a-4e0f-a059-94653b89482e"
+}

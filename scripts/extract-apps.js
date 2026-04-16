@@ -15,12 +15,31 @@ const STAGING_DIR = path.join(REPO_ROOT, 'apps', 'staging');
 const PAPERCLIP_BASE = 'http://localhost:3100';
 
 function slugify(title) {
-  return title
-    .toLowerCase()
+  // Strip common suffixes before slugifying
+  let clean = title
+    .replace(/\s*[\|—–]\s*(Professional|Free|Online|Tool|Calculator|Generator|Converter|App|Checker|Analyzer|Builder|Maker|Formatter|Validator)[^$]*/i, '')
     .replace(/^build\s+(?:a\s+|an\s+)?(?:complete\s+)?(?:single-file\s+html\s+app\s+for\s+a\s+)?/i, '')
+    .replace(/^(?:build|implement|create)\s+(?:a\s+|an\s+)?(?:complete\s+)?(?:single[- ]file\s+)?(?:html\s+)?app\s+(?:for\s+a?\s*|that\s+|to\s+|where\s+)?/i, '')
+    .trim();
+  return clean
+    .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
-    .slice(0, 80);
+    .slice(0, 40);
+}
+
+function slugFromHtml(html, fallbackTitle) {
+  const m = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+  const src = m ? m[1] : fallbackTitle;
+  // Strip subtitle after |, —, –, or " - "
+  const base = src.split(/\s*[\|—–]\s*|\s+-\s+/)[0].trim();
+  // Strip common trailing filler words
+  const clean = base.replace(/\s*[\|—–]\s*(Professional|Free|Online|Tool|Calculator|Generator|Converter|App).*$/i, '').trim();
+  return clean
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
 }
 
 function extractHTML(text) {
@@ -114,7 +133,7 @@ async function main() {
       continue;
     }
 
-    const slug = slugify(issue.title);
+    const slug = slugFromHtml(html, issue.title);
     const htmlFile = path.join(STAGING_DIR, `${slug}.html`);
     const metaFile = path.join(STAGING_DIR, `${slug}.meta.json`);
 

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup Group Expense Splitter | Settle Travel Debts Fast</title>
+    <meta name="description" content="The ultimate World Cup Group Expense Splitter. Track shared costs for Airbnbs, Ubers, and tickets. Minimize Venmo requests with our smart debt simplification algorithm.">
+    <meta name="keywords" content="World Cup group expenses, split bill travel, group debt calculator, travel expense tracker, minimize transactions splitter">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="World Cup Group Expense Splitter">
+    <meta property="og:description" content="Stop the Venmo chaos. Track group travel expenses and find the minimum number of transactions to settle up.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/world-cup-group-expense-splitter.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/world-cup-group-expense-splitter.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "World Cup Group Expense Splitter",
+      "description": "A lightweight tool to track group expenses and calculate the minimum number of transactions to settle debts.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #006400; /* Deep World Cup Green */
+            --primary-light: #00a86b;
+            --secondary: #ffd700; /* Gold */
+            --accent: #e63946;
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #f5f5f5;
+            --text-muted: #b0b0b0;
+            --border: #333;
+            --success: #4caf50;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #004d00);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--secondary);
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-main);
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--secondary);
+        }
+
+        h2::before {
+            content: '⚽';
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        input, select {
+            background: #2a2a2a;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid var(--primary-light);
+            border-color: transparent;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #442222;
+            color: #ff8888;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Member List */
+        .member-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .member-tag {
+            background: #2a2a2a;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+
+        /* Expense Form */
+        .expense-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .expense-grid {
+                grid-template-columns: 1fr;
+            }
+            .input-group {
+                flex-direction: column;
+            }
+        }
+
+        .split-options {
+            margin-bottom: 1rem;
+        }
+
+        .split-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Expense Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Results Section */
+        .results-card {
+            background: #1a2a1a;
+            border: 2px solid var(--primary-light);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+        }
+
+        .settlement-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .settlement-item:last-child {
+            border-bottom: none;
+        }
+
+        .amount-tag {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .copy-area {
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        #resultText {
+            width: 100%;
+            height: 120px;
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            resize: none;
+            margin-bottom: 10px;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--secondary);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem 0;
+            font-style: italic;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>World Cup Group Expense Splitter</h1>
+        <p>Settle your travel debts with the minimum number of transactions.</p>
+    </header>
+
+    <main>
+        <!-- Step 1: Members -->
+        <section id="members-section">
+            <h2>Add Travelers</h2>
+            <div class="input-group">
+                <input type="text" id="memberInput" placeholder="Enter name (e.g. Messi, Ronaldo...)" aria-label="Traveler Name">
+                <button class="btn-primary" onclick="app.addMember()">Add Person</button>
+            </div>
+            <div class="member-list" id="memberList">
+                <!-- Members injected here -->
+            </div>
+        </section>
+
+        <!-- Step 2: Expenses -->
+        <section id="expenses-section">
+            <h2>Log Expense</h2>
+            <div class="expense-grid">
+                <div>
+                    <label style="display:block; font-size:0.8rem; margin-bottom:5px; color:var(--text-muted)">Who paid?</label>
+                    <select id="payerSelect" aria-label="Who paid?"></select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.8rem; margin-bottom:5px; color:var(--text-muted)">Amount</label>
+                    <input type="number" id="amountInput" placeholder="0.00" step="0.01" aria-label="Expense Amount">
+                </div>
+            </div>
+            <div class="split-options">
+                <label style="display:block; font-size:0.8rem; margin-bottom:5px; color:var(--text-muted)">Split among:</label>
+                <div class="split-checkbox-group" id="splitCheckboxGroup">
+                    <!-- Checkboxes injected here -->
+                </div>
+            </div>
+            <button class="btn-primary" style="width:100%" onclick="app.addExpense()">Add Expense</button>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Payer</th>
+                            <th>Amount</th>
+                            <th>Split With</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseTableBody">
+                        <!-- Expenses injected here -->
+                    </tbody>
+                </table>
+                <div id="emptyExpense" class="empty-state">No expenses logged yet.</div>
+            </div>
+        </section>
+
+        <!-- Step 3: Settlement -->
+        <section id="settlement-section">
+            <h2>Settlement Plan</h2>
+            <div class="results-card">
+                <div id="settlementResults">
+                    <div class="empty-state">Add members and expenses to see the settlement plan.</div>
+                </div>
+                
+                <div class="copy-area" id="copyArea" style="display: none;">
+                    <textarea id="resultText" readonly></textarea>
+                    <button class="btn-outline" style="width:100%" onclick="app.copyToClipboard()">📋 Copy for Group Chat</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; <span id="year"></span> World Cup Group Expense Splitter. No data is stored on any server. All calculations happen locally in your browser.
+    </footer>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        const app = {
+            members: [],
+            expenses: [],
+
+            init() {
+                document.getElementById('year').textContent = new Date().getFullYear();
+                // Handle Enter key for member input
+                document.getElementById('memberInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.addMember();
+                });
+            },
+
+            showToast(msg) {
+                const toast = document.getElementById('toast');
+                toast.textContent = msg;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            },
+
+            addMember() {
+                const input = document.getElementById('memberInput');
+                const name = input.value.trim();
+                
+                if (!name) return;
+                if (this.members.includes(name)) {
+                    this.showToast("Member already exists!");
+                    return;
+                }
+
+                this.members.push(name);
+                input.value = '';
+                this.updateUI();
+            },
+
+            removeMember(name) {
+                this.members = this.members.filter(m => m !== name);
+                // Also remove expenses associated with this member
+                this.expenses = this.expenses.filter(e => e.payer !== name && !e.splitAmong.includes(name));
+                this.updateUI();
+            },
+
+            addExpense() {
+                const payer = document.getElementById('payerSelect').value;
+                const amount = parseFloat(document.getElementById('amountInput').value);
+                const checkboxes = document.querySelectorAll('.member-checkbox:checked');
+                
+                if (!payer) {
+                    this.showToast("Please add members first!");
+                    return;
+                }
+                if (isNaN(amount) || amount <= 0) {
+                    this.showToast("Please enter a valid amount!");
+                    return;
+                }
+                if (checkboxes.length === 0) {
+                    this.showToast("Select at least one person to split with!");
+                    return;
+                }
+
+                const splitAmong = Array.from(checkboxes).map(cb => cb.value);
+                
+                this.expenses.push({
+                    id: Date.now(),
+                    payer,
+                    amount,
+                    splitAmong
+                });
+
+                document.getElementById('amountInput').value = '';
+                this.updateUI();
+            },
+
+            removeExpense(id) {
+                this.expenses = this.expenses.filter(e => e.id !== id);
+                this.updateUI();
+            },
+
+            updateUI() {
+                this.renderMembers();
+                this.renderExpenseForm();
+                this.renderExpenseTable();
+                this.calculateSettlements();
+            },
+
+            renderMembers() {
+                const list = document.getElementById('memberList');
+                list.innerHTML = this.members.map(m => `
+                    <div class="member-tag">
+                        <span>${m}</span>
+                        <button class="btn-danger" onclick="app.removeMember('${m}')">×</button>
+                    </div>
+                `).join('');
+            },
+
+            renderExpenseForm() {
+                const payerSelect = document.getElementById('payerSelect');
+                const checkboxGroup = document.getElementById('splitCheckboxGroup');
+
+                payerSelect.innerHTML = this.members.map(m => `<option value="${m}">${m}</option>`).join('');
+                
+                checkboxGroup.innerHTML = this.members.map(m => `
+                    <label class="checkbox-item">
+                        <input type="checkbox" class="member-checkbox" value="${m}" checked> ${m}
+                    </label>
+                `).join('');
+            },
+
+            renderExpenseTable() {
+                const tbody = document.getElementById('expenseTableBody');
+                const empty = document.getElementById('emptyExpense');
+                
+                if (this.expenses.length === 0) {
+                    tbody.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                empty.style.display = 'none';
+                tbody.innerHTML = this.expenses.map(e => `
+                    <tr>
+                        <td>${e.payer}</td>
+                        <td>$${e.amount.toFixed(2)}</td>
+                        <td>${e.splitAmong.join(', ')}</td>
+                        <td><button class="btn-danger" onclick="app.removeExpense(${e.id})">Delete</button></td>
+                    </tr>
+                `).join('');
+            },
+
+            calculateSettlements() {
+                const resultsDiv = document.getElementById('settlementResults');
+                const copyArea = document.getElementById('copyArea');
+                const resultText = document.getElementById('resultText');
+
+                if (this.members.length < 2 || this.expenses.length === 0) {
+                    resultsDiv.innerHTML = '<div class="empty-state">Add at least 2 members and 1 expense to calculate.</div>';
+                    copyArea.style.display = 'none';
+                    return;
+                }
+
+                // 1. Calculate Net Balances
+                const balances = {};
+                this.members.forEach(m => balances[m] = 0);
+
+                this.expenses.forEach(e => {
+                    const share = e.amount / e.splitAmong.length;
+                    balances[e.payer] += e.amount;
+                    e.splitAmong.forEach(person => {
+                        balances[person] -= share;
+                    });
+                });
+
+                // 2. Separate into debtors and creditors
+                let debtors = [];
+                let creditors = [];
+
+                for (let person in balances) {
+                    if (balances[person] < -0.01) {
+                        debtors.push({ name: person, amount: Math.abs(balances[person]) });
+                    } else if (balances[person] > 0.01) {
+                        creditors.push({ name: person, amount: balances[person] });
+                    }
+                }
+
+                // 3. Greedy algorithm to minimize transactions
+                const transactions = [];
+                let dIdx = 0;
+                let cIdx = 0;
+
+                while (dIdx < debtors.length && cIdx < creditors.length) {
+                    const debtor = debtors[dIdx];
+                    const creditor = creditors[cIdx];
+                    const amount = Math.min(debtor.amount, creditor.amount);
+
+                    transactions.push({
+                        from: debtor.name,
+                        to: creditor.name,
+                        amount: amount
+                    });
+
+                    debtor.amount -= amount;
+                    creditor.amount -= amount;
+
+                    if (debtor.amount < 0.01) dIdx++;
+                    if (creditor.amount < 0.01) cIdx++;
+                }
+
+                // Render results
+                if (transactions.length === 0) {
+                    resultsDiv.innerHTML = '<div class="empty-state">Everyone is settled up! 🏆</div>';
+                    copyArea.style.display = 'none';
+                } else {
+                    resultsDiv.innerHTML = transactions.map(t => `
+                        <div class="settlement-item">
+                            <span><strong>${t.from}</strong> pays <strong>${t.to}</strong></span>
+                            <span class="amount-tag">$${t.amount.toFixed(2)}</span>
+                        </div>
+                    `).join('');
+
+                    // Prepare copy text
+                    const text = "🏆 World Cup Expense Settlement:\n\n" + 
+                                transactions.map(t => `✅ ${t.from} ➔ ${t.to}: $${t.amount.toFixed(2)}`).join('\n') + 
+                                "\n\nAll settled!";
+                    resultText.value = text;
+                    copyArea.style.display = 'block';
+                }
+            },
+
+            copyToClipboard() {
+                const textarea = document.getElementById('resultText');
+                textarea.select();
+                document.execCommand('copy');
+                this.showToast("Copied to clipboard!");
+            }
+        };
+
+        app.init();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/2026-freelancer-tax-estimator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 Freelancer Tax Estimator</a>
+    <a href="https://freetoolbox.tools/apps/world-cup-match-conflict-checker.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">World Cup Match Conflict Checker</a>
+    <a href="https://freetoolbox.tools/apps/rpg-character-stat-optimizer.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">RPG Character Stat Optimizer</a>
+    <a href="https://freetoolbox.tools/apps/world-cup-2026-travel-budget-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">World Cup 2026 Travel Budget Calculator</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

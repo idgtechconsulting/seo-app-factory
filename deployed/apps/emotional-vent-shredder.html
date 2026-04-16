@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Vent & Shredder | Release Your Stress Digitally</title>
+    <meta name="description" content="A minimalist digital space to vent your frustrations. Write down what's bothering you and watch it be shredded into pieces for instant emotional relief.">
+    <meta name="keywords" content="Emotional Vent & Shredder, stress relief, digital shredder, vent frustrations, mental health tool, anxiety relief">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Emotional Vent & Shredder | Release Your Stress">
+    <meta property="og:description" content="Write it, shred it, forget it. A satisfying digital experience to let go of stress and frustration.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/emotional-vent-shredder.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/emotional-vent-shredder.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Emotional Vent & Shredder",
+      "description": "A minimalist text area where users type their frustrations and visually shred them for emotional relief.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #0f1113;
+            --card-bg: #1a1d21;
+            --text-main: #e0e0e0;
+            --text-muted: #9ca3af;
+            --accent-color: #ef4444;
+            --accent-hover: #dc2626;
+            --border-color: #374151;
+            --paper-color: #f3f4f6;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            position: relative;
+            z-index: 10;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            background: #000;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            transition: border-color var(--transition-speed);
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        .btn-shred {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-shred:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-shred:active {
+            transform: scale(0.98);
+        }
+
+        /* Shred Animation Elements */
+        .shred-piece {
+            position: absolute;
+            background: var(--paper-color);
+            color: #333;
+            font-size: 12px;
+            padding: 2px 4px;
+            pointer-events: none;
+            z-index: 5;
+            white-space: pre;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        /* Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        footer {
+            padding: 2rem 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.5rem; }
+            .app-container { padding: 1.25rem; }
+            textarea { min-height: 200px; }
+        }
+
+        /* Animation Keyframes */
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>Emotional Vent & Shredder</h1>
+        <p class="subtitle">Type out your stress, your anger, or your worries. Then, let it all go. Click shred to destroy the evidence.</p>
+    </header>
+
+    <main id="main-canvas">
+        <section class="app-container" id="app-card">
+            <div class="input-group">
+                <textarea 
+                    id="vent-input" 
+                    placeholder="I am feeling... because..." 
+                    aria-label="Vent your frustrations here"
+                ></textarea>
+                <button class="btn-shred" id="shred-btn" aria-label="Shred the text">
+                    <span>✂️</span> Shred It
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast">Please write something to shred first!</div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Emotional Vent & Shredder. Your words are not saved or transmitted.</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const ventInput = document.getElementById('vent-input');
+        const shredBtn = document.getElementById('shred-btn');
+        const appCard = document.getElementById('app-card');
+        const mainCanvas = document.getElementById('main-canvas');
+        const toast = document.getElementById('toast');
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Cryptographically secure random for animation offsets
+        function secureRandom() {
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array);
+            return array[0] / (0xFFFFFFFF + 1);
+        }
+
+        function shredText() {
+            const text = ventInput.value.trim();
+            
+            if (!text) {
+                showToast("Please write something to shred first!");
+                return;
+            }
+
+            // Get position of the textarea to spawn shreds from
+            const rect = ventInput.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Split text into small chunks (words or characters)
+            const words = text.split(/\s+/);
+            const shreds = [];
+
+            // Create shred pieces
+            words.forEach((word, index) => {
+                const piece = document.createElement('div');
+                piece.className = 'shred-piece';
+                piece.textContent = word;
+                
+                // Randomize starting position slightly around the center
+                const offsetX = (secureRandom() - 0.5) * 200;
+                const offsetY = (secureRandom() - 0.5) * 100;
+                
+                piece.style.left = `${centerX + offsetX}px`;
+                piece.style.top = `${centerY + offsetY}px`;
+                
+                // Randomize animation properties
+                const duration = 1 + secureRandom() * 2;
+                const delay = secureRandom() * 0.5;
+                const rotation = (secureRandom() - 0.5) * 720;
+                const drift = (secureRandom() - 0.5) * 400;
+
+                piece.style.animation = `fall ${duration}s linear ${delay}s forwards`;
+                
+                // Custom property for drift effect using JS for more control
+                const animation = piece.animate([
+                    { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate(${drift}px, 100vh) rotate(${rotation}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    delay: delay * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    fill: 'forwards'
+                });
+
+                mainCanvas.appendChild(piece);
+                
+                // Cleanup DOM
+                animation.onfinish = () => piece.remove();
+            });
+
+            // Visual feedback for the container
+            appCard.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                appCard.style.transform = 'scale(1)';
+                ventInput.value = '';
+            }, 100);
+
+            showToast("Released. 🕊️");
+        }
+
+        shredBtn.addEventListener('click', shredText);
+
+        // Allow Ctrl+Enter or Cmd+Enter to shred
+        ventInput.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                shredText();
+            }
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/precision-3d-printing-unit-converter.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Precision 3D Printing Unit Converter</a>
+    <a href="https://freetoolbox.tools/apps/2026-us-midterm-ballot-simplified.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 US Midterm Ballot Simplified</a>
+    <a href="https://freetoolbox.tools/apps/ai-subscription-cost-comparison.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">AI Subscription Cost Comparison</a>
+    <a href="https://freetoolbox.tools/apps/break-even-roas-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Break-Even ROAS Calculator</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

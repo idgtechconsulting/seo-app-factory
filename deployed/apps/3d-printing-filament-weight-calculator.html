@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Printing Filament Weight Calculator | Calculate Print Mass</title>
+    <meta name="description" content="Easily calculate the weight of your 3D print based on volume and material density. Supports PLA, PETG, ABS and custom densities to ensure you have enough filament.">
+    <meta name="keywords" content="3D printing filament weight calculator, PLA density, PETG density, ABS density, 3D print mass calculator, filament estimator">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="3D Printing Filament Weight Calculator">
+    <meta property="og:description" content="Calculate the exact weight of your 3D printed parts using volume and material density.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/3d-printing-filament-weight-calculator.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/3d-printing-filament-weight-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "3D Printing Filament Weight Calculator",
+        "description": "A tool for 3D printing hobbyists to calculate the weight of a print based on volume and material density.",
+        "applicationCategory": "Utility",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #22d3ee;
+            --error: #ef4444;
+            --success: #10b981;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .calculator-card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .result-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background-color: rgba(99, 102, 241, 0.1);
+            border-radius: 0.75rem;
+            text-align: center;
+            border: 1px dashed var(--primary);
+        }
+
+        .result-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent);
+            display: block;
+        }
+
+        .result-unit {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+
+        .density-table-container {
+            margin-top: 3rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--error);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transform: translateY(200%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .result-value { font-size: 2.2rem; }
+            .calculator-card { padding: 1.5rem; }
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>Filament Weight Calculator</h1>
+        <p>Convert your slicer's volume estimate into actual weight to ensure you have enough material for your 3D print.</p>
+    </header>
+
+    <main>
+        <section class="calculator-card">
+            <div class="input-group">
+                <label for="material">Material Type</label>
+                <select id="material">
+                    <option value="1.24">PLA (1.24 g/cm³)</option>
+                    <option value="1.27">PETG (1.27 g/cm³)</option>
+                    <option value="1.04">ABS (1.04 g/cm³)</option>
+                    <option value="custom">Custom Density...</option>
+                </select>
+            </div>
+
+            <div id="custom-density-group" class="input-group" style="display: none;">
+                <label for="custom-density">Custom Density (g/cm³)</label>
+                <input type="number" id="custom-density" step="0.01" placeholder="e.g. 1.25">
+            </div>
+
+            <div class="input-group">
+                <label for="volume">Volume from Slicer (mm³)</label>
+                <input type="number" id="volume" step="1" placeholder="e.g. 15000">
+            </div>
+
+            <div class="result-container">
+                <span class="result-label">Estimated Print Weight</span>
+                <span class="result-value" id="weight-output">0.00</span>
+                <span class="result-unit">grams</span>
+            </div>
+        </section>
+
+        <section class="density-table-container">
+            <article>
+                <h2 style="margin-bottom: 1rem; font-size: 1.2rem; color: var(--text-main);">Common Material Densities</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Density (g/cm³)</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PLA</td>
+                            <td>1.24</td>
+                            <td>Easy to print, biodegradable</td>
+                        </tr>
+                        <tr>
+                            <td>PETG</td>
+                            <td>1.27</td>
+                            <td>Durable, water-resistant</td>
+                        </tr>
+                        <tr>
+                            <td>ABS</td>
+                            <td>1.04</td>
+                            <td>Heat resistant, strong</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> 3D Print Tools. Calculations are estimates based on average material densities.</p>
+    </footer>
+
+    <div id="toast" class="toast">Please enter a valid positive number.</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const materialSelect = document.getElementById('material');
+            const customDensityGroup = document.getElementById('custom-density-group');
+            const customDensityInput = document.getElementById('custom-density');
+            const volumeInput = document.getElementById('volume');
+            const weightOutput = document.getElementById('weight-output');
+            const toast = document.getElementById('toast');
+            const yearSpan = document.getElementById('year');
+
+            yearSpan.textContent = new Date().getFullYear();
+
+            const showToast = (message) => {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            };
+
+            const calculateWeight = () => {
+                const volume = parseFloat(volumeInput.value);
+                let density;
+
+                if (materialSelect.value === 'custom') {
+                    density = parseFloat(customDensityInput.value);
+                } else {
+                    density = parseFloat(materialSelect.value);
+                }
+
+                if (isNaN(volume) || volume < 0) {
+                    if (volumeInput.value !== '') {
+                        showToast('Invalid volume entered.');
+                    }
+                    weightOutput.textContent = '0.00';
+                    return;
+                }
+
+                if (isNaN(density) || density <= 0) {
+                    if (materialSelect.value === 'custom' && customDensityInput.value !== '') {
+                        showToast('Invalid density entered.');
+                    }
+                    weightOutput.textContent = '0.00';
+                    return;
+                }
+
+                // Slicer volumes are typically mm3. 
+                // Density is g/cm3. 1 cm3 = 1000 mm3.
+                // Weight (g) = (Volume in mm3 / 1000) * Density in g/cm3
+                const weight = (volume / 1000) * density;
+                weightOutput.textContent = weight.toFixed(2);
+            };
+
+            materialSelect.addEventListener('change', () => {
+                if (materialSelect.value === 'custom') {
+                    customDensityGroup.style.display = 'block';
+                } else {
+                    customDensityGroup.style.display = 'none';
+                }
+                calculateWeight();
+            });
+
+            volumeInput.addEventListener('input', calculateWeight);
+            customDensityInput.addEventListener('input', calculateWeight);
+
+            // Keyboard accessibility for custom density
+            customDensityInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    calculateWeight();
+                }
+            });
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/promptcompare.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">PromptCompare</a>
+    <a href="https://freetoolbox.tools/apps/2026-us-midterm-ballot-simplified.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 US Midterm Ballot Simplified</a>
+    <a href="https://freetoolbox.tools/apps/studyflow.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">StudyFlow</a>
+    <a href="https://freetoolbox.tools/apps/fabric-yardage-pattern-waste-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Fabric Yardage &amp; Pattern Waste Calculator</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

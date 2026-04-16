@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CancelMap | The Ultimate Subscription Cancelation Roadmap</title>
+    <meta name="description" content="Stop the subscription maze. Get direct cancellation links and proven scripts to bypass retention agents for popular SaaS and services.">
+    <meta name="keywords" content="subscription cancelation roadmap, how to cancel subscription, cancel saas, direct cancel link, retention agent script">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="CancelMap | Subscription Cancelation Roadmap">
+    <meta property="og:description" content="Direct links and scripts to cancel your subscriptions without the headache.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cancelmap.app">
+    
+    <link rel="canonical" href="https://cancelmap.app">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CancelMap",
+      "description": "A crowdsourced directory of direct cancellation links and scripts for SaaS and services.",
+      "applicationCategory": "Utility",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f43f5e;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #fbbf24;
+            --success: #22c55e;
+            --border: #334155;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            padding: 4rem 1rem 6rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #818cf8, #f43f5e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* Search & Filter */
+        .controls {
+            margin-top: -3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+            border-radius: 1rem;
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            color: white;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            fill: var(--text-muted);
+            width: 20px;
+            height: 20px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .chip {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Grid */
+        main {
+            padding: 3rem 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .service-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .difficulty {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.4rem;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .diff-easy { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .diff-medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+        .diff-hard { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+
+        .card-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-view {
+            margin-top: auto;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn-view:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .modal-content {
+            padding: 2.5rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .link-box {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .link-box a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .script-box {
+            background: #000;
+            padding: 1.2rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            color: #d1d5db;
+            position: relative;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            background: var(--border);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+        }
+
+        /* Contribution Form */
+        .contribute-section {
+            background: #1e1b4b;
+            padding: 4rem 1rem;
+            margin-top: 4rem;
+            border-radius: 2rem 2rem 0 0;
+            text-align: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            max-width: 800px;
+            margin: 2rem auto 0 auto;
+            text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-input {
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background: var(--bg-dark);
+            color: white;
+        }
+
+        .submit-btn {
+            grid-column: 1 / -1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            transform: translateY(200%);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+            font-weight: 600;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        footer {
+            padding: 3rem 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            .modal-content { padding: 1.5rem; }
+            .modal-title { font-size: 1.5rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>CancelMap</h1>
+            <p class="tagline">The crowdsourced subscription cancelation roadmap. Stop fighting the UI maze and get straight to the exit.</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="controls">
+            <div class="search-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search services (e.g. Adobe, Netflix, gym)..." aria-label="Search subscriptions">
+            </div>
+            <div class="filter-chips" id="filterChips">
+                <button class="chip active" data-cat="all">All</button>
+                <button class="chip" data-cat="SaaS">SaaS</button>
+                <button class="chip" data-cat="Entertainment">Entertainment</button>
+                <button class="chip" data-cat="Fitness">Fitness</button>
+                <button class="chip" data-cat="Utilities">Utilities</button>
+                <button class="chip" data-cat="Other">Other</button>
+            </div>
+        </section>
+
+        <main>
+            <div class="grid" id="servicesGrid">
+                <!-- Cards injected by JS -->
+            </div>
+        </main>
+    </div>
+
+    <section class="contribute-section">
+        <div class="container">
+            <h2>Help Others Escape</h2>
+            <p class="tagline" style="margin-bottom: 2rem;">Found a direct link or a script that actually works? Share it with the community.</p>
+            <form id="contributeForm" class="form-grid">
+                <div class="form-group">
+                    <label for="servName">Service Name</label>
+                    <input type="text" id="servName" class="form-input" required placeholder="e.g. Adobe Creative Cloud">
+                </div>
+                <div class="form-group">
+                    <label for="servCat">Category</label>
+                    <select id="servCat" class="form-input">
+                        <option value="SaaS">SaaS</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Fitness">Fitness</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="servDiff">Difficulty</label>
+                    <select id="servDiff" class="form-input">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="servLink">Direct Cancel URL</label>
+                    <input type="url" id="servLink" class="form-input" required placeholder="https://...">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="servScript">Retention Agent Script (Optional)</label>
+                    <textarea id="servScript" class="form-input" rows="3" placeholder="What should people say on the phone to avoid the sales pitch?"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Submit to Roadmap</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="year"></span> CancelMap. A community-driven project to end dark patterns.</p>
+            <p style="margin-top: 1rem; font-size: 0.8rem;">Disclaimer: We are not affiliated with any services listed. Links are provided by users.</p>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-content" id="modalContent">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        // Initial Data
+        const initialServices = [
+            {
+                id: 1,
+                name: "Adobe Creative Cloud",
+                category: "SaaS",
+                difficulty: "hard",
+                link: "https://account.adobe.com/plans",
+                script: "Agent: 'We can offer you 2 months free!'\n\nYou: 'I am not interested in any offers or discounts. Please process the cancellation immediately and send me a confirmation email. I do not authorize any further charges.'",
+                desc: "Known for high early-termination fees."
+            },
+            {
+                id: 2,
+                name: "Amazon Prime",
+                category: "Entertainment",
+                difficulty: "medium",
+                link: "https://www.amazon.com/amazonprime/managemembership",
+                script: "Just keep clicking 'Continue to Cancel' through the 4-5 pages of guilt-tripping prompts.",
+                desc: "Requires multiple confirmation clicks."
+            },
+            {
+                id: 3,
+                name: "Netflix",
+                category: "Entertainment",
+                difficulty: "easy",
+                link: "https://www.netflix.com/cancelplan",
+                script: "No script needed. Direct and simple.",
+                desc: "One of the few services that makes it easy."
+            },
+            {
+                id: 4,
+                name: "Planet Fitness",
+                category: "Fitness",
+                difficulty: "hard",
+                link: "N/A (Requires Certified Mail)",
+                script: "You must send a signed letter via Certified Mail to your home club. \n\nScript for phone: 'I am sending my formal cancellation via certified mail today. Please note my account for closure.'",
+                desc: "Avoid phone calls; they rarely process cancellations."
+            },
+            {
+                id: 5,
+                name: "Microsoft 365",
+                category: "SaaS",
+                difficulty: "medium",
+                link: "https://account.microsoft.com/services",
+                script: "Navigate to 'Manage' -> 'Cancel Subscription'. If it asks for a reason, select 'Too expensive'.",
+                desc: "Hidden under general account services."
+            },
+            {
+                id: 6,
+                name: "Apple Music",
+                category: "Entertainment",
+                difficulty: "easy",
+                link: "https://music.apple.com/account",
+                script: "Go to Account Settings -> Subscriptions -> Manage.",
+                desc: "Fast process via Apple ID."
+            }
+        ];
+
+        let services = [...initialServices];
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // DOM Elements
+        const grid = document.getElementById('servicesGrid');
+        const searchInput = document.getElementById('searchInput');
+        const filterChips = document.getElementById('filterChips');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContent = document.getElementById('modalContent');
+        const modalClose = document.getElementById('modalClose');
+        const contributeForm = document.getElementById('contributeForm');
+        const toast = document.getElementById('toast');
+
+        // Initialize
+        function init() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            loadLocalStorage();
+            render();
+        }
+
+        function loadLocalStorage() {
+            const saved = localStorage.getItem('cancelmap_data');
+            if (saved) {
+                const extra = JSON.parse(saved);
+                services = [...initialServices, ...extra];
+            }
+        }
+
+        function saveLocalStorage(newData) {
+            const extra = services.filter(s => !initialServices.find(i => i.id === s.id));
+            localStorage.setItem('cancelmap_data', JSON.stringify(extra));
+        }
+
+        function render() {
+            grid.innerHTML = '';
+            
+            const filtered = services.filter(s => {
+                const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesCat = currentFilter === 'all' || s.category === currentFilter;
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">No services found matching your criteria. Try contributing one!</div>`;
+                return;
+            }
+
+            filtered.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => openModal(s);
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="service-name">${s.name}</span>
+                        <span class="difficulty diff-${s.difficulty}">${s.difficulty}</span>
+                    </div>
+                    <p class="card-meta">${s.desc || 'Direct cancellation guide available.'}</p>
+                    <button class="btn-view">View Roadmap</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openModal(service) {
+            modalContent.innerHTML = `
+                <h2 class="modal-title">${service.name}</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Category: ${service.category} | Difficulty: ${service.difficulty}</p>
+                
+                <span class="section-label">Direct Cancellation Link</span>
+                <div class="link-box">
+                    <a href="${service.link}" target="_blank" rel="noopener noreferrer">${service.link}</a>
+                    <button class="copy-btn" onclick="copyText('${service.link}')">Copy</button>
+                </div>
+
+                <span class="section-label">Retention Agent Script</span>
+                <div class="script-box" id="scriptText">${service.script}</div>
+                <button class="copy-btn" onclick="copyText(document.getElementById('scriptText').innerText)">Copy Script</button>
+            `;
+            modalOverlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        }
+
+        // Events
+        searchInput.oninput = (e) => {
+            searchQuery = e.target.value;
+            render();
+        };
+
+        filterChips.onclick = (e) => {
+            if (e.target.classList.contains('chip')) {
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.cat;
+                render();
+            }
+        };
+
+        modalClose.onclick = () => {
+            modalOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        };
+
+        window.onclick = (e) => {
+            if (e.target === modalOverlay) {
+                modalClose.onclick();
+            }
+        };
+
+        contributeForm.onsubmit = (e) => {
+            e.preventDefault();
+            const newService = {
+                id: Date.now(),
+                name: document.getElementById('servName').value,
+                category: document.getElementById('servCat').value,
+                difficulty: document.getElementById('servDiff').value,
+                link: document.getElementById('servLink').value,
+                script: document.getElementById('servScript').value || "No specific script provided.",
+                desc: "Community contributed guide."
+            };
+            
+            services.push(newService);
+            saveLocalStorage(newService);
+            render();
+            contributeForm.reset();
+            
+            toast.textContent = "Guide submitted successfully!";
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.textContent = "Copied to clipboard!";
+            }, 3000);
+        };
+
+        init();
+    </script>
+</body>
+</html>

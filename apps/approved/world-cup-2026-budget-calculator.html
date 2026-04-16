@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup 2026 Budget Calculator | Plan Your North American Trip</title>
+    <meta name="description" content="Easily plan your World Cup 2026 journey. Calculate hotel, ticket, transport, and food costs across multiple US, Mexico, and Canada host cities.">
+    <meta name="keywords" content="World Cup 2026 Budget Calculator, FIFA 2026 travel costs, World Cup trip planner, North America 2026 budget">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="World Cup 2026 Budget Calculator">
+    <meta property="og:description" content="Plan your multi-city World Cup 2026 trip. Track hotel, ticket, and transport costs across all host cities.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    
+    <link rel="canonical" href="https://example.com/world-cup-2026-budget-calculator">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "World Cup 2026 Budget Calculator",
+      "description": "A specialized budget calculator for international football fans traveling to the 2026 World Cup in North America.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #004a99;
+            --primary-dark: #003366;
+            --secondary: #eeb31d;
+            --accent: #2ecc71;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --border: #334155;
+            --radius: 12px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            padding: 3rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-bottom: 4px solid var(--secondary);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .global-settings {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .city-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .city-grid {
+                grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            }
+        }
+
+        .city-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: var(--shadow);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .city-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .city-header h3 {
+            color: var(--secondary);
+        }
+
+        .btn-remove {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .btn-remove:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .city-inputs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .city-inputs .input-group.full-width {
+            grid-column: span 2;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.1s, background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: #facc3c;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: white;
+            color: white;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid var(--secondary);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(238, 179, 29, 0.2);
+        }
+
+        .summary-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .total-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .breakdown-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .breakdown-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--card-bg);
+            border-left: 4px solid var(--secondary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            margin-top: 10px;
+            box-shadow: var(--shadow);
+            animation: toastIn 0.3s ease-out;
+        }
+
+        @keyframes toastIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 2rem;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>World Cup 2026 Budget Calculator</h1>
+        <p>Plan your journey across North America. Estimate costs for hotels, tickets, and transport across multiple host cities.</p>
+    </header>
+
+    <main>
+        <section class="global-settings" aria-labelledby="global-settings-title">
+            <h2 id="global-settings-title" class="sr-only">Global Trip Settings</h2>
+            <div class="input-group">
+                <label for="currency">Currency</label>
+                <select id="currency" onchange="updateUI()">
+                    <option value="USD">$ USD</option>
+                    <option value="EUR">€ EUR</option>
+                    <option value="GBP">£ GBP</option>
+                    <option value="CAD">C$ CAD</option>
+                    <option value="MXN">$ MXN</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="daily-food">Daily Food Budget (per person)</label>
+                <input type="number" id="daily-food" value="50" min="0" oninput="updateUI()">
+            </div>
+        </section>
+
+        <section id="city-container" class="city-grid" aria-live="polite">
+            <!-- City modules injected here -->
+        </section>
+
+        <div class="actions">
+            <button class="btn-primary" onclick="addCity()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add City Module
+            </button>
+            <button class="btn-secondary" onclick="resetAll()">Reset All</button>
+        </div>
+
+        <section class="summary-card" aria-labelledby="summary-title">
+            <h2 id="summary-title">Estimated Total Trip Cost</h2>
+            <span class="total-amount" id="total-cost">$0.00</span>
+            <div class="breakdown">
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Hotels</span>
+                    <span class="breakdown-value" id="sum-hotels">$0.00</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Tickets</span>
+                    <span class="breakdown-value" id="sum-tickets">$0.00</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Transport</span>
+                    <span class="breakdown-value" id="sum-transport">$0.00</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Food</span>
+                    <span class="breakdown-value" id="sum-food">$0.00</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <footer>
+        <p>&copy; 2024 World Cup 2026 Budget Tool. Not affiliated with FIFA.</p>
+    </footer>
+
+    <script>
+        // --- State Management ---
+        let state = {
+            currency: 'USD',
+            dailyFood: 50,
+            cities: []
+        };
+
+        const CURRENCY_SYMBOLS = {
+            USD: '$',
+            EUR: '€',
+            GBP: '£',
+            CAD: 'C$',
+            MXN: '$'
+        };
+
+        // --- Initialization ---
+        window.onload = () => {
+            const saved = localStorage.getItem('wc2026_budget_data');
+            if (saved) {
+                state = JSON.parse(saved);
+                document.getElementById('currency').value = state.currency;
+                document.getElementById('daily-food').value = state.dailyFood;
+            } else {
+                // Add a default city for new users
+                addCity('New York/New Jersey');
+            }
+            updateUI();
+        };
+
+        function saveState() {
+            localStorage.setItem('wc2026_budget_data', JSON.stringify(state));
+        }
+
+        // --- Logic ---
+        function addCity(name = '') {
+            const id = Date.now();
+            const newCity = {
+                id: id,
+                name: name,
+                hotelPrice: 0,
+                hotelDays: 1,
+                ticketCost: 0,
+                transportCost: 0,
+                stayDays: 1
+            };
+            state.cities.push(newCity);
+            renderCities();
+            updateUI();
+            showToast('City module added');
+        }
+
+        function removeCity(id) {
+            state.cities = state.cities.filter(c => c.id !== id);
+            renderCities();
+            updateUI();
+            showToast('City module removed');
+        }
+
+        function updateCityData(id, field, value) {
+            const city = state.cities.find(c => c.id === id);
+            if (city) {
+                // Sanitize numeric inputs
+                if (field !== 'name') {
+                    city[field] = parseFloat(value) || 0;
+                } else {
+                    city[field] = value;
+                }
+            }
+            updateUI();
+        }
+
+        function resetAll() {
+            if (confirm('Are you sure you want to clear all your planning data?')) {
+                state.cities = [];
+                state.dailyFood = 50;
+                state.currency = 'USD';
+                document.getElementById('currency').value = 'USD';
+                document.getElementById('daily-food').value = '50';
+                renderCities();
+                updateUI();
+                showToast('All data cleared');
+            }
+        }
+
+        // --- UI Rendering ---
+        function renderCities() {
+            const container = document.getElementById('city-container');
+            container.innerHTML = '';
+
+            state.cities.forEach(city => {
+                const card = document.createElement('article');
+                card.className = 'city-card';
+                card.innerHTML = `
+                    <div class="city-header">
+                        <input type="text" value="${city.name}" 
+                               placeholder="City Name (e.g. Mexico City)" 
+                               oninput="updateCityData(${city.id}, 'name', this.value)" 
+                               style="font-weight: bold; border: none; background: transparent; color: var(--secondary); font-size: 1.2rem; width: 70%;">
+                        <button class="btn-remove" onclick="removeCity(${city.id})" aria-label="Remove city">Remove</button>
+                    </div>
+                    <div class="city-inputs">
+                        <div class="input-group full-width">
+                            <label>Hotel Price per Night</label>
+                            <input type="number" value="${city.hotelPrice}" min="0" oninput="updateCityData(${city.id}, 'hotelPrice', this.value)">
+                        </div>
+                        <div class="input-group">
+                            <label>Nights Stayed</label>
+                            <input type="number" value="${city.hotelDays}" min="1" oninput="updateCityData(${city.id}, 'hotelDays', this.value)">
+                        </div>
+                        <div class="input-group">
+                            <label>Total Ticket Costs</label>
+                            <input type="number" value="${city.ticketCost}" min="0" oninput="updateCityData(${city.id}, 'ticketCost', this.value)">
+                        </div>
+                        <div class="input-group">
+                            <label>Local Transport</label>
+                            <input type="number" value="${city.transportCost}" min="0" oninput="updateCityData(${city.id}, 'transportCost', this.value)">
+                        </div>
+                        <div class="input-group">
+                            <label>Total Days in City</label>
+                            <input type="number" value="${city.stayDays}" min="1" oninput="updateCityData(${city.id}, 'stayDays', this.value)">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateUI() {
+            // Update global state from inputs
+            state.currency = document.getElementById('currency').value;
+            state.dailyFood = parseFloat(document.getElementById('daily-food').value) || 0;
+
+            const symbol = CURRENCY_SYMBOLS[state.currency];
+            
+            let totalHotels = 0;
+            let totalTickets = 0;
+            let totalTransport = 0;
+            let totalFood = 0;
+
+            state.cities.forEach(city => {
+                totalHotels += (city.hotelPrice * city.hotelDays);
+                totalTickets += city.ticketCost;
+                totalTransport += city.transportCost;
+                totalFood += (state.dailyFood * city.stayDays);
+            });
+
+            const grandTotal = totalHotels + totalTickets + totalTransport + totalFood;
+
+            // Update summary DOM
+            document.getElementById('total-cost').textContent = `${symbol}${grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('sum-hotels').textContent = `${symbol}${totalHotels.toLocaleString()}`;
+            document.getElementById('sum-tickets').textContent = `${symbol}${totalTickets.toLocaleString()}`;
+            document.getElementById('sum-transport').textContent = `${symbol}${totalTransport.toLocaleString()}`;
+            document.getElementById('sum-food').textContent = `${symbol}${totalFood.toLocaleString()}`;
+
+            saveState();
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // Overwrite confirm to use a custom toast-like approach if needed, 
+        // but for a "Reset All" critical action, standard confirm is acceptable for accessibility.
+        // However, the prompt asks to avoid alert/confirm. Let's implement a simple custom modal.
+    </script>
+    
+    <!-- Custom Confirmation Modal for Reset -->
+    <style>
+        #modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+            max-width: 400px;
+        }
+        .modal-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+    </style>
+    
+    <div id="modal-overlay">
+        <div class="modal">
+            <h3>Clear All Data?</h3>
+            <p>This will permanently delete all your city modules and settings.</p>
+            <div class="modal-btns">
+                <button class="btn-secondary" onclick="closeResetModal()">Cancel</button>
+                <button class="btn-primary" style="background: var(--danger); color: white;" onclick="confirmReset()">Yes, Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Replace the previous resetAll to use the modal
+        function resetAll() {
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+        function closeResetModal() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+        function confirmReset() {
+            closeResetModal();
+            state.cities = [];
+            state.dailyFood = 50;
+            state.currency = 'USD';
+            document.getElementById('currency').value = 'USD';
+            document.getElementById('daily-food').value = '50';
+            renderCities();
+            updateUI();
+            showToast('All data cleared');
+        }
+    </script>
+</body>
+</html>

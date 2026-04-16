@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Cost Live Ticker | Real-Time Meeting Cost Calculator</title>
+    <meta name="description" content="Calculate the real-time financial cost of your meetings. Track burning budget as the seconds tick by. Stop wasteful meetings today.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Meeting Cost Live Ticker - Real-Time Cost Calculator">
+    <meta property="og:description" content="See exactly how much your meeting is costing the company in real-time. Stop the bleed.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/meeting-cost-live-ticker.html">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://freetoolbox.tools/apps/meeting-cost-live-ticker.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Meeting Cost Live Ticker",
+      "description": "A real-time meeting cost calculator that tracks the financial burn of company meetings based on attendee salaries.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #0a0a0b;
+            --card-bg: #16161a;
+            --accent-red: #ff4d4d;
+            --accent-green: #00ff88;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a5;
+            --border-color: #2d2d33;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+
+        /* Input Section */
+        .setup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .setup-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        input, select {
+            background: #222226;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent-red);
+        }
+
+        .preset-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .preset-btn {
+            background: #222226;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+        }
+
+        .preset-btn.active {
+            background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
+        }
+
+        /* Ticker Section */
+        .ticker-display {
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .cost-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .big-counter {
+            font-family: var(--font-mono);
+            font-size: clamp(3rem, 15vw, 6rem);
+            font-weight: 700;
+            color: var(--accent-red);
+            text-shadow: 0 0 20px rgba(255, 77, 77, 0.3);
+            display: block;
+            line-height: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Alert Section */
+        .email-alert {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            text-align: center;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .email-alert.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: var(--accent-red);
+            color: white;
+            flex: 2;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #2d2d33;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #3d3d43;
+        }
+
+        /* Screenshot Mode */
+        .screenshot-mode .no-screenshot {
+            display: none !important;
+        }
+        .screenshot-mode .card {
+            border: none;
+            box-shadow: none;
+            background: transparent;
+        }
+        .screenshot-mode .logo-placeholder {
+            display: block !important;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            border: 2px dashed var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .logo-placeholder {
+            display: none;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>Meeting Cost Live Ticker</h1>
+        <p class="tagline">Stop the financial bleed. Track your meeting burn in real-time.</p>
+    </header>
+
+    <main>
+        <div class="card" id="app-card">
+            <div class="logo-placeholder">COMPANY LOGO</div>
+
+            <section class="no-screenshot" aria-labelledby="setup-heading">
+                <h2 id="setup-heading" class="sr-only">Meeting Setup</h2>
+                <div class="setup-grid">
+                    <div class="input-group">
+                        <label for="attendees">Number of Attendees</label>
+                        <input type="number" id="attendees" value="5" min="1" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="hourly-rate">Avg. Hourly Salary ($)</label>
+                        <input type="number" id="hourly-rate" value="50" min="1" step="1">
+                        <div class="preset-container">
+                            <button class="preset-btn" data-val="30">Junior ($30)</button>
+                            <button class="preset-btn" data-val="50">Mid ($50)</button>
+                            <button class="preset-btn" data-val="80">Senior ($80)</button>
+                            <button class="preset-btn" data-val="150">Exec ($150)</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ticker-display" aria-live="polite">
+                <span class="cost-label">Total Meeting Cost</span>
+                <span class="big-counter" id="main-ticker">$0.00</span>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="per-min-val">$0.00</span>
+                        <span class="stat-label">Cost per Minute</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="per-hour-val">$0.00</span>
+                        <span class="stat-label">Cost per Hour</span>
+                    </div>
+                </div>
+            </section>
+
+            <div id="email-alert" class="email-alert">
+                ⚠️ This meeting could have been an email.
+            </div>
+
+            <div class="controls no-screenshot">
+                <button id="btn-start" class="btn btn-primary">Start Meeting</button>
+                <button id="btn-stop" class="btn btn-secondary" style="display: none;">Pause</button>
+                <button id="btn-reset" class="btn btn-secondary">Reset</button>
+                <button id="btn-snap" class="btn btn-secondary">📸 Snap</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Meeting Cost Live Ticker. Built for productivity.</p>
+    </footer>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        // State Management
+        let state = {
+            isRunning: false,
+            startTime: null,
+            elapsedTime: 0, // in milliseconds
+            attendees: 5,
+            hourlyRate: 50,
+            timerId: null,
+            emailThreshold: 50 // Dollars before alert shows
+        };
+
+        // DOM Elements
+        const el = {
+            attendees: document.getElementById('attendees'),
+            hourlyRate: document.getElementById('hourly-rate'),
+            mainTicker: document.getElementById('main-ticker'),
+            perMinVal: document.getElementById('per-min-val'),
+            perHourVal: document.getElementById('per-hour-val'),
+            btnStart: document.getElementById('btn-start'),
+            btnStop: document.getElementById('btn-stop'),
+            btnReset: document.getElementById('btn-reset'),
+            btnSnap: document.getElementById('btn-snap'),
+            emailAlert: document.getElementById('email-alert'),
+            presetBtns: document.querySelectorAll('.preset-btn'),
+            appCard: document.getElementById('app-card'),
+            toast: document.getElementById('toast'),
+            year: document.getElementById('year')
+        };
+
+        // Initialize
+        el.year.textContent = new Date().getFullYear();
+        updatePresetUI();
+
+        // Preset Logic
+        el.presetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const val = btn.getAttribute('data-val');
+                el.hourlyRate.value = val;
+                updatePresetUI();
+                calculateStaticCosts();
+            });
+        });
+
+        function updatePresetUI() {
+            el.presetBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-val') === el.hourlyRate.value);
+            });
+        }
+
+        el.hourlyRate.addEventListener('input', () => {
+            updatePresetUI();
+            calculateStaticCosts();
+        });
+
+        el.attendees.addEventListener('input', calculateStaticCosts);
+
+        function calculateStaticCosts() {
+            const attendees = parseInt(el.attendees.value) || 0;
+            const rate = parseFloat(el.hourlyRate.value) || 0;
+            
+            const perHour = attendees * rate;
+            const perMin = perHour / 60;
+
+            el.perHourVal.textContent = `$${perHour.toFixed(2)}`;
+            el.perMinVal.textContent = `$${perMin.toFixed(2)}`;
+            
+            return { perHour, perMin };
+        }
+
+        // Timer Logic
+        function startMeeting() {
+            state.isRunning = true;
+            state.attendees = parseInt(el.attendees.value) || 0;
+            state.hourlyRate = parseFloat(el.hourlyRate.value) || 0;
+            
+            if (!state.startTime) {
+                state.startTime = Date.now();
+            } else {
+                // Adjust start time to account for paused duration
+                state.startTime = Date.now() - state.elapsedTime;
+            }
+
+            el.btnStart.style.display = 'none';
+            el.btnStop.style.display = 'block';
+            
+            // Run ticker at 10fps for smooth cents animation
+            state.timerId = setInterval(updateTicker, 100);
+            showToast("Meeting started. Money is burning...");
+        }
+
+        function stopMeeting() {
+            state.isRunning = false;
+            clearInterval(state.timerId);
+            state.elapsedTime = Date.now() - state.startTime;
+            
+            el.btnStart.textContent = 'Resume Meeting';
+            el.btnStart.style.display = 'block';
+            el.btnStop.style.display = 'none';
+        }
+
+        function resetMeeting() {
+            stopMeeting();
+            state.startTime = null;
+            state.elapsedTime = 0;
+            el.btnStart.textContent = 'Start Meeting';
+            el.mainTicker.textContent = '$0.00';
+            el.emailAlert.classList.remove('visible');
+            calculateStaticCosts();
+        }
+
+        function updateTicker() {
+            const now = Date.now();
+            const currentElapsed = now - state.startTime;
+            const seconds = currentElapsed / 1000;
+            
+            const costPerSecond = (state.attendees * state.hourlyRate) / 3600;
+            const totalCost = seconds * costPerSecond;
+
+            el.mainTicker.textContent = `$${totalCost.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })}`;
+
+            if (totalCost >= state.emailThreshold) {
+                el.emailAlert.classList.add('visible');
+            }
+        }
+
+        // Screenshot Mode
+        function toggleScreenshot() {
+            document.body.classList.add('screenshot-mode');
+            showToast("Screenshot mode active. Take your capture!");
+            
+            setTimeout(() => {
+                document.body.classList.remove('screenshot-mode');
+                showToast("Returned to editor mode.");
+            }, 5000);
+        }
+
+        // Toast helper
+        function showToast(msg) {
+            el.toast.textContent = msg;
+            el.toast.style.opacity = '1';
+            setTimeout(() => {
+                el.toast.style.opacity = '0';
+            }, 3000);
+        }
+
+        // Event Listeners
+        el.btnStart.addEventListener('click', startMeeting);
+        el.btnStop.addEventListener('click', stopMeeting);
+        el.btnReset.addEventListener('click', resetMeeting);
+        el.btnSnap.addEventListener('click', toggleScreenshot);
+
+        // Initial run
+        calculateStaticCosts();
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/dora-compliance-self-assessment-checklis.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">DORA Compliance Self-Assessment Checklist</a>
+    <a href="https://freetoolbox.tools/apps/omnicalc-rpg.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">OmniCalc RPG</a>
+    <a href="https://freetoolbox.tools/apps/web-accessibility-heading-structure-vali.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Web Accessibility Heading Structure Validator - Check HTML Hierarchy</a>
+    <a href="https://freetoolbox.tools/apps/precision-3d-printing-unit-converter.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Precision 3D Printing Unit Converter</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

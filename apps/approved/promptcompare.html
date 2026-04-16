@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptCompare | AI Prompt A/B Tester for Images</title>
+    <meta name="description" content="Professional AI prompt A/B tester for images. Compare Midjourney, DALL-E, and Stable Diffusion prompt variations side-by-side to find the perfect visual style.">
+    <meta name="keywords" content="AI prompt A/B tester for images, prompt versioning, midjourney prompt tester, dalle prompt comparison, AI art workflow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="PromptCompare | AI Prompt A/B Tester for Images">
+    <meta property="og:description" content="Stop guessing and start testing. Compare multiple AI prompt variations side-by-side in one gallery.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://promptcompare.app">
+    <link rel="canonical" href="https://promptcompare.app">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PromptCompare",
+      "description": "A professional gallery tool for A/B testing AI image prompts side-by-side.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --border: #334155;
+            --radius: 12px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+        h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; }
+        p { color: var(--text-muted); }
+
+        /* Layout */
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(to bottom, #1e293b, #0f172a);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        /* Prompt Input Area */
+        .input-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        textarea, input {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .variations-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .variation-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 0.5rem 0.75rem;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .image-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .image-card.winner {
+            border: 3px solid var(--success);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .image-container {
+            aspect-ratio: 1/1;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-container .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .card-content {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .prompt-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+            font-style: italic;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Saved History */
+        .history-section {
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .history-item {
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .history-prompt {
+            font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.5);
+            transform: translateY(200%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+            h1 { font-size: 1.5rem; }
+            .input-card { padding: 1rem; }
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PromptCompare</h1>
+        <p>Professional AI Prompt A/B Tester for Images</p>
+    </header>
+
+    <main>
+        <section id="tester">
+            <div class="input-card">
+                <div class="form-group">
+                    <label for="base-prompt">Base Prompt</label>
+                    <textarea id="base-prompt" rows="3" placeholder="e.g., A futuristic city skyline during golden hour, cinematic lighting..."></textarea>
+                </div>
+
+                <label>Prompt Variations (A/B Tests)</label>
+                <div id="variations-list" class="variations-container">
+                    <div class="variation-row">
+                        <input type="text" class="variation-input" placeholder="Variation 1 (e.g., in the style of Cyberpunk 2077)">
+                        <button class="btn btn-danger" onclick="removeVariation(this)" aria-label="Remove variation">×</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-secondary" onclick="addVariation()" style="flex: 1;">+ Add Variation</button>
+                </div>
+
+                <button class="btn btn-primary" id="generate-btn" onclick="generateComparison()">
+                    <span>Generate Comparison Grid</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg>
+                </button>
+            </div>
+        </section>
+
+        <section id="results-section" style="display: none;">
+            <h2>Comparison Results</h2>
+            <div id="gallery" class="gallery-grid">
+                <!-- Images injected here -->
+            </div>
+        </section>
+
+        <section class="history-section">
+            <h2>Saved Winning Prompts</h2>
+            <div id="history-list" class="history-list">
+                <!-- History items injected here -->
+                <p style="text-align: center; padding: 2rem; opacity: 0.5;">No winning prompts saved yet.</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" role="alert"></div>
+
+    <footer style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.85rem;">
+        <p>&copy; <span id="year"></span> PromptCompare. Designed for AI Artists.</p>
+    </footer>
+
+    <script>
+        // State Management
+        let state = {
+            winners: JSON.parse(localStorage.getItem('prompt_winners') || '[]'),
+            isGenerating: false
+        };
+
+        // Initialize
+        document.getElementById('year').textContent = new Date().getFullYear();
+        renderHistory();
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function addVariation() {
+            const container = document.getElementById('variations-list');
+            const div = document.createElement('div');
+            div.className = 'variation-row';
+            div.innerHTML = `
+                <input type="text" class="variation-input" placeholder="New variation...">
+                <button class="btn btn-danger" onclick="removeVariation(this)" aria-label="Remove variation">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeVariation(btn) {
+            const rows = document.querySelectorAll('.variation-row');
+            if (rows.length > 1) {
+                btn.parentElement.remove();
+            } else {
+                showToast("At least one variation is required.");
+            }
+        }
+
+        async function generateComparison() {
+            const basePrompt = document.getElementById('base-prompt').value.trim();
+            const variationInputs = document.querySelectorAll('.variation-input');
+            const gallery = document.getElementById('gallery');
+            const resultsSection = document.getElementById('results-section');
+            const btn = document.getElementById('generate-btn');
+
+            if (!basePrompt) {
+                showToast("Please enter a base prompt first.");
+                return;
+            }
+
+            state.isGenerating = true;
+            btn.disabled = true;
+            btn.innerHTML = '<span>Generating...</span>';
+            
+            gallery.innerHTML = '';
+            resultsSection.style.display = 'block';
+
+            const variations = Array.from(variationInputs).map(input => input.value.trim());
+            
+            // We treat the base prompt as Version A, and each variation as a test
+            const promptSet = [basePrompt, ...variations.filter(v => v !== "")];
+
+            promptSet.forEach((prompt, index) => {
+                const fullPrompt = index === 0 ? prompt : `${basePrompt}, ${prompt}`;
+                const card = createCard(fullPrompt, index);
+                gallery.appendChild(card);
+                
+                // Trigger the image load
+                loadImage(card, fullPrompt);
+            });
+
+            state.isGenerating = false;
+            btn.disabled = false;
+            btn.innerHTML = '<span>Generate Comparison Grid</span> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg>';
+            
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createCard(prompt, index) {
+            const div = document.createElement('div');
+            div.className = 'image-card';
+            div.setAttribute('data-index', index);
+            div.innerHTML = `
+                <div class="image-container">
+                    <div class="loader"></div>
+                    <img src="" alt="AI Generated Result ${index + 1}" style="opacity: 0">
+                </div>
+                <div class="card-content">
+                    <p class="prompt-text">${prompt}</p>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary" style="flex:1" onclick="voteWinner(this)">Vote</button>
+                        <button class="btn btn-secondary" onclick="copyPrompt(this)">Copy</button>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        async function loadImage(card, prompt) {
+            const img = card.querySelector('img');
+            const loader = card.querySelector('.loader');
+            
+            // Using Pollinations.ai for free, no-key, high-quality AI images
+            const seed = crypto.getRandomValues(new Uint32Array(1))[0];
+            const encodedPrompt = encodeURIComponent(prompt);
+            const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=512&height=512&nologo=true`;
+
+            try {
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = url;
+                });
+                img.style.opacity = '1';
+                loader.style.display = 'none';
+            } catch (e) {
+                loader.innerHTML = '<span style="font-size:10px; color:red">Error</span>';
+                showToast("Failed to load some images. Try again.");
+            }
+        }
+
+        function voteWinner(btn) {
+            const card = btn.closest('.image-card');
+            const allCards = document.querySelectorAll('.image-card');
+            
+            allCards.forEach(c => c.classList.remove('winner'));
+            card.classList.add('winner');
+            
+            const prompt = card.querySelector('.prompt-text').textContent;
+            saveWinner(prompt);
+            showToast("Marked as winner and saved to history!");
+        }
+
+        function copyPrompt(btn) {
+            const prompt = btn.closest('.image-card').querySelector('.prompt-text').textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                showToast("Prompt copied to clipboard!");
+            });
+        }
+
+        function saveWinner(prompt) {
+            if (!state.winners.includes(prompt)) {
+                state.winners.unshift(prompt);
+                if (state.winners.length > 10) state.winners.pop();
+                localStorage.setItem('prompt_winners', JSON.stringify(state.winners));
+                renderHistory();
+            }
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-list');
+            if (state.winners.length === 0) return;
+
+            container.innerHTML = '';
+            state.winners.forEach((prompt, idx) => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <span class="history-prompt">${prompt}</span>
+                    <div style="display:flex; gap:0.5rem">
+                        <button class="btn btn-secondary" onclick="copyText('${prompt.replace(/'/g, "\\'")}')" style="padding: 0.4rem 0.8rem">Copy</button>
+                        <button class="btn btn-danger" onclick="deleteHistory(${idx})" style="padding: 0.4rem 0.8rem">×</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Copied to clipboard!");
+            });
+        }
+
+        function deleteHistory(index) {
+            state.winners.splice(index, 1);
+            localStorage.setItem('prompt_winners', JSON.stringify(state.winners));
+            renderHistory();
+        }
+    </script>
+</body>
+</html>

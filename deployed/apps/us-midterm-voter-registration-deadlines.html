@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Midterm Voter Registration Deadlines 2026 | Quick State Guide</title>
+    <meta name="description" content="Find your state's voter registration deadline and early voting dates for the 2026 US Midterm elections. Fast, searchable, and direct links to official portals.">
+    <meta name="keywords" content="US midterm voter registration deadlines 2026, voter registration, 2026 elections, early voting dates, state voter portals">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="US Midterm Voter Registration Deadlines 2026">
+    <meta property="og:description" content="Quickly find when and how to register to vote in your state for the 2026 Midterms.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/us-midterm-voter-registration-deadlines.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/us-midterm-voter-registration-deadlines.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "US Midterm Voter Registration Deadlines 2026",
+      "description": "A comprehensive dashboard to find voter registration deadlines and early voting dates for all 50 US states for the 2026 midterm elections.",
+      "applicationCategory": "Civic Tool",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #c53030;
+            --accent-color: #2b6cb0;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --success-color: #38a169;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.2s ease-in-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Search Section */
+        .search-container {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--bg-color);
+            padding: 1.5rem 0;
+            margin-bottom: 1rem;
+        }
+
+        .search-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #stateSearch {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 1.1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        #stateSearch:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            fill: var(--text-muted);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        /* States Grid */
+        .states-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .state-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .state-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            box-shadow: var(--shadow);
+        }
+
+        .state-card:active {
+            transform: scale(0.95);
+        }
+
+        /* Detail Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #edf2f7;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background: #e2e8f0;
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: right;
+        }
+
+        .btn-portal {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .btn-portal:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translate(-50%, -10px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .disclaimer {
+            max-width: 600px;
+            margin: 0 auto 1rem;
+            font-style: italic;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        @media (max-width: 480px) {
+            .states-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <div class="container">
+            <h1>2026 US Midterm Voter Guide</h1>
+            <p class="subtitle">Find registration deadlines and early voting dates for your state.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="search-container">
+            <div class="search-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <label for="stateSearch" class="sr-only">Search for your state</label>
+                <input type="text" id="stateSearch" placeholder="Search state (e.g. Texas, California...)" aria-label="Search state">
+            </div>
+        </section>
+
+        <section id="statesGrid" class="states-grid">
+            <!-- States injected by JS -->
+        </section>
+    </main>
+
+    <div id="modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal" aria-label="Close details">&times;</button>
+            <div class="modal-header">
+                <h2 id="modalTitle">State Name</h2>
+            </div>
+            <div class="modal-body">
+                <div class="info-row">
+                    <span class="info-label">Registration Deadline</span>
+                    <span class="info-value" id="regDeadline">Oct 15, 2026</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Early Voting Starts</span>
+                    <span class="info-value" id="earlyVoting">Oct 1, 2026</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Election Day</span>
+                    <span class="info-value">Nov 3, 2026</span>
+                </div>
+                <a href="#" id="portalLink" class="btn-portal" target="_blank" rel="noopener noreferrer">Visit Official State Portal</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" role="alert"></div>
+
+    <footer>
+        <div class="container">
+            <p class="disclaimer">Disclaimer: Deadlines are estimates based on typical election cycles. Please always verify dates on your official state government website.</p>
+            <p>&copy; 2026 Voter Information Dashboard. Non-partisan civic tool.</p>
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * STATIC DATA
+         * Note: Dates for 2026 are projected based on typical state laws 
+         * (e.g., 30 days prior for many, same-day for others).
+         */
+        const stateData = [
+            { name: "Alabama", deadline: "Oct 5, 2026", early: "Oct 12, 2026", portal: "https://www.sos.alabama.gov/" },
+            { name: "Alaska", deadline: "Oct 6, 2026", early: "Oct 15, 2026", portal: "https://elections.alaska.gov/" },
+            { name: "Arizona", deadline: "Oct 5, 2026", early: "Oct 18, 2026", portal: "https://azsos.gov/" },
+            { name: "Arkansas", deadline: "Oct 4, 2026", early: "Oct 18, 2026", portal: "https://www.sos.arkansas.gov/" },
+            { name: "California", deadline: "Oct 19, 2026", early: "Oct 7, 2026", portal: "https://www.sos.ca.gov/" },
+            { name: "Colorado", deadline: "Nov 3, 2026", early: "Oct 19, 2026", portal: "https://www.sos.state.co.us/" },
+            { name: "Connecticut", deadline: "Oct 12, 2026", early: "Oct 7, 2026", portal: "https://portal.ct.gov/" },
+            { name: "Delaware", deadline: "Oct 12, 2026", early: "Oct 13, 2026", portal: "https://elections.delaware.gov/" },
+            { name: "Florida", deadline: "Oct 5, 2026", early: "Oct 26, 2026", portal: "https://dos.myflorida.com/" },
+            { name: "Georgia", deadline: "Oct 5, 2026", early: "Oct 12, 2026", portal: "https://sos.ga.gov/" },
+            { name: "Hawaii", deadline: "Oct 13, 2026", early: "Oct 13, 2026", portal: "https://elections.hawaii.gov/" },
+            { name: "Idaho", deadline: "Oct 25, 2026", early: "Oct 19, 2026", portal: "https://voteidaho.gov/" },
+            { name: "Illinois", deadline: "Oct 20, 2026", early: "Oct 5, 2026", portal: "https://www.elections.il.gov/" },
+            { name: "Indiana", deadline: "Oct 5, 2026", early: "Oct 12, 2026", portal: "https://indianavoters.in.gov/" },
+            { name: "Iowa", deadline: "Oct 26, 2026", early: "Sept 20, 2026", portal: "https://sos.iowa.gov/" },
+            { name: "Kansas", deadline: "Oct 12, 2026", early: "Oct 15, 2026", portal: "https://sos.ks.gov/" },
+            { name: "Kentucky", deadline: "Oct 4, 2026", early: "Oct 26, 2026", portal: "https://elect.ky.gov/" },
+            { name: "Louisiana", deadline: "Oct 5, 2026", early: "Oct 12, 2026", portal: "https://www.sos.la.gov/" },
+            { name: "Maine", deadline: "Nov 3, 2026", early: "Oct 15, 2026", portal: "https://www.maine.gov/sos/" },
+            { name: "Maryland", deadline: "Oct 19, 2026", early: "Oct 17, 2026", portal: "https://elections.maryland.gov/" },
+            { name: "Massachusetts", deadline: "Oct 26, 2026", early: "Oct 15, 2026", portal: "https://www.sec.state.ma.us/" },
+            { name: "Michigan", deadline: "Oct 26, 2026", early: "Sept 21, 2026", portal: "https://www.michigan.gov/sos" },
+            { name: "Minnesota", deadline: "Nov 3, 2026", early: "Sept 22, 2026", portal: "https://www.sos.state.mn.us/" },
+            { name: "Mississippi", deadline: "Oct 6, 2026", early: "Oct 12, 2026", portal: "https://www.sos.ms.gov/" },
+            { name: "Missouri", deadline: "Oct 6, 2026", early: "Oct 15, 2026", portal: "https://www.sos.mo.gov/" },
+            { name: "Montana", deadline: "Oct 12, 2026", early: "Oct 19, 2026", portal: "https://sosmt.gov/" },
+            { name: "Nebraska", deadline: "Oct 25, 2026", early: "Oct 12, 2026", portal: "https://sos.nebraska.gov/" },
+            { name: "Nevada", deadline: "Nov 3, 2026", early: "Oct 19, 2026", portal: "https://www.nvsos.gov/" },
+            { name: "New Hampshire", deadline: "Nov 3, 2026", early: "Oct 20, 2026", portal: "https://www.sos.nh.gov/" },
+            { name: "New Jersey", deadline: "Oct 12, 2026", early: "Oct 26, 2026", portal: "https://www.nj.gov/state/elections/" },
+            { name: "New Mexico", deadline: "Oct 5, 2026", early: "Oct 12, 2026", portal: "https://www.sos.nm.gov/" },
+            { name: "New York", deadline: "Oct 19, 2026", early: "Sept 26, 2026", portal: "https://www.elections.ny.gov/" },
+            { name: "North Carolina", deadline: "Oct 12, 2026", early: "Oct 19, 2026", portal: "https://www.ncsbe.gov/" },
+            { name: "North Dakota", deadline: "N/A", early: "Oct 19, 2026", portal: "https://vip.sos.nd.gov/" },
+            { name: "Ohio", deadline: "Oct 5, 2026", early: "Oct 5, 2026", portal: "https://www.ohiosos.gov/" },
+            { name: "Oklahoma", deadline: "Oct 12, 2026", early: "Oct 26, 2026", portal: "https://oklahoma.gov/elections" },
+            { name: "Oregon", deadline: "Oct 12, 2026", early: "Oct 13, 2026", portal: "https://sos.oregon.gov/" },
+            { name: "Pennsylvania", deadline: "Oct 19, 2026", early: "Oct 19, 2026", portal: "https://www.vote.pa.gov/" },
+            { name: "Rhode Island", deadline: "Oct 26, 2026", early: "Oct 12, 2026", portal: "https://vote.sos.ri.gov/" },
+            { name: "South Carolina", deadline: "Oct 5, 2026", early: "Oct 12, 2026", portal: "https://scvotes.gov/" },
+            { name: "South Dakota", deadline: "Oct 12, 2026", early: "Oct 19, 2026", portal: "https://sos.sd.gov/" },
+            { name: "Tennessee", deadline: "Oct 5, 2026", early: "Oct 12, 2026", portal: "https://sos.tn.gov/" },
+            { name: "Texas", deadline: "Oct 5, 2026", early: "Oct 12, 2026", portal: "https://www.votetexas.gov/" },
+            { name: "Utah", deadline: "Oct 26, 2026", early: "Oct 19, 2026", portal: "https://vote.utah.gov/" },
+            { name: "Vermont", deadline: "Nov 3, 2026", early: "Sept 21, 2026", portal: "https://sos.vermont.gov/" },
+            { name: "Virginia", deadline: "Oct 12, 2026", early: "Sept 21, 2026", portal: "https://www.elections.virginia.gov/" },
+            { name: "Washington", deadline: "Oct 26, 2026", early: "Oct 13, 2026", portal: "https://www.sos.wa.gov/" },
+            { name: "West Virginia", deadline: "Oct 12, 2026", early: "Sept 28, 2026", portal: "https://sos.wv.gov/" },
+            { name: "Wisconsin", deadline: "Oct 19, 2026", early: "Oct 12, 2026", portal: "https://myvote.wi.gov/" },
+            { name: "Wyoming", deadline: "Nov 3, 2026", early: "Oct 19, 2026", portal: "https://sos.wy.gov/" }
+        ];
+
+        const statesGrid = document.getElementById('statesGrid');
+        const stateSearch = document.getElementById('stateSearch');
+        const modal = document.getElementById('modal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const toast = document.getElementById('toast');
+
+        // Modal Elements
+        const modalTitle = document.getElementById('modalTitle');
+        const regDeadline = document.getElementById('regDeadline');
+        const earlyVoting = document.getElementById('earlyVoting');
+        const portalLink = document.getElementById('portalLink');
+
+        /**
+         * Initialize the grid
+         */
+        function initGrid(filter = "") {
+            statesGrid.innerHTML = "";
+            const filteredStates = stateData.filter(state => 
+                state.name.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filteredStates.length === 0) {
+                statesGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-muted);">No states found matching "${filter}"</p>`;
+                return;
+            }
+
+            filteredStates.forEach(state => {
+                const card = document.createElement('div');
+                card.className = 'state-card';
+                card.textContent = state.name;
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-label', `View deadlines for ${state.name}`);
+                
+                card.addEventListener('click', () => openStateDetails(state));
+                card.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') openStateDetails(state);
+                });
+                
+                statesGrid.appendChild(card);
+            });
+        }
+
+        /**
+         * Open Detail Modal
+         */
+        function openStateDetails(state) {
+            modalTitle.textContent = state.name;
+            regDeadline.textContent = state.deadline;
+            earlyVoting.textContent = state.early;
+            portalLink.href = state.portal;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scroll
+            closeModalBtn.focus();
+        }
+
+        /**
+         * Close Modal
+         */
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        /**
+         * Toast Notification
+         */
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Event Listeners
+        stateSearch.addEventListener('input', (e) => {
+            initGrid(e.target.value);
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Close modal on overlay click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Close modal on Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                closeModal();
+            }
+        });
+
+        // Initial Load
+        window.addEventListener('DOMContentLoaded', () => {
+            initGrid();
+            showToast("Welcome! Search for your state to begin.");
+        });
+
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/json-to-clean-html-table-converter.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">JSON to Clean HTML Table Converter</a>
+    <a href="https://freetoolbox.tools/apps/midterm-election-ballot-strategy-planner.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Midterm Election Ballot Strategy Planner</a>
+    <a href="https://freetoolbox.tools/apps/chromaconvert.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">ChromaConvert</a>
+    <a href="https://freetoolbox.tools/apps/randomized-guest-list-filter.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Randomized Guest List Filter</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Hourly Rate Calculator - Calculate Your Sustainable Rate</title>
+    <meta name="description" content="Stop undercharging. Use our free freelancer hourly rate calculator to determine a sustainable rate based on your desired take-home pay, expenses, and taxes.">
+    <link rel="canonical" href="https://freetoolbox.tools/apps/freelancer-hourly-rate-calculator.html">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Freelancer Hourly Rate Calculator - Calculate Your Sustainable Rate">
+    <meta property="og:description" content="Determine exactly how much to charge per hour to cover your expenses, taxes, and desired salary.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/freelancer-hourly-rate-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Freelancer Hourly Rate Calculator",
+      "description": "A tool for freelancers to calculate their minimum hourly rate based on target income, expenses, and billable hours.",
+      "applicationCategory": "FinancialApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-color: #10b981;
+            --error-color: #ef4444;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1.2fr 0.8fr;
+                align-items: start;
+            }
+        }
+
+        .calculator-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s, ring 0.2s;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .toggle-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .btn-calculate {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-calculate:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .results-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .results-card h2 {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .rate-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            line-height: 1;
+        }
+
+        .rate-display span {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-left: 0.25rem;
+        }
+
+        .breakdown {
+            text-align: left;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .breakdown-item span:first-child {
+            color: var(--text-muted);
+        }
+
+        .breakdown-item span:last-child {
+            font-weight: 600;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #334155;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            transform: translateY(150%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        footer {
+            max-width: 800px;
+            margin: 4rem auto 2rem auto;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        nav {
+            display: none; /* Not needed for single page app, but keeping semantic tag */
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <nav aria-hidden="true"></nav>
+
+    <header>
+        <h1>Freelancer Hourly Rate Calculator</h1>
+        <p>Calculate a sustainable rate that covers your life, your business, and your taxes.</p>
+    </header>
+
+    <main>
+        <section class="calculator-card">
+            <div class="input-group">
+                <label for="takehome">Desired Annual Take-Home Pay</label>
+                <div class="input-wrapper">
+                    <span>$</span>
+                    <input type="number" id="takehome" placeholder="e.g. 60000" min="0" step="1000">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="expenses">Annual Business Expenses</label>
+                <div class="input-wrapper">
+                    <span>$</span>
+                    <input type="number" id="expenses" placeholder="e.g. 5000" min="0" step="100">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="billableHours">Billable Hours Per Week</label>
+                <div class="input-wrapper">
+                    <span>🕒</span>
+                    <input type="number" id="billableHours" placeholder="e.g. 25" min="1" max="168">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="weeksWorked">Weeks Worked Per Year</label>
+                <div class="input-wrapper">
+                    <span>📅</span>
+                    <input type="number" id="weeksWorked" placeholder="e.g. 48" min="1" max="52">
+                </div>
+            </div>
+
+            <div class="toggle-group">
+                <label class="toggle-label" for="taxBuffer">Add Tax Buffer (25%)</label>
+                <label class="switch">
+                    <input type="checkbox" id="taxBuffer" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <button class="btn-calculate" id="calcBtn">Calculate My Rate</button>
+        </section>
+
+        <section class="results-card" aria-live="polite">
+            <h2>Recommended Rate</h2>
+            <div class="rate-display" id="finalRate">$0<span>/hr</span></div>
+            
+            <div class="breakdown">
+                <div class="breakdown-item">
+                    <span>Annual Target (Net)</span>
+                    <span id="breakNet">$0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Business Expenses</span>
+                    <span id="breakExp">$0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Tax Buffer</span>
+                    <span id="breakTax">$0</span>
+                </div>
+                <div class="breakdown-item" style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem; font-weight: 700; color: var(--text-main);">
+                    <span>Total Gross Annual</span>
+                    <span id="breakGross">$0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Total Annual Hours</span>
+                    <span id="breakHours">0</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Freelancer Rate Tool. Built for sustainable business growth.</p>
+    </footer>
+
+    <div id="toast" class="toast">Please fill in all fields correctly.</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            const calcBtn = document.getElementById('calcBtn');
+            const toast = document.getElementById('toast');
+
+            // Input elements
+            const inputs = {
+                takehome: document.getElementById('takehome'),
+                expenses: document.getElementById('expenses'),
+                billableHours: document.getElementById('billableHours'),
+                weeksWorked: document.getElementById('weeksWorked'),
+                taxBuffer: document.getElementById('taxBuffer')
+            };
+
+            // Display elements
+            const displays = {
+                finalRate: document.getElementById('finalRate'),
+                breakNet: document.getElementById('breakNet'),
+                breakExp: document.getElementById('breakExp'),
+                breakTax: document.getElementById('breakTax'),
+                breakGross: document.getElementById('breakGross'),
+                breakHours: document.getElementById('breakHours')
+            };
+
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            function formatCurrency(num) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    maximumFractionDigits: 0
+                }).format(num);
+            }
+
+            function calculate() {
+                // Validation
+                const takehome = parseFloat(inputs.takehome.value);
+                const expenses = parseFloat(inputs.expenses.value);
+                const billableHours = parseFloat(inputs.billableHours.value);
+                const weeksWorked = parseFloat(inputs.weeksWorked.value);
+
+                if (isNaN(takehome) || isNaN(expenses) || isNaN(billableHours) || isNaN(weeksWorked)) {
+                    showToast('Please enter valid numbers in all fields.');
+                    return;
+                }
+
+                if (billableHours <= 0 || weeksWorked <= 0) {
+                    showToast('Hours and weeks must be greater than zero.');
+                    return;
+                }
+
+                if (weeksWorked > 52) {
+                    showToast('Weeks worked cannot exceed 52.');
+                    return;
+                }
+
+                // Logic
+                const baseRequirement = takehome + expenses;
+                const taxRate = inputs.taxBuffer.checked ? 0.25 : 0;
+                const taxAmount = baseRequirement * taxRate;
+                const totalGrossAnnual = baseRequirement + taxAmount;
+                const totalAnnualHours = billableHours * weeksWorked;
+                
+                const hourlyRate = totalGrossAnnual / totalAnnualHours;
+
+                // Update UI
+                displays.finalRate.innerHTML = `${formatCurrency(hourlyRate)}<span>/hr</span>`;
+                displays.breakNet.textContent = formatCurrency(takehome);
+                displays.breakExp.textContent = formatCurrency(expenses);
+                displays.breakTax.textContent = formatCurrency(taxAmount);
+                displays.breakGross.textContent = formatCurrency(totalGrossAnnual);
+                displays.breakHours.textContent = totalAnnualHours.toLocaleString();
+            }
+
+            calcBtn.addEventListener('click', calculate);
+
+            // Allow "Enter" key to trigger calculation
+            document.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    calculate();
+                }
+            });
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/podcast-episode-length-to-word-count-est.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Podcast Episode Length to Word Count Estimator</a>
+    <a href="https://freetoolbox.tools/apps/emotional-vent-shredder.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Emotional Vent &amp; Shredder</a>
+    <a href="https://freetoolbox.tools/apps/dora-compliance-self-assessment-tool.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">DORA Compliance Self-Assessment Tool</a>
+    <a href="https://freetoolbox.tools/apps/fabric-yardage-pattern-waste-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Fabric Yardage &amp; Pattern Waste Calculator</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

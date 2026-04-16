@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landed Cost Calculator | Professional Import Cost Tool</title>
+    <meta name="description" content="Calculate the total landed cost of your imports including shipping, insurance, customs duties, and taxes. A professional tool for importers and logistics managers.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Landed Cost Calculator | Professional Import Cost Tool">
+    <meta property="og:description" content="Accurately calculate the total cost of importing goods, including all hidden fees, duties, and taxes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/landed-cost-calculator">
+    
+    <link rel="canonical" href="https://yourdomain.com/landed-cost-calculator">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Landed Cost Calculator",
+      "description": "A professional tool for importers to calculate the total landed cost of goods, including freight, insurance, and customs duties.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 0;
+            margin: 0;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            main {
+                grid-template-columns: 1.2fr 0.8fr;
+                align-items: start;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--bg-main);
+            padding-bottom: 0.75rem;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            padding-left: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        input.no-prefix {
+            padding-left: 0.75rem;
+        }
+
+        .results-card {
+            position: sticky;
+            top: 2rem;
+            background: var(--primary);
+            color: white;
+        }
+
+        .results-card .section-title {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.2);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.95rem;
+        }
+
+        .result-row.total {
+            border-bottom: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .result-label {
+            opacity: 0.9;
+        }
+
+        .result-value {
+            font-weight: 600;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        @media print {
+            header, .btn-container, footer {
+                display: none;
+            }
+            main {
+                display: block;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            .results-card {
+                background: white !important;
+                color: black !important;
+                position: static;
+            }
+            .result-row {
+                color: black !important;
+                border-bottom-color: #eee !important;
+            }
+            .result-label, .result-value {
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Landed Cost Calculator</h1>
+        <p>Determine the true cost of your imported goods</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <div class="section-title">📦 Product Details</div>
+            <div class="input-group">
+                <div class="field">
+                    <label for="unit-cost">Unit Cost</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="unit-cost" placeholder="0.00" step="0.01" value="10.00">
+                    </div>
+                    <p class="help-text">Price per single unit from supplier</p>
+                </div>
+                <div class="field">
+                    <label for="quantity">Quantity</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="quantity" class="no-prefix" placeholder="0" value="100">
+                    </div>
+                    <p class="help-text">Total number of units</p>
+                </div>
+            </div>
+
+            <div class="section-title">🚢 Logistics & Shipping</div>
+            <div class="input-group">
+                <div class="field">
+                    <label for="shipping-cost">Shipping/Freight</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="shipping-cost" placeholder="0.00" step="0.01" value="250.00">
+                    </div>
+                    <p class="help-text">Total cost to transport goods</p>
+                </div>
+                <div class="field">
+                    <label for="insurance-cost">Insurance</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="insurance-cost" placeholder="0.00" step="0.01" value="50.00">
+                    </div>
+                    <p class="help-text">Cargo insurance cost</p>
+                </div>
+            </div>
+
+            <div class="section-title">⚖️ Customs & Taxes</div>
+            <div class="input-group">
+                <div class="field">
+                    <label for="duty-rate">Import Duty Rate (%)</label>
+                    <div class="input-wrapper">
+                        <span>%</span>
+                        <input type="number" id="duty-rate" placeholder="0" step="0.1" value="5.0">
+                    </div>
+                    <p class="help-text">HS Code duty percentage</p>
+                </div>
+                <div class="field">
+                    <label for="tax-rate">VAT / Sales Tax (%)</label>
+                    <div class="input-wrapper">
+                        <span>%</span>
+                        <input type="number" id="tax-rate" placeholder="0" step="0.1" value="15.0">
+                    </div>
+                    <p class="help-text">Local consumption tax</p>
+                </div>
+            </div>
+
+            <div class="section-title">🛠️ Other Fees</div>
+            <div class="input-group">
+                <div class="field">
+                    <label for="other-fees">Handling & Brokerage</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="other-fees" placeholder="0.00" step="0.01" value="100.00">
+                    </div>
+                    <p class="help-text">Port fees, customs broker, etc.</p>
+                </div>
+                <div class="field">
+                    <label for="currency-conversion">Conversion/Bank Fees</label>
+                    <div class="input-wrapper">
+                        <span>$</span>
+                        <input type="number" id="currency-conversion" placeholder="0.00" step="0.01" value="20.00">
+                    </div>
+                    <p class="help-text">Bank wire or exchange fees</p>
+                </div>
+            </div>
+        </section>
+
+        <aside class="card results-card">
+            <div class="section-title">📊 Cost Summary</div>
+            
+            <div class="result-row">
+                <span class="result-label">Product Subtotal:</span>
+                <span class="result-value" id="res-subtotal">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">CIF Value:</span>
+                <span class="result-value" id="res-cif">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Import Duties:</span>
+                <span class="result-value" id="res-duty">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">VAT / Taxes:</span>
+                <span class="result-value" id="res-tax">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Other Expenses:</span>
+                <span class="result-value" id="res-others">$0.00</span>
+            </div>
+
+            <div class="result-row total">
+                <span class="result-label">Total Landed Cost:</span>
+                <span class="result-value" id="res-total">$0.00</span>
+            </div>
+            
+            <div class="result-row" style="border: none; margin-top: 1rem; font-size: 1.1rem; background: rgba(0,0,0,0.1); padding: 0.75rem; border-radius: 8px;">
+                <span class="result-label">Landed Cost Per Unit:</span>
+                <span class="result-value" id="res-per-unit">$0.00</span>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-primary" onclick="window.print()">Print PDF</button>
+                <button class="btn btn-outline" onclick="resetForm()">Reset</button>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Landed Cost Calculator. Professional Grade Import Tool.</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const inputs = [
+            'unit-cost', 'quantity', 'shipping-cost', 'insurance-cost', 
+            'duty-rate', 'tax-rate', 'other-fees', 'currency-conversion'
+        ];
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            }).format(num);
+        }
+
+        function calculate() {
+            // Get values
+            const unitCost = parseFloat(document.getElementById('unit-cost').value) || 0;
+            const qty = parseFloat(document.getElementById('quantity').value) || 0;
+            const shipping = parseFloat(document.getElementById('shipping-cost').value) || 0;
+            const insurance = parseFloat(document.getElementById('insurance-cost').value) || 0;
+            const dutyRate = parseFloat(document.getElementById('duty-rate').value) || 0;
+            const taxRate = parseFloat(document.getElementById('tax-rate').value) || 0;
+            const others = parseFloat(document.getElementById('other-fees').value) || 0;
+            const conversion = parseFloat(document.getElementById('currency-conversion').value) || 0;
+
+            // 1. Product Cost
+            const productSubtotal = unitCost * qty;
+
+            // 2. CIF (Cost, Insurance, Freight) - The basis for duty calculation
+            const cifValue = productSubtotal + shipping + insurance;
+
+            // 3. Duty calculation
+            const dutyAmount = cifValue * (dutyRate / 100);
+
+            // 4. Tax calculation (Usually applied to CIF + Duty)
+            const taxAmount = (cifValue + dutyAmount) * (taxRate / 100);
+
+            // 5. Other expenses
+            const otherTotal = others + conversion;
+
+            // 6. Total Landed Cost
+            const totalLandedCost = cifValue + dutyAmount + taxAmount + otherTotal;
+
+            // 7. Cost per unit
+            const costPerUnit = qty > 0 ? totalLandedCost / qty : 0;
+
+            // Update UI
+            document.getElementById('res-subtotal').textContent = formatCurrency(productSubtotal);
+            document.getElementById('res-cif').textContent = formatCurrency(cifValue);
+            document.getElementById('res-duty').textContent = formatCurrency(dutyAmount);
+            document.getElementById('res-tax').textContent = formatCurrency(taxAmount);
+            document.getElementById('res-others').textContent = formatCurrency(otherTotal);
+            document.getElementById('res-total').textContent = formatCurrency(totalLandedCost);
+            document.getElementById('res-per-unit').textContent = formatCurrency(costPerUnit);
+        }
+
+        function resetForm() {
+            inputs.forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            calculate();
+        }
+
+        // Add event listeners to all inputs for real-time updates
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', calculate);
+        });
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>

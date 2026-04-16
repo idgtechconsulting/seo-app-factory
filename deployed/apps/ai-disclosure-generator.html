@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Disclosure Generator | Create Compliant AI Content Labels</title>
+    <meta name="description" content="Generate professional, legally-minded AI disclosure statements for YouTube, Instagram, and Blogs. Ensure your content remains transparent and compliant.">
+    <meta name="keywords" content="AI Disclosure Generator, AI content label, AI transparency, content creator compliance, AI assisted content phrasing">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="AI Disclosure Generator | Professional Content Labels">
+    <meta property="og:description" content="Quickly generate standard disclosure statements for AI-assisted or AI-generated content across all social platforms.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/ai-disclosure-generator.html">
+    
+    <link rel="canonical" href="https://freetoolbox.tools/apps/ai-disclosure-generator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AI Disclosure Generator",
+      "description": "A tool for content creators to generate transparent disclosure statements for AI-involved content.",
+      "applicationCategory": "Utility",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #22d3ee;
+            --success: #10b981;
+            --border: #334155;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        header {
+            padding: 3rem 1rem 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #818cf8, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        .generator-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .option-card {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .option-card input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .option-box {
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            height: 100%;
+        }
+
+        .option-box strong {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .option-box span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .option-card input:checked + .option-box {
+            border-color: var(--primary);
+            background-color: rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .btn-generate {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-generate:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-generate:active {
+            transform: translateY(0);
+        }
+
+        .results-section {
+            margin-top: 3rem;
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .platform-result {
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .platform-header {
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .platform-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: var(--border);
+        }
+
+        .disclosure-text {
+            padding: 1.25rem;
+            font-size: 1rem;
+            color: var(--text-main);
+            white-space: pre-wrap;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transform: translateY(150%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 1.8rem; }
+            .generator-card { padding: 1.5rem; }
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>AI Disclosure Generator</h1>
+        <p class="subtitle">Stay compliant and transparent. Generate professional disclosure statements for your AI-assisted content in seconds.</p>
+    </header>
+
+    <main>
+        <section class="generator-card">
+            <div class="form-group">
+                <label>Level of AI Involvement</label>
+                <div class="options-grid" role="radiogroup" aria-label="AI Involvement Level">
+                    <label class="option-card">
+                        <input type="radio" name="ai_level" value="ideation" checked>
+                        <div class="option-box">
+                            <strong>Ideation Only</strong>
+                            <span>AI used for brainstorming & outlines.</span>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="ai_level" value="drafting">
+                        <div class="option-box">
+                            <strong>Drafting/Assisted</strong>
+                            <span>AI wrote drafts, human edited & verified.</span>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="ai_level" value="generation">
+                        <div class="option-box">
+                            <strong>Full Generation</strong>
+                            <span>Content primarily AI-generated.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn-generate" onclick="generateDisclosures()">
+                Generate Statements
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </section>
+
+        <section id="results" class="results-section">
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Your Disclosure Statements</h2>
+            
+            <div class="platform-result">
+                <div class="platform-header">
+                    <span class="platform-name">YouTube / Long Form Video</span>
+                    <button class="copy-btn" onclick="copyText('yt-text')">Copy</button>
+                </div>
+                <div id="yt-text" class="disclosure-text"></div>
+            </div>
+
+            <div class="platform-result">
+                <div class="platform-header">
+                    <span class="platform-name">Instagram / TikTok / Shorts</span>
+                    <button class="copy-btn" onclick="copyText('social-text')">Copy</button>
+                </div>
+                <div id="social-text" class="disclosure-text"></div>
+            </div>
+
+            <div class="platform-result">
+                <div class="platform-header">
+                    <span class="platform-name">Blog / Article / Website</span>
+                    <button class="copy-btn" onclick="copyText('blog-text')">Copy</button>
+                </div>
+                <div id="blog-text" class="disclosure-text"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> AI Disclosure Generator. For informational purposes only. Not legal advice.</p>
+    </footer>
+
+    <div id="toast" class="toast">Copied to clipboard!</div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const contentMap = {
+            ideation: {
+                youtube: "AI tools were used in the conceptualization and outlining phase of this video. All scripts and final content were written and reviewed by a human creator.",
+                social: "💡 Ideation assisted by AI. Content written by me. #AIassisted #Transparency",
+                blog: "Disclosure: Artificial intelligence was utilized during the research and brainstorming stage of this article. The final writing, editing, and fact-checking were performed entirely by the author."
+            },
+            drafting: {
+                youtube: "This video was created with the assistance of AI for drafting and scripting, with significant human editing and verification to ensure accuracy and quality.",
+                social: "✍️ Drafted with AI, refined by a human. #AIassisted #ContentCreation",
+                blog: "Disclosure: This article was drafted with the assistance of AI tools. The author has extensively edited, rewritten, and verified all information to ensure accuracy and original perspective."
+            },
+            generation: {
+                youtube: "This content was primarily generated by artificial intelligence. It has been reviewed by a human for quality and compliance.",
+                social: "🤖 AI-generated content. Reviewed by a human. #AIgenerated #Transparency",
+                blog: "Disclosure: This content was generated by artificial intelligence. While it has been reviewed for quality, the primary phrasing and structure are AI-generated."
+            }
+        };
+
+        function generateDisclosures() {
+            const level = document.querySelector('input[name="ai_level"]:checked').value;
+            const data = contentMap[level];
+
+            document.getElementById('yt-text').textContent = data.youtube;
+            document.getElementById('social-text').textContent = data.social;
+            document.getElementById('blog-text').textContent = data.blog;
+
+            const resultsSection = document.getElementById('results');
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        async function copyText(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast();
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                showToast();
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/2026-world-cup-budget-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 World Cup Budget Calculator</a>
+    <a href="https://freetoolbox.tools/apps/password-entropy-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Password Entropy Calculator</a>
+    <a href="https://freetoolbox.tools/apps/2026-us-midterm-candidate-stance-compara.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 US Midterm Candidate Stance Comparator</a>
+    <a href="https://freetoolbox.tools/apps/world-cup-group-expense-splitter.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">World Cup Group Expense Splitter</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

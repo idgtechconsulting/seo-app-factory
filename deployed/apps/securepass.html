@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurePass | Professional Password Generator</title>
+    <meta name="description" content="Generate secure, random passwords instantly with customizable length and character sets. Free, private, and browser-based.">
+    <meta name="keywords" content="password generator, secure password, random password, cybersecurity tool">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="SecurePass | Professional Password Generator">
+    <meta property="og:description" content="Generate secure, random passwords instantly with customizable length and character sets.">
+    <meta property="og:type" content="website">
+    <meta property="og:color" content="#6366f1">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Result Area */
+        .result-container {
+            position: relative;
+            background-color: rgba(15, 23, 42, 0.5);
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            min-height: 64px;
+        }
+
+        #password-display {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 1.25rem;
+            word-break: break-all;
+            color: var(--text-main);
+            margin-right: 10px;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.6rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .copy-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Strength Meter */
+        .strength-meter {
+            margin-bottom: 2rem;
+        }
+
+        .strength-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .strength-bar-bg {
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .strength-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* Controls */
+        .settings {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .setting-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .length-value {
+            font-family: monospace;
+            font-weight: bold;
+            min-width: 2rem;
+            text-align: right;
+            color: var(--text-main);
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .checkbox-item input {
+            width: 1.2rem;
+            height: 1.2rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .generate-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.75rem;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .generate-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Tooltip/Toast */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #toast.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 400px) {
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+  <link rel="canonical" href="https://freetoolbox.tools/apps/securepass.html">
+  <meta property="og:url" content="https://freetoolbox.tools/apps/securepass.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <div class="container">
+        <header>
+            <h1>SecurePass</h1>
+            <p class="subtitle">Generate cryptographically strong passwords</p>
+        </header>
+
+        <div class="result-container">
+            <span id="password-display">P@ssw0rd123!</span>
+            <button class="copy-btn" id="copy-btn" title="Copy to Clipboard">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a1.125 1.125 0 0 1 1.125 1.125V17.25M14.25 8.625H18a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-.75.75h-3.75m0-9V5.25a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75V8.625" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="strength-meter">
+            <div class="strength-label">
+                <span>Password Strength</span>
+                <span id="strength-text">Weak</span>
+            </div>
+            <div class="strength-bar-bg">
+                <div id="strength-bar" class="strength-bar-fill"></div>
+            </div>
+        </div>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label for="length">Password Length: <span class="length-value" id="length-val">12</span></label>
+                <div class="range-container">
+                    <input type="range" id="length" min="6" max="50" value="12">
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label>Include Characters</label>
+                <div class="checkbox-grid">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="uppercase" checked> Uppercase (A-Z)
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="lowercase" checked> Lowercase (a-z)
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="numbers" checked> Numbers (0-9)
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="symbols" checked> Symbols (!@#$%^&*)
+                    </label>
+                </div>
+            </div>
+
+            <button class="generate-btn" id="generate-btn">Generate Password</button>
+        </div>
+    </div>
+
+    <div id="toast">Password copied to clipboard!</div>
+
+    <script>
+        const charSets = {
+            uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            lowercase: 'abcdefghijklmnopqrstuvwxyz',
+            numbers: '0123456789',
+            symbols: '!@#$%^&*()_+~`|}{[]:;?><,./-='
+        };
+
+        const display = document.getElementById('password-display');
+        const lengthInput = document.getElementById('length');
+        const lengthVal = document.getElementById('length-val');
+        const uppercaseEl = document.getElementById('uppercase');
+        const lowercaseEl = document.getElementById('lowercase');
+        const numbersEl = document.getElementById('numbers');
+        const symbolsEl = document.getElementById('symbols');
+        const generateBtn = document.getElementById('generate-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthText = document.getElementById('strength-text');
+        const toast = document.getElementById('toast');
+
+        // Update length display
+        lengthInput.addEventListener('input', () => {
+            lengthVal.textContent = lengthInput.value;
+            updateStrength();
+        });
+
+        function generatePassword() {
+            let allowedChars = '';
+            const options = {
+                uppercase: uppercaseEl.checked,
+                lowercase: lowercaseEl.checked,
+                numbers: numbersEl.checked,
+                symbols: symbolsEl.checked
+            };
+
+            Object.keys(options).forEach(key => {
+                if (options[key]) allowedChars += charSets[key];
+            });
+
+            if (allowedChars === '') {
+                alert('Please select at least one character type!');
+                return '';
+            }
+
+            let password = '';
+            const length = parseInt(lengthInput.value);
+
+            // Ensure at least one of each selected type is included
+            Object.keys(options).forEach(key => {
+                if (options[key]) {
+                    const set = charSets[key];
+                    password += set.charAt(Math.floor(Math.random() * set.length));
+                }
+            });
+
+            // Fill the rest
+            for (let i = password.length; i < length; i++) {
+                password += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
+            }
+
+            // Shuffle the guaranteed characters
+            password = password.split('').sort(() => Math.random() - 0.5).join('');
+            
+            return password;
+        }
+
+        function updateStrength() {
+            const length = parseInt(lengthInput.value);
+            let score = 0;
+
+            if (length >= 8) score++;
+            if (length >= 12) score++;
+            if (length >= 16) score++;
+
+            if (uppercaseEl.checked) score++;
+            if (lowercaseEl.checked) score++;
+            if (numbersEl.checked) score++;
+            if (symbolsEl.checked) score++;
+
+            let width = '0%';
+            let color = 'var(--danger)';
+            let text = 'Very Weak';
+
+            if (score <= 2) {
+                width = '25%';
+                color = 'var(--danger)';
+                text = 'Weak';
+            } else if (score <= 4) {
+                width = '50%';
+                color = 'var(--warning)';
+                text = 'Fair';
+            } else if (score <= 6) {
+                width = '75%';
+                color = '#a3e635';
+                text = 'Strong';
+            } else {
+                width = '100%';
+                color = 'var(--success)';
+                text = 'Very Strong';
+            }
+
+            strengthBar.style.width = width;
+            strengthBar.style.backgroundColor = color;
+            strengthText.textContent = text;
+            strengthText.style.color = color;
+        }
+
+        function showToast() {
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        async function copyToClipboard() {
+            const text = display.textContent;
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast();
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+
+        generateBtn.addEventListener('click', () => {
+            const password = generatePassword();
+            if (password) {
+                display.textContent = password;
+                updateStrength();
+            }
+        });
+
+        copyBtn.addEventListener('click', copyToClipboard);
+
+        // Listen for checkbox changes to update strength in real-time
+        [uppercaseEl, lowercaseEl, numbersEl, symbolsEl].forEach(el => {
+            el.addEventListener('change', updateStrength);
+        });
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            display.textContent = generatePassword();
+            updateStrength();
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/world-cup-2026-travel-budget-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">World Cup 2026 Travel Budget Calculator</a>
+    <a href="https://freetoolbox.tools/apps/midterm-election-ballot-strategy-planner.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Midterm Election Ballot Strategy Planner</a>
+    <a href="https://freetoolbox.tools/apps/landed-cost-calculator-2.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Landed Cost Calculator</a>
+    <a href="https://freetoolbox.tools/apps/industrial-coating-dft-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Industrial Coating DFT Calculator</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

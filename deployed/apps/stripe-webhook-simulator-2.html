@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Webhook Simulator — Payload Tester</title>
+    <meta name="description" content="Simulate Stripe webhook events by generating authentic JSON payloads and sending them to your local or remote endpoint for testing.">
+    <meta property="og:title" content="Stripe Webhook Simulator — Payload Tester">
+    <meta property="og:description" content="Simulate Stripe webhook events by generating authentic JSON payloads and sending them to your local or remote endpoint.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://freetoolbox.tools/apps/stripe-webhook-simulator-2.html">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Stripe Webhook Simulator",
+      "description": "A tool to generate and send mock Stripe webhook payloads to a specified endpoint for integration testing.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any"
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #635bff;
+            --primary-hover: #4b45d1;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --error: #ef4444;
+            --border: #334155;
+            --radius: 8px;
+            --font-mono: 'ui-monospace', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 400px 1fr;
+                align-items: start;
+            }
+        }
+
+        section {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.625rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            transition: border-color 0.2s, ring 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 91, 255, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            width: 100%;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #payload-editor {
+            font-family: var(--font-mono);
+            min-height: 400px;
+            resize: vertical;
+            tab-size: 2;
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow-x: auto;
+        }
+
+        .response-area {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            display: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .status-success { background-color: #065f46; color: #a7f3d0; }
+        .status-error { background-color: #991b1b; color: #fecaca; }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.8125rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transform: translateY(200%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .toast.show { transform: translateY(0); }
+        .toast-success { background-color: var(--accent); }
+        .toast-error { background-color: var(--error); }
+
+        .cors-warning {
+            font-size: 0.75rem;
+            color: #fbbf24;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: var(--radius);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+    </style>
+  <meta property="og:url" content="https://freetoolbox.tools/apps/stripe-webhook-simulator-2.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>Stripe Webhook Simulator</h1>
+        <p>Generate and test Stripe event payloads</p>
+    </header>
+
+    <main>
+        <section aria-labelledby="config-title">
+            <h2 id="config-title" style="font-size: 1.125rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                ⚙️ Configuration
+            </h2>
+            
+            <div class="form-group">
+                <label for="event-type">Event Type</label>
+                <select id="event-type">
+                    <option value="payment_intent.succeeded">payment_intent.succeeded</option>
+                    <option value="payment_intent.payment_failed">payment_intent.payment_failed</option>
+                    <option value="customer.subscription.created">customer.subscription.created</option>
+                    <option value="customer.subscription.deleted">customer.subscription.deleted</option>
+                    <option value="checkout.session.completed">checkout.session.completed</option>
+                    <option value="charge.refunded">charge.refunded</option>
+                    <option value="custom">Custom JSON</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="endpoint-url">Webhook Endpoint URL</label>
+                <input type="url" id="endpoint-url" placeholder="https://your-api.com/webhooks/stripe" required>
+            </div>
+
+            <div class="form-group">
+                <label for="webhook-secret">Webhook Signing Secret (Optional)</label>
+                <input type="password" id="webhook-secret" placeholder="whsec_...">
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">
+                    Used to generate the <code>stripe-signature</code> header.
+                </p>
+            </div>
+
+            <div class="cors-warning">
+                <strong>Note:</strong> Browser CORS restrictions may block requests to servers that don't explicitly allow this origin.
+            </div>
+
+            <button id="send-btn" class="btn btn-primary">Send Webhook Event</button>
+        </section>
+
+        <section aria-labelledby="payload-title">
+            <h2 id="payload-title" style="font-size: 1.125rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                📄 JSON Payload
+            </h2>
+            
+            <div class="editor-container">
+                <textarea id="payload-editor" spellcheck="false"></textarea>
+                
+                <div id="response-container" class="response-area">
+                    <div id="status-badge" class="status-badge"></div>
+                    <div id="response-body"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; <span id="year"></span> Stripe Webhook Simulator &bull; For Developer Testing Purposes
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const templates = {
+            'payment_intent.succeeded': {
+                id: "evt_1Pabc123",
+                object: "event",
+                api_version: "2023-10-16",
+                created: Math.floor(Date.now() / 1000),
+                type: "payment_intent.succeeded",
+                data: {
+                    object: {
+                        id: "pi_3Pabc123",
+                        object: "payment_intent",
+                        amount: 2000,
+                        currency: "usd",
+                        status: "succeeded",
+                        payment_method: "pm_123",
+                        customer: "cus_abc123"
+                    }
+                }
+            },
+            'payment_intent.payment_failed': {
+                id: "evt_1Pabc456",
+                object: "event",
+                api_version: "2023-10-16",
+                created: Math.floor(Date.now() / 1000),
+                type: "payment_intent.payment_failed",
+                data: {
+                    object: {
+                        id: "pi_3Pabc456",
+                        object: "payment_intent",
+                        amount: 2000,
+                        currency: "usd",
+                        status: "requires_payment_method",
+                        last_payment_error: {
+                            message: "Your card was declined.",
+                            code: "card_declined"
+                        }
+                    }
+                }
+            },
+            'customer.subscription.created': {
+                id: "evt_1Pabc789",
+                object: "event",
+                api_version: "2023-10-16",
+                created: Math.floor(Date.now() / 1000),
+                type: "customer.subscription.created",
+                data: {
+                    object: {
+                        id: "sub_123",
+                        object: "subscription",
+                        customer: "cus_abc123",
+                        status: "active",
+                        current_period_end: Math.floor(Date.now() / 1000) + 2592000,
+                        plan: { id: "price_123", amount: 1000, currency: "usd" }
+                    }
+                }
+            },
+            'customer.subscription.deleted': {
+                id: "evt_1Pabc000",
+                object: "event",
+                api_version: "2023-10-16",
+                created: Math.floor(Date.now() / 1000),
+                type: "customer.subscription.deleted",
+                data: {
+                    object: {
+                        id: "sub_123",
+                        object: "subscription",
+                        customer: "cus_abc123",
+                        status: "canceled"
+                    }
+                }
+            },
+            'checkout.session.completed': {
+                id: "evt_1Pabc111",
+                object: "event",
+                api_version: "2023-10-16",
+                created: Math.floor(Date.now() / 1000),
+                type: "checkout.session.completed",
+                data: {
+                    object: {
+                        id: "cs_test_123",
+                        object: "checkout.session",
+                        customer: "cus_abc123",
+                        payment_status: "paid",
+                        amount_total: 5000,
+                        currency: "usd"
+                    }
+                }
+            },
+            'charge.refunded': {
+                id: "evt_1Pabc222",
+                object: "event",
+                api_version: "2023-10-16",
+                created: Math.floor(Date.now() / 1000),
+                type: "charge.refunded",
+                data: {
+                    object: {
+                        id: "ch_123",
+                        object: "charge",
+                        amount: 2000,
+                        amount_refunded: 2000,
+                        refunded: true,
+                        currency: "usd"
+                    }
+                }
+            }
+        };
+
+        const eventSelector = document.getElementById('event-type');
+        const editor = document.getElementById('payload-editor');
+        const sendBtn = document.getElementById('send-btn');
+        const endpointInput = document.getElementById('endpoint-url');
+        const secretInput = document.getElementById('webhook-secret');
+        const responseContainer = document.getElementById('response-container');
+        const responseBody = document.getElementById('response-body');
+        const statusBadge = document.getElementById('status-badge');
+        const toast = document.getElementById('toast');
+
+        function showToast(msg, type = 'success') {
+            toast.textContent = msg;
+            toast.className = `toast show toast-${type}`;
+            setTimeout(() => toast.className = 'toast', 3000);
+        }
+
+        function updatePayload() {
+            const type = eventSelector.value;
+            if (type === 'custom') {
+                return;
+            }
+            const template = templates[type];
+            editor.value = JSON.stringify(template, null, 2);
+        }
+
+        async function generateStripeSignature(payload, secret) {
+            const timestamp = Math.floor(Date.now() / 1000);
+            const signedPayload = `${timestamp}.${payload}`;
+            
+            const encoder = new TextEncoder();
+            const keyData = encoder.encode(secret);
+            const messageData = encoder.encode(signedPayload);
+
+            const cryptoKey = await crypto.subtle.importKey(
+                'raw', 
+                keyData, 
+                { name: 'HMAC', hash: 'SHA-256' }, 
+                false, 
+                ['sign']
+            );
+
+            const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+            const hashArray = Array.from(new Uint8Array(signatureBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+            return `t=${timestamp},v1=${hashHex}`;
+        }
+
+        async function sendWebhook() {
+            const url = endpointInput.value;
+            const secret = secretInput.value;
+            const payloadString = editor.value;
+
+            if (!url) {
+                showToast('Please provide an endpoint URL', 'error');
+                return;
+            }
+
+            try {
+                JSON.parse(payloadString);
+            } catch (e) {
+                showToast('Invalid JSON payload', 'error');
+                return;
+            }
+
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            responseContainer.style.display = 'none';
+
+            try {
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+
+                if (secret) {
+                    const signature = await generateStripeSignature(payloadString, secret);
+                    headers['stripe-signature'] = signature;
+                }
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: payloadString
+                });
+
+                const responseText = await response.text();
+                
+                responseContainer.style.display = 'block';
+                statusBadge.textContent = `HTTP ${response.status} ${response.statusText}`;
+                statusBadge.className = `status-badge ${response.ok ? 'status-success' : 'status-error'}`;
+                
+                try {
+                    const jsonRes = JSON.parse(responseText);
+                    responseBody.textContent = JSON.stringify(jsonRes, null, 2);
+                } catch {
+                    responseBody.textContent = responseText || '(Empty response body)';
+                }
+
+                showToast(response.ok ? 'Webhook sent successfully!' : 'Server returned an error');
+            } catch (err) {
+                responseContainer.style.display = 'block';
+                statusBadge.textContent = 'Network Error';
+                statusBadge.className = 'status-badge status-error';
+                responseBody.textContent = err.message + '\n\nPossible causes:\n1. CORS restriction (Server must allow this origin)\n2. Invalid URL\n3. Server is offline';
+                showToast('Request failed', 'error');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Webhook Event';
+            }
+        }
+
+        eventSelector.addEventListener('change', updatePayload);
+        sendBtn.addEventListener('click', sendWebhook);
+
+        // Initial load
+        updatePayload();
+
+        // Handle Tab key in textarea
+        editor.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + "  " + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 2;
+            }
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/subtrack.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">SubTrack</a>
+    <a href="https://freetoolbox.tools/apps/midterm-election-ballot-strategy-planner.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Midterm Election Ballot Strategy Planner</a>
+    <a href="https://freetoolbox.tools/apps/local-candidate-stance-matcher.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Local Candidate Stance Matcher</a>
+    <a href="https://freetoolbox.tools/apps/regexpro.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">RegexPro</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html></html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Path Data Visualizer - Instant Path Rendering Tool</title>
+    <meta name="description" content="A free, professional SVG path data visualizer for developers. Paste your SVG 'd' attribute to instantly render and debug paths on a coordinate grid.">
+    <meta name="keywords" content="SVG path data visualizer, SVG d attribute, SVG path debugger, web development tools, SVG coordinate grid">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="SVG Path Data Visualizer - Instant Path Rendering Tool">
+    <meta property="og:description" content="Quickly visualize and debug SVG path data. Paste your 'd' attribute and see the result instantly on a coordinate grid.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://svg-path-visualizer.example.com">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://svg-path-visualizer.example.com">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SVG Path Data Visualizer",
+      "description": "A developer tool to visualize SVG path data (d attribute) instantly on a coordinate grid.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-color: #1e293b;
+            --accent-color: #38bdf8;
+            --accent-hover: #7dd3fc;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --grid-line: #334155;
+            --grid-line-major: #475569;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--panel-color);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            fill: var(--accent-color);
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+        }
+
+        /* Sidebar Controls */
+        .controls-panel {
+            width: 380px;
+            background-color: var(--panel-color);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .controls-panel {
+                width: 100%;
+                height: auto;
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-main);
+            padding: 0.75rem;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.875rem;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        input[type="color"], input[type="number"], input[type="range"] {
+            width: 100%;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            color: var(--text-main);
+            padding: 0.4rem;
+            cursor: pointer;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        /* Visualization Area */
+        .viewer-container {
+            flex: 1;
+            position: relative;
+            background-color: var(--bg-color);
+            cursor: grab;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .viewer-container:active {
+            cursor: grabbing;
+        }
+
+        #svg-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .coord-display {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            border: 1px solid var(--border-color);
+        }
+
+        .error-banner {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--error-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            display: none;
+            z-index: 20;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: var(--panel-color);
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Accessibility Focus */
+        *:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-group">
+            <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
+            </svg>
+            <h1>SVG Path Visualizer</h1>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" onclick="resetView()" aria-label="Reset View">Reset View</button>
+            <button class="btn" onclick="autoFit()" aria-label="Auto Fit Path">Auto Fit</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="controls-panel">
+            <div class="input-group">
+                <label for="path-input">SVG Path Data (d attribute)</label>
+                <textarea 
+                    id="path-input" 
+                    placeholder="e.g. M10 10 L90 10 L90 90 L10 90 Z" 
+                    spellcheck="false"
+                    aria-describedby="path-hint"></textarea>
+                <p id="path-hint" style="font-size: 0.7rem; color: var(--text-muted);">Paste the content of the 'd' attribute from an &lt;path&gt; element.</p>
+            </div>
+
+            <div class="settings-grid">
+                <div class="control-item">
+                    <label for="stroke-color">Stroke Color</label>
+                    <input type="color" id="stroke-color" value="#38bdf8">
+                </div>
+                <div class="control-item">
+                    <label for="stroke-width">Width</label>
+                    <input type="number" id="stroke-width" value="2" min="0.1" step="0.5">
+                </div>
+                <div class="control-item">
+                    <label for="fill-toggle">Fill Path</label>
+                    <select id="fill-toggle" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.4rem;">
+                        <option value="none">None</option>
+                        <option value="currentColor">Current Color</option>
+                    </select>
+                </div>
+                <div class="control-item">
+                    <label for="grid-toggle">Grid</label>
+                    <select id="grid-toggle" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.4rem;">
+                        <option value="on">Enabled</option>
+                        <option value="off">Disabled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-item">
+                <label for="zoom-slider">Zoom Level</label>
+                <input type="range" id="zoom-slider" min="0.1" max="10" step="0.1" value="1">
+            </div>
+
+            <article style="margin-top: auto; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 0.5rem; border: 1px solid var(--border-color);">
+                <h2 style="font-size: 0.875rem; margin-bottom: 0.5rem;">Quick Tips</h2>
+                <ul style="font-size: 0.75rem; color: var(--text-muted); padding-left: 1.2rem;">
+                    <li>Drag the canvas to pan around</li>
+                    <li>Use 'Auto Fit' to center your path</li>
+                    <li>Scroll (or pinch) to zoom in/out</li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="viewer-container" id="viewer">
+            <div id="error-banner" class="error-banner">Invalid SVG path data</div>
+            
+            <svg id="svg-canvas" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Major Grid Lines -->
+                    <pattern id="grid-major" width="100" height="100" patternUnits="userSpaceOnUse">
+                        <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#475569" stroke-width="1"/>
+                    </pattern>
+                    <!-- Minor Grid Lines -->
+                    <pattern id="grid-minor" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#334155" stroke-width="0.5"/>
+                    </pattern>
+                </defs>
+                
+                <!-- Grid Rectangles -->
+                <rect id="grid-minor-bg" x="-100000" y="-100000" width="200000" height="200000" fill="url(#grid-minor)" />
+                <rect id="grid-major-bg" x="-100000" y="-100000" width="200000" height="200000" fill="url(#grid-major)" />
+                
+                <!-- The Dynamic Path -->
+                <path id="visual-path" d="" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <div class="coord-display" id="coord-display">X: 0, Y: 0</div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> SVG Path Data Visualizer. A professional tool for web developers.</p>
+    </footer>
+
+    <script>
+        // Constants & State
+        const pathInput = document.getElementById('path-input');
+        const visualPath = document.getElementById('visual-path');
+        const svgCanvas = document.getElementById('svg-canvas');
+        const strokeColorInput = document.getElementById('stroke-color');
+        const strokeWidthInput = document.getElementById('stroke-width');
+        const fillToggle = document.getElementById('fill-toggle');
+        const gridToggle = document.getElementById('grid-toggle');
+        const zoomSlider = document.getElementById('zoom-slider');
+        const errorBanner = document.getElementById('error-banner');
+        const coordDisplay = document.getElementById('coord-display');
+        const viewer = document.getElementById('viewer');
+
+        let state = {
+            viewBox: { x: 0, y: 0, w: 800, h: 600 },
+            isDragging: false,
+            lastMousePos: { x: 0, y: 0 },
+            zoom: 1
+        };
+
+        // Initialize
+        window.onload = () => {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            updateViewBox();
+            
+            // Default example
+            pathInput.value = "M 100 100 L 300 100 L 200 300 Z M 400 100 C 450 50, 550 50, 600 100 S 750 250, 600 300 S 450 350, 400 300 Z";
+            renderPath();
+        };
+
+        // Core Rendering
+        function renderPath() {
+            const d = pathInput.value.trim();
+            visualPath.setAttribute('d', d);
+            
+            // Validate path
+            if (d && visualPath.getBBox().width === 0 && visualPath.getBBox().height === 0) {
+                // BBox is 0, but we have input -> likely invalid
+                // Note: some paths (like a single point) naturally have 0 BBox
+                // This is a simple heuristic
+                if (!isValidPath(d)) {
+                    showError(true);
+                } else {
+                    showError(false);
+                }
+            } else {
+                showError(false);
+            }
+
+            // Update styles
+            visualPath.setAttribute('stroke', strokeColorInput.value);
+            visualPath.setAttribute('stroke-width', strokeWidthInput.value);
+            visualPath.setAttribute('fill', fillToggle.value === 'currentColor' ? strokeColorInput.value : 'none');
+        }
+
+        function isValidPath(d) {
+            // Very basic check: paths usually start with a command letter
+            return /^[a-df-z]".*$/i.test(d) || /^[a-df-z]\s*[-+]?\d+/.test(d);
+        }
+
+        function showError(show) {
+            errorBanner.style.display = show ? 'block' : 'none';
+        }
+
+        // ViewBox & Zoom Logic
+        function updateViewBox() {
+            svgCanvas.setAttribute('viewBox', `${state.viewBox.x} ${state.viewBox.y} ${state.viewBox.w} ${state.viewBox.h}`);
+        }
+
+        function autoFit() {
+            const bbox = visualPath.getBBox();
+            if (bbox.width === 0 && bbox.height === 0) return;
+
+            const padding = 50;
+            state.viewBox.x = bbox.x - padding;
+            state.viewBox.y = bbox.y - padding;
+            state.viewBox.w = bbox.width + padding * 2;
+            state.viewBox.h = bbox.height + padding * 2;
+            
+            updateViewBox();
+        }
+
+        function resetView() {
+            state.viewBox = { x: 0, y: 0, w: 800, h: 600 };
+            state.zoom = 1;
+            zoomSlider.value = 1;
+            updateViewBox();
+        }
+
+        // Interaction Events
+        pathInput.addEventListener('input', renderPath);
+        strokeColorInput.addEventListener('input', renderPath);
+        strokeWidthInput.addEventListener('input', renderPath);
+        fillToggle.addEventListener('change', renderPath);
+        
+        gridToggle.addEventListener('change', () => {
+            const val = gridToggle.value;
+            document.getElementById('grid-minor-bg').style.display = val === 'on' ? 'block' : 'none';
+            document.getElementById('grid-major-bg').style.display = val === 'on' ? 'block' : 'none';
+        });
+
+        zoomSlider.addEventListener('input', (e) => {
+            const scale = parseFloat(e.target.value);
+            const centerX = state.viewBox.x + state.viewBox.w / 2;
+            const centerY = state.viewBox.y + state.viewBox.h / 2;
+            
+            const newW = 800 / scale;
+            const newH = 600 / scale;
+            
+            state.viewBox.x = centerX - newW / 2;
+            state.viewBox.y = centerY - newH / 2;
+            state.viewBox.w = newW;
+            state.viewBox.h = newH;
+            
+            updateViewBox();
+        });
+
+        // Panning Logic
+        viewer.addEventListener('mousedown', (e) => {
+            state.isDragging = true;
+            state.lastMousePos = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            // Update Coordinate Display
+            const point = svgCanvas.createSVGPoint();
+            point.x = e.clientX;
+            point.y = e.clientY;
+            
+            // We need to find the SVG element's position relative to the viewport
+            const rect = svgCanvas.getBoundingClientRect();
+            const svgPoint = svgCanvas.createSVGPoint();
+            svgPoint.x = e.clientX;
+            svgPoint.y = e.clientY;
+            
+            const transformedPoint = svgPoint.matrixTransform(svgCanvas.getScreenCTM());
+            coordDisplay.textContent = `X: ${Math.round(transformedPoint.x)}, Y: ${Math.round(transformedPoint.y)}`;
+
+            if (!state.isDragging) return;
+
+            const dx = e.clientX - state.lastMousePos.x;
+            const dy = e.clientY - state.lastMousePos.y;
+            
+            // Convert screen pixels to SVG units
+            const scaleX = state.viewBox.w / rect.width;
+            const scaleY = state.viewBox.h / rect.height;
+            
+            state.viewBox.x -= dx * scaleX;
+            state.viewBox.y -= dy * scaleY;
+            
+            state.lastMousePos = { x: e.clientX, y: e.clientY };
+            updateViewBox();
+        });
+
+        window.addEventListener('mouseup', () => {
+            state.isDragging = false;
+        });
+
+        // Mouse Wheel Zoom
+        viewer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
+            
+            const centerX = state.viewBox.x + state.viewBox.w / 2;
+            const centerY = state.viewBox.y + state.viewBox.h / 2;
+            
+            state.viewBox.w *= zoomFactor;
+            state.viewBox.h *= zoomFactor;
+            
+            state.viewBox.x = centerX - state.viewBox.w / 2;
+            state.viewBox.y = centerY - state.viewBox.h / 2;
+            
+            // Update slider to reflect change
+            zoomSlider.value = 800 / state.viewBox.w;
+            
+            updateViewBox();
+        }, { passive: false });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelance Hourly Rate Calculator — Pricing Tool</title>
+    <meta name="description" content="Calculate your ideal freelance hourly rate based on desired annual salary, business overhead, taxes, and billable hours.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Freelance Hourly Rate Calculator — Pricing Tool">
+    <meta property="og:description" content="Stop undercharging. Calculate the exact hourly rate you need to cover taxes, expenses, and your desired take-home pay.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://freetoolbox.tools/apps/freelance-hourly-rate-calculator.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Freelance Hourly Rate Calculator",
+      "description": "A professional tool for freelancers to calculate their hourly rate based on desired salary, taxes, and overhead.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --error: #ef4444;
+            --border: #334155;
+            --input-bg: #0f172a;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 850px) {
+            main {
+                grid-template-columns: 1.2fr 0.8fr;
+                align-items: start;
+            }
+        }
+
+        .calculator-card {
+            background-color: var(--bg-card);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .input-wrapper span + input {
+            padding-left: 2.2rem;
+        }
+
+        .range-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .range-value {
+            min-width: 45px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .results-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            line-height: 1;
+        }
+
+        .result-value span {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            vertical-align: super;
+            margin-right: 0.25rem;
+        }
+
+        .breakdown {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            text-align: left;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .breakdown-item span:first-child {
+            color: var(--text-muted);
+        }
+
+        .breakdown-item span:last-child {
+            font-weight: 600;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--error);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
+            transform: translateY(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        nav {
+            display: none; /* Placeholder for future scalability */
+        }
+    </style>
+  <meta property="og:url" content="https://freetoolbox.tools/apps/freelance-hourly-rate-calculator.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <h1>Freelance Hourly Rate Calculator</h1>
+        <p class="subtitle">Stop guessing your prices. Calculate a sustainable hourly rate that covers your lifestyle, business costs, and taxes.</p>
+    </header>
+
+    <nav aria-label="Main Navigation"></nav>
+
+    <main>
+        <section class="calculator-card">
+            <div class="input-group">
+                <label for="annualSalary">Desired Annual Take-Home Pay</label>
+                <div class="input-wrapper">
+                    <span>$</span>
+                    <input type="number" id="annualSalary" placeholder="60,000" value="60000" min="0" step="1000">
+                </div>
+                <p class="help-text">How much you want in your pocket after taxes and expenses.</p>
+            </div>
+
+            <div class="input-group">
+                <label for="monthlyOverhead">Monthly Business Expenses</label>
+                <div class="input-wrapper">
+                    <span>$</span>
+                    <input type="number" id="monthlyOverhead" placeholder="500" value="500" min="0" step="50">
+                </div>
+                <p class="help-text">Software, hardware, coworking space, insurance, etc.</p>
+            </div>
+
+            <div class="input-group">
+                <label for="taxRate">Estimated Tax Rate</label>
+                <div class="range-group">
+                    <input type="range" id="taxRate" min="0" max="50" value="25" step="1">
+                    <div class="range-value"><span id="taxRateVal">25</span>%</div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="billableHours">Billable Hours per Week</label>
+                <div class="input-wrapper">
+                    <input type="number" id="billableHours" placeholder="30" value="30" min="1" max="168">
+                </div>
+                <p class="help-text">Actual hours spent on client work (excluding admin/marketing).</p>
+            </div>
+
+            <div class="input-group">
+                <label for="vacationWeeks">Unpaid Weeks per Year</label>
+                <div class="input-wrapper">
+                    <input type="number" id="vacationWeeks" placeholder="4" value="4" min="0" max="52">
+                </div>
+                <p class="help-text">Vacation, sick leave, and holidays.</p>
+            </div>
+
+            <div class="input-group">
+                <label for="buffer">Admin & Risk Buffer</label>
+                <div class="range-group">
+                    <input type="range" id="buffer" min="0" max="50" value="15" step="1">
+                    <div class="range-value"><span id="bufferVal">15</span>%</div>
+                </div>
+                <p class="help-text">Extra margin for unpaid admin, scope creep, or slow months.</p>
+            </div>
+        </section>
+
+        <section class="results-card">
+            <div class="result-label">Recommended Hourly Rate</div>
+            <div class="result-value"><span id="currencySymbol">$</span><span id="hourlyRate">0</span></div>
+            
+            <div class="breakdown">
+                <div class="breakdown-item">
+                    <span>Gross Annual Revenue</span>
+                    <span id="grossRevenue">$0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Annual Overhead</span>
+                    <span id="annualOverhead">$0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Estimated Annual Tax</span>
+                    <span id="annualTax">$0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Total Billable Hours</span>
+                    <span id="totalHours">0</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast">Please enter valid positive numbers.</div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Freelance Hourly Rate Calculator. All calculations are estimates.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elements
+            const inputs = ['annualSalary', 'monthlyOverhead', 'taxRate', 'billableHours', 'vacationWeeks', 'buffer'];
+            const elements = {};
+            inputs.forEach(id => elements[id] = document.getElementById(id));
+            
+            const display = {
+                taxRateVal: document.getElementById('taxRateVal'),
+                bufferVal: document.getElementById('bufferVal'),
+                hourlyRate: document.getElementById('hourlyRate'),
+                grossRevenue: document.getElementById('grossRevenue'),
+                annualOverhead: document.getElementById('annualOverhead'),
+                annualTax: document.getElementById('annualTax'),
+                totalHours: document.getElementById('totalHours')
+            };
+
+            const toast = document.getElementById('toast');
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+
+            function formatCurrency(num) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    maximumFractionDigits: 0
+                }).format(num);
+            }
+
+            function calculate() {
+                // Get values and validate
+                const salary = parseFloat(elements.annualSalary.value) || 0;
+                const monthlyOverhead = parseFloat(elements.monthlyOverhead.value) || 0;
+                const taxRate = parseFloat(elements.taxRate.value) / 100;
+                const billableHours = parseFloat(elements.billableHours.value) || 0;
+                const vacationWeeks = parseFloat(elements.vacationWeeks.value) || 0;
+                const buffer = parseFloat(elements.buffer.value) / 100;
+
+                // Validation
+                if (salary < 0 || monthlyOverhead < 0 || billableHours <= 0 || vacationWeeks < 0 || vacationWeeks >= 52) {
+                    if (billableHours <= 0) {
+                        showToast("Billable hours must be greater than 0.");
+                    } else if (vacationWeeks >= 52) {
+                        showToast("Vacation weeks cannot exceed 51.");
+                    }
+                    return;
+                }
+
+                // 1. Calculate Annual Overhead
+                const annualOverhead = monthlyOverhead * 12;
+
+                // 2. Calculate Gross Salary needed to hit Net (Take-home)
+                // Formula: Net = Gross * (1 - taxRate)  => Gross = Net / (1 - taxRate)
+                const grossSalaryNeeded = salary / (1 - taxRate);
+
+                // 3. Total Revenue needed before taxes and overhead
+                const totalAnnualRevenueNeeded = grossSalaryNeeded + annualOverhead;
+
+                // 4. Calculate Total Billable Hours per Year
+                const billableWeeks = 52 - vacationWeeks;
+                const totalAnnualHours = billableWeeks * billableHours;
+
+                // 5. Base Hourly Rate
+                const baseHourlyRate = totalAnnualRevenueNeeded / totalAnnualHours;
+
+                // 6. Apply Buffer
+                const finalHourlyRate = baseHourlyRate * (1 + buffer);
+
+                // 7. Tax calculation for breakdown
+                const totalTax = totalAnnualRevenueNeeded * taxRate;
+
+                // Update UI
+                display.taxRateVal.textContent = Math.round(taxRate * 100);
+                display.bufferVal.textContent = Math.round(buffer * 100);
+                
+                display.hourlyRate.textContent = Math.ceil(finalHourlyRate).toLocaleString();
+                display.grossRevenue.textContent = formatCurrency(totalAnnualRevenueNeeded);
+                display.annualOverhead.textContent = formatCurrency(annualOverhead);
+                display.annualTax.textContent = formatCurrency(totalTax);
+                display.totalHours.textContent = totalAnnualHours.toLocaleString();
+            }
+
+            // Add listeners to all inputs
+            inputs.forEach(id => {
+                elements[id].addEventListener('input', calculate);
+            });
+
+            // Initial calculation
+            calculate();
+        });
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/shopify-shipping-profit-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Shopify Shipping Profit Calculator</a>
+    <a href="https://freetoolbox.tools/apps/2026-world-cup-budget-calculator.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">2026 World Cup Budget Calculator</a>
+    <a href="https://freetoolbox.tools/apps/subscription-cost-audit-tool.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Subscription Cost Audit Tool</a>
+    <a href="https://freetoolbox.tools/apps/world-cup-2026-match-itinerary-planner.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">World Cup 2026 Match Itinerary Planner</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 102 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

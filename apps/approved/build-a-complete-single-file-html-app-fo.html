@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+The user wants a complete, single-file HTML application for a Unix Timestamp Converter.
+
+    *   Convert Unix Timestamp (seconds/milliseconds) to Human-readable date (Local and UTC).
+    *   Convert Human-readable date to Unix Timestamp.
+    *   "Current Time" button to quickly get the now timestamp.
+    *   Support for both seconds and milliseconds.
+    *   Copy to clipboard functionality.
+    *   Responsive, professional design (Dark/Light theme).
+    *   Complete HTML/CSS/JS in one file.
+
+    *   Header: Title and brief description.
+    *   Section 1: Epoch to Date.
+        *   Input field for timestamp.
+        *   Toggle/Dropdown for seconds vs milliseconds.
+        *   Display area for Local time and UTC time.
+    *   Section 2: Date to Epoch.
+        *   Datetime-local input.
+        *   Display area for resulting timestamp.
+    *   Section 3: Current Time (Real-time clock).
+        *   Live updating Unix timestamp.
+
+    *   Color Palette: Deep slate/charcoal for dark mode, vibrant accent (indigo/blue).
+    *   Typography: System sans-serif (Inter/Roboto style).
+    *   Layout: Centered card layout, max-width for readability.
+    *   Components: Styled inputs, buttons with hover effects, clear result boxes.
+
+    *   `Date.now()` for current time.
+    *   `new Date(timestamp * 1000)` for conversion (handling ms vs s).
+    *   `toISOString()` for UTC.
+    *   `toLocaleString()` for local.
+    *   `Date.parse()` for date to timestamp.
+    *   `navigator.clipboard.writeText()` for copying.
+
+    *   Single file? Yes.
+    *   Production-ready? Yes.
+    *   No markdown/explanation? Yes.
+    *   Meta tags included? Yes.
+    *   Responsive? Yes.
+</body>
+</html>

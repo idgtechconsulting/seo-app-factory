@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Professional Portfolio</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-preview: ${currentTheme === 'dark-preview' ? '#0f172a' : '#ffffff'};
+            --text-main: ${currentTheme === 'dark-preview' ? '#f8fafc' : '#1e293b'};
+            --text-muted: ${currentTheme === 'dark-preview' ? '#94a3b8' : '#64748b'};
+            --border-color: ${currentTheme === 'dark-preview' ? '#334155' : '#e2e8f0'};
+            --accent: #f43f5e;
+        }
+        body { 
+            background-color: var(--bg-preview); 
+            color: var(--text-main); 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+        }
+        ${portfolioCss}
+    </style>
+</head>
+<body>
+    <article id="portfolio-render">
+        ${content}
+    </article>
+</body>
+</html>`;
+
+            const blob = new Blob([fullHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'portfolio.html';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Portfolio exported as HTML!');
+        };
+
+        // Event Listeners
+        editor.addEventListener('input', updatePreview);
+        
+        themeSelect.addEventListener('change', (e) => {
+            previewContainer.setAttribute('data-theme', e.target.value);
+        });
+
+        // Initial Render
+        updatePreview();
+    </script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 {
-  "issueId": "67a6ffb3-95b7-4686-803a-02e912bbecd5",
-  "title": "BUILD: Implement as single-file HTML app: A text-analysis tool where users paste a Privacy Policy. The JS scans for a large static dictionary ",
+  "issueId": "19d59bba-afd6-4b1d-98dd-5522124209b2",
+  "title": "BUILD: Implement as single-file HTML app: A text analysis tool where users paste a privacy policy. The JS uses a large array of 'red flag' key",
   "slug": "build-implement-as-single-file-html-app-a-text-analysis-tool-where-users-paste-a",
-  "keywordTarget": "BUILD: Implement as single-file HTML app: A text-analysis tool where users paste a Privacy Policy. The JS scans for a large static dictionary ",
-  "timestamp": "2026-04-16T03:55:41.986Z",
-  "sourceIssueUrl": "http://localhost:3100/issues/67a6ffb3-95b7-4686-803a-02e912bbecd5"
+  "keywordTarget": "BUILD: Implement as single-file HTML app: A text analysis tool where users paste a privacy policy. The JS uses a large array of 'red flag' key",
+  "timestamp": "2026-04-16T03:59:15.898Z",
+  "sourceIssueUrl": "http://localhost:3100/issues/19d59bba-afd6-4b1d-98dd-5522124209b2"
 }

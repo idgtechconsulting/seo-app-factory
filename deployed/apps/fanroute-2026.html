@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FIFA 2026 multi-city travel optimizer: Plan your World Cup journey. Map matches, optimize flight routes, and find the best hotels for your favorite team.">
+    <meta name="keywords" content="FIFA 2026 multi-city travel optimizer, World Cup 2026 travel, football itinerary generator, WC2026 flights hotels">
+    <title>FanRoute 2026 | FIFA 2026 Multi-City Travel Optimizer</title>
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="FanRoute 2026 | World Cup Travel Optimizer">
+    <meta property="og:description" content="Stop the logistical nightmare. Map your team's matches and find the cheapest travel routes for WC2026.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freetoolbox.tools/apps/fanroute-2026.html">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630?text=FanRoute+2026">
+
+    <link rel="canonical" href="https://freetoolbox.tools/apps/fanroute-2026.html">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FanRoute 2026",
+      "description": "A travel itinerary generator for FIFA World Cup 2026 fans to optimize multi-city travel.",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Match mapping",
+        "Flight optimization",
+        "Budget vs Luxury toggles",
+        "Stadium proximity analysis"
+      ]
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #003366;
+            --primary-light: #0055aa;
+            --accent: #00ff88;
+            --accent-dark: #00cc6d;
+            --bg: #f4f7f9;
+            --text: #1a1a1a;
+            --text-light: #666;
+            --white: #ffffff;
+            --error: #ff4d4d;
+            --gold: #ffd700;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span { color: var(--accent); }
+
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { color: var(--white); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: var(--transition); }
+        nav a:hover { color: var(--accent); }
+
+        main { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero h1 { 
+            font-size: 2.5rem; 
+            margin-bottom: 1rem; 
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .hero p { 
+            font-size: 1.1rem; 
+            color: var(--text-light); 
+            max-width: 700px; 
+            margin: 0 auto 2rem; 
+        }
+
+        /* Optimizer Card */
+        .optimizer-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label { font-weight: 600; font-size: 0.9rem; color: var(--primary); }
+
+        select, input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        select:focus, input:focus { border-color: var(--primary-light); }
+
+        .toggle-group {
+            display: flex;
+            background: #eee;
+            padding: 4px;
+            border-radius: 10px;
+            gap: 4px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            background: transparent;
+            color: var(--text-light);
+        }
+
+        .toggle-btn.active {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-generate {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-generate:hover { background: var(--primary-light); transform: translateY(-2px); }
+        .btn-generate:active { transform: translateY(0); }
+
+        /* Results Section */
+        .results-container {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .itinerary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .itinerary-grid { grid-template-columns: 2fr 1fr; }
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ddd;
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -37px;
+            top: 20px;
+            width: 14px;
+            height: 14px;
+            background: var(--primary);
+            border: 4px solid var(--white);
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .timeline-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        .detail-pill {
+            background: #f0f4f8;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-light);
+        }
+
+        /* Proximity Heatmap Simulation */
+        .heatmap-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .heatmap-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .proximity-list {
+            list-style: none;
+        }
+
+        .proximity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .proximity-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .proximity-name { font-size: 0.9rem; font-weight: 600; }
+        .proximity-dist { font-size: 0.8rem; color: var(--text-light); }
+
+        .proximity-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dist-close { background: #00ff88; box-shadow: 0 0 8px #00ff88; }
+        .dist-mid { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; }
+        .dist-far { background: #ff4d4d; box-shadow: 0 0 8px #ff4d4d; }
+
+        /* Loading State */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #eee;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 1.5rem;
+            list-style: none;
+        }
+
+        .footer-links a { color: #ccc; text-decoration: none; font-size: 0.9rem; }
+        .footer-links a:hover { color: var(--accent); }
+
+        /* Animations */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Accessibility */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTYFM7PZD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BKTYFM7PZD');</script>
+</head>
+<body>
+<nav style="background:#1a1a2e;padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2d3e;font-family:system-ui,sans-serif;font-size:14px">
+  <a href="https://freetoolbox.tools/" style="color:#7c3aed;text-decoration:none;font-weight:700">← Free Online Tools</a>
+  <span style="color:#444">|</span>
+  <a href="https://freetoolbox.tools/" style="color:#888;text-decoration:none">Browse All Tools</a>
+</nav>
+
+    <header>
+        <div class="logo">Fan<span>Route</span> 2026</div>
+        <nav>
+            <ul>
+                <li><a href="#optimizer">Optimizer</a></li>
+                <li><a href="#guides">Fan Guides</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>FIFA 2026 Multi-City <br>Travel Optimizer</h1>
+            <p>Stop the logistical nightmare. Select your team and we'll map the most cost-effective route through Vancouver, LA, Mexico City and beyond.</p>
+        </section>
+
+        <section id="optimizer" class="optimizer-card">
+            <div class="controls">
+                <div class="input-group">
+                    <label for="team-select">Following Team</label>
+                    <select id="team-select">
+                        <option value="">-- Select a Team --</option>
+                        <option value="USA">🇺🇸 USA</option>
+                        <option value="MEX">🇲🇽 Mexico</option>
+                        <option value="CAN">🇨🇦 Canada</option>
+                        <option value="BRA">🇧🇷 Brazil</option>
+                        <option value="ARG">🇦🇷 Argentina</option>
+                        <option value="FRA">🇫🇷 France</option>
+                        <option value="ENG">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</option>
+                        <option value="GER">🇩🇪 Germany</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Travel Style</label>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" data-style="budget">Budget</button>
+                        <button class="toggle-btn" data-style="luxury">Luxury</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="group-size">Group Size</label>
+                    <input type="number" id="group-size" value="1" min="1" max="20">
+                </div>
+            </div>
+            
+            <button class="btn-generate" id="generate-btn">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724a1 1 0 001.553.118v10.764a1 1 0 00-1.447.894L15 17m0-10v10m0 0l-6-3m6 3V7"></path></svg>
+                Optimize My Route
+            </button>
+        </section>
+
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>Analyzing match schedules and flight patterns...</p>
+        </div>
+
+        <section class="results-container" id="results">
+            <div class="itinerary-grid">
+                <div class="timeline" id="timeline-content">
+                    <!-- JS populated -->
+                </div>
+
+                <div class="heatmap-card">
+                    <div class="heatmap-title">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Stadium Proximity
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 1rem;">Estimated distance from selected hotel to stadium.</p>
+                    <ul class="proximity-list" id="proximity-list">
+                        <!-- JS populated -->
+                    </ul>
+                    <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 8px; font-size: 0.75rem;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="proximity-indicator dist-close"></div> Walkable (&lt; 1km)
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="proximity-indicator dist-mid"></div> Short Ride (1-5km)
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="proximity-indicator dist-far"></div> Transit Needed (5km+)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Contact Support</a></li>
+            <li><a href="#">API Documentation</a></li>
+        </ul>
+        <p>&copy; 2024 FanRoute 2026. Not affiliated with FIFA.</p>
+    </footer>
+
+    <script>
+        // Mock Data for WC2026
+        const TEAM_DATA = {
+            'USA': [
+                { date: 'June 12, 2026', city: 'Los Angeles', stadium: 'SoFi Stadium', opponent: 'TBD' },
+                { date: 'June 18, 2026', city: 'Vancouver', stadium: 'BC Place', opponent: 'TBD' },
+                { date: 'June 24, 2026', city: 'Mexico City', stadium: 'Estadio Azteca', opponent: 'TBD' }
+            ],
+            'MEX': [
+                { date: 'June 11, 2026', city: 'Mexico City', stadium: 'Estadio Azteca', opponent: 'TBD' },
+                { date: 'June 17, 2026', city: 'Los Angeles', stadium: 'SoFi Stadium', opponent: 'TBD' },
+                { date: 'June 23, 2026', city: 'Toronto', stadium: 'BMO Field', opponent: 'TBD' }
+            ],
+            'CAN': [
+                { date: 'June 12, 2026', city: 'Vancouver', stadium: 'BC Place', opponent: 'TBD' },
+                { date: 'June 17, 2026', city: 'Toronto', stadium: 'BMO Field', opponent: 'TBD' },
+                { date: 'June 22, 2026', city: 'Mexico City', stadium: 'Estadio Azteca', opponent: 'TBD' }
+            ],
+            'DEFAULT': [
+                { date: 'June 15, 2026', city: 'Miami', stadium: 'Hard Rock Stadium', opponent: 'TBD' },
+                { date: 'June 21, 2026', city: 'New York/NJ', stadium: 'MetLife Stadium', opponent: 'TBD' },
+                { date: 'June 27, 2026', city: 'Los Angeles', stadium: 'SoFi Stadium', opponent: 'TBD' }
+            ]
+        };
+
+        const HOTEL_DATA = {
+            'budget': {
+                name: 'FanZone Hostels',
+                price: 65,
+                rating: '3.2 ★',
+                dist: 'mid'
+            },
+            'luxury': {
+                name: 'Grand Plaza Elite',
+                price: 450,
+                rating: '4.9 ★',
+                dist: 'close'
+            }
+        };
+
+        const FLIGHT_COSTS = {
+            'budget': 250,
+            'luxury': 850
+        };
+
+        // State Management
+        let currentState = {
+            team: '',
+            style: 'budget',
+            groupSize: 1
+        };
+
+        // DOM Elements
+        const teamSelect = document.getElementById('team-select');
+        const groupSizeInput = document.getElementById('group-size');
+        const toggleBtns = document.querySelectorAll('.toggle-btn');
+        const generateBtn = document.getElementById('generate-btn');
+        const loader = document.getElementById('loader');
+        const results = document.getElementById('results');
+        const timelineContent = document.getElementById('timeline-content');
+        const proximityList = document.getElementById('proximity-list');
+
+        // Event Listeners
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                toggleBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentState.style = btn.dataset.style;
+            });
+        });
+
+        generateBtn.addEventListener('click', async () => {
+            const selectedTeam = teamSelect.value;
+            if (!selectedTeam) {
+                alert('Please select a team to optimize your route!');
+                return;
+            }
+
+            currentState.team = selectedTeam;
+            currentState.groupSize = parseInt(groupSizeInput.value) || 1;
+
+            // Simulate API Call
+            generateBtn.disabled = true;
+            results.style.display = 'none';
+            loader.style.display = 'block';
+
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            loader.style.display = 'none';
+            results.style.display = 'block';
+            generateBtn.disabled = false;
+
+            renderItinerary();
+        });
+
+        function renderItinerary() {
+            const matches = TEAM_DATA[currentState.team] || TEAM_DATA['DEFAULT'];
+            const styleConfig = HOTEL_DATA[currentState.style];
+            const flightCost = FLIGHT_COSTS[currentState.style];
+            
+            timelineContent.innerHTML = '';
+            proximityList.innerHTML = '';
+
+            matches.forEach((match, index) => {
+                // Timeline Item
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                
+                const flightInfo = index === 0 ? 'Starting Point' : `Flight from ${matches[index-1].city}`;
+                const costEstimate = index === 0 ? 0 : flightCost * currentState.groupSize;
+
+                item.innerHTML = `
+                    <span class="timeline-date">${match.date}</span>
+                    <div class="timeline-title">${match.city} 🏟️</div>
+                    <p>Match: ${currentState.team} vs ${match.opponent} at <strong>${match.stadium}</strong></p>
+                    <div class="timeline-details">
+                        <div class="detail-pill">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M12 3v18"></path></svg>
+                            ${flightInfo}
+                        </div>
+                        <div class="detail-pill">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            ${styleConfig.name} (${styleConfig.rating})
+                        </div>
+                        <div class="detail-pill" style="background: var(--primary); color: white;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Est. Cost: $${(styleConfig.price * currentState.groupSize + costEstimate).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+                timelineContent.appendChild(item);
+
+                // Proximity Item
+                const proxItem = document.createElement('li');
+                proxItem.className = 'proximity-item';
+                proxItem.innerHTML = `
+                    <div class="proximity-info">
+                        <span class="proximity-name">${match.stadium}</span>
+                        <span class="proximity-dist">${styleConfig.name}</span>
+                    </div>
+                    <div class="proximity-indicator dist-${styleConfig.dist}"></div>
+                `;
+                proximityList.appendChild(proxItem);
+            });
+        }
+    </script>
+
+<section style="background:#0f1117;border-top:1px solid #2a2d3e;padding:24px 20px;font-family:system-ui,sans-serif">
+  <div style="max-width:860px;margin:0 auto">
+    <h3 style="color:#8b8fa8;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">More Free Tools</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <a href="https://freetoolbox.tools/apps/freelance-rate-calculator-2.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Freelance Rate Calculator</a>
+    <a href="https://freetoolbox.tools/apps/promptcompare.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">PromptCompare</a>
+    <a href="https://freetoolbox.tools/apps/web-accessibility-heading-structure-vali.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Web Accessibility Heading Structure Validator - Check HTML Hierarchy</a>
+    <a href="https://freetoolbox.tools/apps/landed-cost-calculator-2.html" style="display:block;padding:8px 12px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:8px;color:#e2e4f0;text-decoration:none;font-size:13px;transition:border-color .2s" onmouseover="this.style.borderColor='#6c63ff'" onmouseout="this.style.borderColor='#2a2d3e'">Landed Cost Calculator</a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <a href="https://freetoolbox.tools/" style="color:#6c63ff;text-decoration:none;font-size:13px">Browse all 103 tools →</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

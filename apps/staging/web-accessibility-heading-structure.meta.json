@@ -1,0 +1,8 @@
+{
+  "issueId": "b28e7a8c-5f55-4e87-96f6-4404f536ff06",
+  "title": "Build: A tool that parses HTML input and flags missing heading levels (e.g., skipping from H2 to H4).",
+  "slug": "web-accessibility-heading-structure",
+  "keywordTarget": "Build: A tool that parses HTML input and flags missing heading levels (e.g., skipping from H2 to H4).",
+  "timestamp": "2026-04-17T15:55:49.150Z",
+  "sourceIssueUrl": "http://localhost:3100/issues/b28e7a8c-5f55-4e87-96f6-4404f536ff06"
+}

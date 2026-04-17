@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DORA Compliance Checklist Tool | Digital Operational Resilience Act Tracker</title>
-    <meta name="description" content="Free, interactive DORA compliance checklist tool for fintechs and financial entities to track Digital Operational Resilience Act requirements.">
-    <meta name="keywords" content="DORA compliance checklist tool, Digital Operational Resilience Act, fintech compliance, ICT risk management, DORA requirements">
+    <title>DORA Compliance Checklist Tool | Digital Operational Resilience Act Gap Analysis</title>
+    <meta name="description" content="Free interactive DORA compliance checklist tool for small to medium fintechs. Perform a gap analysis on ICT risk management, incident reporting, and third-party risk.">
+    <meta name="keywords" content="DORA compliance checklist tool, Digital Operational Resilience Act, fintech compliance, ICT risk management, DORA gap analysis">
     
-    <!-- Open Graph Tags -->
+    <!-- Open Graph -->
     <meta property="og:title" content="DORA Compliance Checklist Tool">
-    <meta property="og:description" content="Track your progress toward Digital Operational Resilience Act (DORA) compliance with this interactive checklist.">
+    <meta property="og:description" content="Simplify your DORA gap analysis. Track compliance across the five pillars of the Digital Operational Resilience Act.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourdomain.com/dora-checklist">
+    <meta property="og:url" content="https://example.com/dora-compliance-tool">
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://yourdomain.com/dora-checklist">
+    <link rel="canonical" href="https://example.com/dora-compliance-tool">
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -22,9 +21,9 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "DORA Compliance Checklist Tool",
-      "description": "An interactive tool to track compliance with the Digital Operational Resilience Act (DORA) for financial institutions.",
+      "description": "An interactive tool for fintech compliance officers to track DORA requirements and identify resilience gaps.",
       "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
+      "operatingSystem": "Any",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -35,17 +34,18 @@
 
     <style>
         :root {
-            --primary-color: #1e3a8a;
-            --primary-light: #3b82f6;
-            --primary-dark: #1e40af;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
             --accent-color: #10b981;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
+            --accent-hover: #059669;
             --danger-color: #ef4444;
-            --transition: all 0.2s ease;
+            --warning-color: #f59e0b;
+            --border-color: #475569;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.2s ease-in-out;
         }
 
         * {
@@ -56,495 +56,559 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
 
         header {
-            background-color: var(--primary-color);
-            color: white;
+            background-color: var(--bg-secondary);
             padding: 2rem 1rem;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .header-content {
-            max-width: 800px;
+        .header-container {
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         h1 {
             font-size: 1.875rem;
             margin-bottom: 0.5rem;
-            font-weight: 800;
+            color: var(--text-primary);
         }
 
         .subtitle {
+            color: var(--text-secondary);
             font-size: 1rem;
-            opacity: 0.9;
             margin-bottom: 1.5rem;
         }
 
         /* Progress Section */
         .progress-container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 999px;
+            height: 24px;
+            width: 100%;
             max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .progress-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-        }
-
-        .progress-bar-bg {
-            background: rgba(0, 0, 0, 0.2);
-            height: 12px;
-            border-radius: 6px;
+            margin: 0 auto 1rem;
             overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-color);
         }
 
-        .progress-bar-fill {
-            background: var(--accent-color);
+        .progress-bar {
             height: 100%;
             width: 0%;
+            background-color: var(--accent-color);
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
         main {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
-        .controls {
+        /* Pillar Navigation */
+        .pillar-nav {
             display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
             margin-bottom: 2rem;
+            scrollbar-width: thin;
+        }
+
+        .pillar-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .pillar-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .pillar-btn:hover:not(.active) {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Checklist Section */
+        .pillar-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .pillar-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pillar-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .pillar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .requirement-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .requirement-card:hover {
+            border-color: var(--text-secondary);
+            background: #253145;
+        }
+
+        .requirement-card.completed {
+            border-left: 6px solid var(--accent-color);
+            background: #1a2e2a;
+        }
+
+        .checkbox-wrapper {
+            margin-top: 0.25rem;
+        }
+
+        .custom-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .completed .custom-checkbox {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .custom-checkbox svg {
+            width: 14px;
+            height: 14px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+            display: none;
+        }
+
+        .completed .custom-checkbox svg {
+            display: block;
+        }
+
+        .req-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .req-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Actions Footer */
+        .actions-container {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn {
-            cursor: pointer;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 0.875rem;
-            border: none;
+            cursor: pointer;
             transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            border: none;
+            font-size: 1rem;
         }
 
         .btn-primary {
-            background-color: var(--primary-light);
+            background: var(--accent-color);
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: var(--primary-dark);
+            background: var(--accent-hover);
         }
 
         .btn-outline {
-            background-color: transparent;
+            background: transparent;
             border: 1px solid var(--border-color);
-            color: var(--text-muted);
+            color: var(--text-primary);
         }
 
         .btn-outline:hover {
-            border-color: var(--danger-color);
-            color: var(--danger-color);
-        }
-
-        /* Checklist Styling */
-        .category-section {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .category-header {
-            background-color: #f1f5f9;
-            padding: 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            user-select: none;
-        }
-
-        .category-header h2 {
-            font-size: 1.125rem;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .category-count {
-            font-size: 0.75rem;
-            background: var(--primary-color);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-        }
-
-        .category-content {
-            padding: 0;
-            max-height: 2000px;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .category-content.collapsed {
-            max-height: 0;
-            overflow: hidden;
-        }
-
-        .requirement-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            transition: var(--transition);
-        }
-
-        .requirement-item:last-child {
-            border-bottom: none;
-        }
-
-        .requirement-item:hover {
-            background-color: #fafafa;
-        }
-
-        .checkbox-wrapper {
-            margin-right: 1rem;
-            padding-top: 0.25rem;
-        }
-
-        input[type="checkbox"] {
-            width: 1.25rem;
-            height: 1.25rem;
-            cursor: pointer;
-            accent-color: var(--primary-color);
-        }
-
-        .req-text {
-            flex: 1;
-        }
-
-        .req-title {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 0.25rem;
-            color: var(--text-main);
-        }
-
-        .req-desc {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .requirement-item.completed .req-title {
-            text-decoration: line-through;
-            color: var(--text-muted);
+            background: var(--bg-tertiary);
         }
 
         /* Toast Notification */
-        #toast {
+        .toast {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background: #334155;
+            background: var(--bg-tertiary);
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: 1rem 1.5rem;
             border-radius: 8px;
-            font-size: 0.875rem;
+            box-shadow: var(--card-shadow);
             transform: translateY(150%);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease-out;
             z-index: 1000;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--accent-color);
         }
 
-        #toast.show {
+        .toast.show {
             transform: translateY(0);
         }
 
         footer {
             text-align: center;
             padding: 3rem 1rem;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-size: 0.875rem;
         }
 
-        /* Print Styles */
-        @media print {
-            body {
-                background: white;
-                color: black;
-            }
-            header, .controls, footer, .category-header .category-count {
-                display: none !important;
-            }
-            main {
-                margin: 0;
-                padding: 0;
-                max-width: 100%;
-            }
-            .category-section {
-                border: 1px solid #ccc;
-                box-shadow: none;
-                page-break-inside: avoid;
-            }
-            .category-header {
-                background: #eee !important;
-                color: black !important;
-                border-bottom: 2px solid #333;
-                cursor: default;
-            }
-            .category-header h2 {
-                color: black !important;
-            }
-            .category-content.collapsed {
-                max-height: none !important;
-            }
-            .requirement-item {
-                border-bottom: 1px solid #eee;
-            }
-            .progress-container {
-                display: none !important;
-            }
-            .btn {
-                display: none !important;
-            }
-        }
-
+        /* Responsive Adjustments */
         @media (max-width: 640px) {
             h1 { font-size: 1.5rem; }
-            .controls { flex-direction: column; align-items: stretch; }
-            .btn { justify-content: center; }
+            .pillar-nav { gap: 0.25rem; }
+            .pillar-btn { padding: 0.5rem 0.75rem; font-size: 0.875rem; }
+            .btn-group { flex-direction: column; }
+            .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-content">
+        <div class="header-container">
             <h1>DORA Compliance Checklist</h1>
-            <p class="subtitle">Digital Operational Resilience Act (EU 2022/2554) Tracker</p>
+            <p class="subtitle">Digital Operational Resilience Act Gap Analysis Tool</p>
             
-            <div class="progress-container">
-                <div class="progress-stats">
-                    <span>Overall Readiness</span>
-                    <span id="progress-text">0%</span>
-                </div>
-                <div class="progress-bar-bg">
-                    <div id="progress-bar" class="progress-bar-fill"></div>
-                </div>
+            <div class="progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-text" id="progressText">0% Compliant</div>
             </div>
         </div>
     </header>
 
     <main>
-        <div class="controls">
-            <button class="btn btn-outline" id="reset-btn">
-                <span>↺</span> Reset Progress
-            </button>
-            <button class="btn btn-primary" id="print-btn">
-                <span>📄</span> Export to PDF
-            </button>
+        <nav class="pillar-nav" id="pillarNav" aria-label="DORA Pillars Navigation">
+            <!-- Buttons injected by JS -->
+        </nav>
+
+        <div id="checklistContainer">
+            <!-- Sections injected by JS -->
         </div>
 
-        <div id="checklist-root">
-            <!-- Categories and items will be injected here -->
-        </div>
+        <section class="actions-container">
+            <h2 style="margin-bottom: 1rem;">Finalize Assessment</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Export your gap analysis report to identify missing controls and prioritize remediation.</p>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="exportReport()">Download Gap Report (.txt)</button>
+                <button class="btn btn-outline" onclick="resetProgress()">Reset All Progress</button>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; <span id="year"></span> DORA Compliance Tool. Designed for Fintech Compliance Officers.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.75rem;">Disclaimer: This tool is for tracking purposes and does not constitute legal advice.</p>
+        <p>&copy; <span id="year"></span> DORA Compliance Tool. For informational purposes only. Not legal advice.</p>
     </footer>
 
-    <div id="toast">Progress saved!</div>
+    <div id="toast" class="toast">Notification message</div>
 
     <script>
-        (function() {
-            'use strict';
-
-            // DORA Requirements Data
-            const DORA_DATA = [
-                {
-                    category: "ICT Risk Management Framework",
-                    id: "cat-risk",
-                    items: [
-                        { id: "risk-1", title: "Governance Framework", desc: "Establish a robust governance framework with the management body bearing ultimate responsibility." },
-                        { id: "risk-2", title: "Risk Identification", desc: "Implement a continuous process to identify ICT business functions and dependencies." },
-                        { id: "risk-3", title: "Protection & Prevention", desc: "Deploy security tools to protect ICT assets (firewalls, encryption, IAM)." },
-                        { id: "risk-4", title: "Detection Mechanisms", desc: "Establish mechanisms to detect anomalous activities and potential ICT incidents." },
-                        { id: "risk-5", title: "Response & Recovery", desc: "Develop and test ICT Business Continuity Plans (BCP) and Disaster Recovery Plans (DRP)." },
-                        { id: "risk-6", title: "Digital Asset Inventory", desc: "Maintain an up-to-date registry of all critical ICT assets and software." }
-                    ]
-                },
-                {
-                    category: "ICT Incident Management & Reporting",
-                    id: "cat-incident",
-                    items: [
-                        { id: "inc-1", title: "Incident Classification", desc: "Define criteria to classify ICT incidents based on criticality and impact." },
-                        { id: "inc-2", title: "Reporting Workflow", desc: "Establish a process for reporting major ICT incidents to competent authorities." },
-                        { id: "inc-3", title: "Root Cause Analysis", desc: "Implement a mandatory post-incident review process to identify root causes." },
-                        { id: "inc-4", title: "Log Management", desc: "Maintain secure, timestamped logs of ICT incidents for auditing." }
-                    ]
-                },
-                {
-                    category: "Digital Operational Resilience Testing",
-                    id: "cat-testing",
-                    items: [
-                        { id: "test-1", title: "Annual Basic Testing", desc: "Perform annual vulnerability assessments and network scans." },
-                        { id: "test-2", title: "Scenario-based Testing", desc: "Execute resilience tests based on realistic failure scenarios." },
-                        { id: "test-3", title: "TLPT (Threat Led Penetration Testing)", desc: "For significant entities: Conduct advanced TLPT every 3 years." },
-                        { id: "test-4", title: "Remediation Tracking", desc: "Track and verify the closure of gaps identified during resilience tests." }
-                    ]
-                },
-                {
-                    category: "ICT Third-Party Risk Management",
-                    id: "cat-thirdparty",
-                    items: [
-                        { id: "tp-1", title: "Third-Party Registry", desc: "Maintain a Register of Information on all contractual arrangements with ICT third-party providers." },
-                        { id: "tp-2", title: "Due Diligence", desc: "Perform rigorous pre-contractual due diligence on ICT providers." },
-                        { id: "tp-3", title: "Contractual Minimums", desc: "Ensure contracts include service levels, termination rights, and audit clauses." },
-                        { id: "tp-4", title: "Exit Strategies", desc: "Develop exit strategies for critical ICT providers to ensure business continuity." },
-                        { id: "tp-5", title: "Concentration Risk", desc: "Assess and monitor concentration risk regarding critical third-party dependencies." }
-                    ]
-                },
-                {
-                    category: "Information Sharing",
-                    id: "cat-sharing",
-                    items: [
-                        { id: "share-1", title: "Intelligence Exchange", desc: "Establish mechanisms to share cyber threat intelligence with other financial entities." },
-                        { id: "share-2", title: "Secure Channels", desc: "Ensure information sharing occurs via secure, encrypted communication channels." }
-                    ]
-                }
-            ];
-
-            const state = {
-                completed: new Set(JSON.parse(localStorage.getItem('dora_completed') || '[]'))
-            };
-
-            const root = document.getElementById('checklist-root');
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            const toast = document.getElementById('toast');
-
-            function saveState() {
-                localStorage.setItem('dora_completed', JSON.stringify([...state.completed]));
-                showToast();
+        // DORA Requirements Data Structure
+        const doraData = [
+            {
+                id: "ict-risk",
+                title: "ICT Risk Management",
+                description: "Establish a comprehensive ICT risk management framework to ensure resilience.",
+                items: [
+                    { id: "risk-1", text: "Identification of all critical business functions and the ICT assets supporting them.", desc: "Maintain an up-to-date register of critical assets." },
+                    { id: "risk-2", text: "Implementation of a robust ICT risk management framework.", desc: "Documented policies for risk identification, assessment, and mitigation." },
+                    { id: "risk-3", text: "Establishment of business continuity and disaster recovery (BCDR) plans.", desc: "Plans must be tested regularly and updated." },
+                    { id: "risk-4", text: "Regular review and updating of ICT risk policies.", desc: "Annual review cycle by management or board." },
+                    { id: "risk-5", text: "Implementation of network security and access control measures.", desc: "Strong authentication and least-privilege access." },
+                    { id: "risk-6", text: "Management of ICT asset inventories.", desc: "Hardware and software asset tracking with lifecycle management." }
+                ]
+            },
+            {
+                id: "incident-reporting",
+                title: "ICT Incident Reporting",
+                description: "Streamline the classification and reporting of major ICT-related incidents.",
+                items: [
+                    { id: "inc-1", text: "Defined classification criteria for ICT incidents.", desc: "Clearly defined 'major' vs 'minor' incidents based on impact." },
+                    { id: "inc-2", text: "Incident logging and tracking system in place.", desc: "Centralized log for all security and operational incidents." },
+                    { id: "inc-3", text: "Formal process for reporting major incidents to competent authorities.", desc: "Templates and timelines aligned with DORA reporting windows." },
+                    { id: "inc-4", text: "Root cause analysis (RCA) procedure for major incidents.", desc: "Post-mortem process to prevent recurrence." },
+                    { id: "inc-5", text: "Communication plan for notifying clients and stakeholders.", desc: "Pre-defined templates for external communication." }
+                ]
+            },
+            {
+                id: "resilience-testing",
+                title: "Operational Resilience Testing",
+                description: "Regularly test ICT systems to ensure they can withstand disruptions.",
+                items: [
+                    { id: "test-1", text: "Annual basic ICT testing program.", desc: "Vulnerability scans and network assessments." },
+                    { id: "test-2", text: "Threat-Led Penetration Testing (TLPT) for critical systems.", desc: "Advanced testing for entities with high systemic importance." },
+                    { id: "test-3", text: "Verification of BCDR plan effectiveness through simulations.", desc: "Scheduled failover tests and tabletop exercises." },
+                    { id: "test-4", text: "Remediation tracking for identified vulnerabilities.", desc: "Audit trail showing fixes for test findings." },
+                    { id: "test-5", text: "Independent validation of testing results.", desc: "Third-party or internal audit review of test outcomes." }
+                ]
+            },
+            {
+                id: "third-party-risk",
+                title: "ICT Third-Party Risk",
+                description: "Manage risks associated with the use of external ICT service providers.",
+                items: [
+                    { id: "tp-1", text: "Register of all ICT third-party service providers.", desc: "Comprehensive list including critical providers." },
+                    { id: "tp-2", text: "Standardized contractual clauses for ICT providers.", desc: "Specific DORA-required terms in all vendor contracts." },
+                    { id: "tp-3", text: "Due diligence process for selecting ICT providers.", desc: "Risk assessment performed before onboarding." },
+                    { id: "tp-4", text: "Exit strategies for critical ICT service providers.", desc: "Documented plans to migrate or terminate without disruption." },
+                    { id: "tp-5", text: "Ongoing monitoring of third-party performance and risk.", desc: "Quarterly or annual vendor reviews." }
+                ]
+            },
+            {
+                id: "info-sharing",
+                title: "Information Sharing",
+                description: "Exchange cyber threat intelligence with other financial entities.",
+                items: [
+                    { id: "share-1", text: "Participation in threat intelligence sharing communities.", desc: "Membership in ISACs or similar networks." },
+                    { id: "share-2", text: "Internal process for analyzing shared threat data.", desc: "Mechanism to turn external intel into internal controls." },
+                    { id: "share-3", text: "Secure channels for exchanging sensitive threat information.", desc: "Encrypted communication methods for intel sharing." },
+                    { id: "share-4", text: "Policies on what information can be shared externally.", desc: "Governance on data privacy and confidentiality." }
+                ]
             }
+        ];
 
-            function showToast() {
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
-            }
+        let userProgress = {};
 
-            function updateProgress() {
-                const totalItems = DORA_DATA.reduce((acc, cat) => acc + cat.items.length, 0);
-                const completedCount = state.completed.size;
-                const percentage = Math.round((completedCount / totalItems) * 100);
-                
-                progressBar.style.width = `${percentage}%`;
-                progressText.innerText = `${percentage}%`;
-            }
+        // Initialize App
+        function init() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            loadProgress();
+            renderNav();
+            renderChecklist();
+            updateProgress();
+        }
 
-            function toggleItem(id) {
-                if (state.completed.has(id)) {
-                    state.completed.delete(id);
-                } else {
-                    state.completed.add(id);
-                }
-                
-                // Update UI classes
-                const element = document.querySelector(`[data-id="${id}"]`);
-                if (element) {
-                    element.classList.toggle('completed');
-                }
-                
-                saveState();
-                updateProgress();
-            }
+        function renderNav() {
+            const nav = document.getElementById('pillarNav');
+            nav.innerHTML = '';
+            doraData.forEach((pillar, index) => {
+                const btn = document.createElement('button');
+                btn.className = `pillar-btn ${index === 0 ? 'active' : ''}`;
+                btn.textContent = pillar.title;
+                btn.onclick = () => switchPillar(pillar.id, btn);
+                btn.setAttribute('aria-controls', pillar.id);
+                nav.appendChild(btn);
+            });
+        }
 
-            function render() {
-                root.innerHTML = '';
-                
-                DORA_DATA.forEach(cat => {
-                    const section = document.createElement('section');
-                    section.className = 'category-section';
-                    
-                    const completedInCategory = cat.items.filter(i => state.completed.has(i.id)).length;
-                    
-                    section.innerHTML = `
-                        <div class="category-header" onclick="this.nextElementSibling.classList.toggle('collapsed')">
-                            <h2>
-                                ${cat.category} 
-                                <span class="category-count">${completedInCategory}/${cat.items.length}</span>
-                            </h2>
-                            <span style="font-size: 0.8rem; opacity: 0.6;">▼</span>
-                        </div>
-                        <div class="category-content">
-                            ${cat.items.map(item => `
-                                <div class="requirement-item ${state.completed.has(item.id) ? 'completed' : ''}" data-id="${item.id}">
-                                    <div class="checkbox-wrapper">
-                                        <input type="checkbox" 
-                                               ${state.completed.has(item.id) ? 'checked' : ''} 
-                                               onchange="window.app.toggleItem('${item.id}')">
-                                    </div>
-                                    <div class="req-text">
-                                        <span class="req-title">${item.title}</span>
-                                        <span class="req-desc">${item.desc}</span>
+        function renderChecklist() {
+            const container = document.getElementById('checklistContainer');
+            container.innerHTML = '';
+
+            doraData.forEach((pillar, index) => {
+                const section = document.createElement('section');
+                section.id = pillar.id;
+                section.className = `pillar-section ${index === 0 ? 'active' : ''}`;
+
+                section.innerHTML = `
+                    <div class="pillar-header">
+                        <h2>${pillar.title}</h2>
+                        <p style="color: var(--text-secondary)">${pillar.description}</p>
+                    </div>
+                    <div class="requirements-list">
+                        ${pillar.items.map(item => `
+                            <div class="requirement-card ${userProgress[item.id] ? 'completed' : ''}" 
+                                 onclick="toggleItem('${item.id}')" 
+                                 id="card-${item.id}" 
+                                 tabindex="0" 
+                                 onkeypress="if(event.key==='Enter') toggleItem('${item.id}')">
+                                <div class="checkbox-wrapper">
+                                    <div class="custom-checkbox">
+                                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                     </div>
                                 </div>
-                            `).join('')}
-                        </div>
-                    `;
-                    root.appendChild(section);
-                });
+                                <div class="req-content">
+                                    <h3>${item.text}</h3>
+                                    <p>${item.desc}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        function switchPillar(pillarId, btn) {
+            // Update buttons
+            document.querySelectorAll('.pillar-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Update sections
+            document.querySelectorAll('.pillar-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(pillarId).classList.add('active');
+        }
+
+        function toggleItem(itemId) {
+            userProgress[itemId] = !userProgress[itemId];
+            
+            const card = document.getElementById(`card-${itemId}`);
+            if (userProgress[itemId]) {
+                card.classList.add('completed');
+            } else {
+                card.classList.remove('completed');
             }
 
-            // Public API for inline event handlers
-            window.app = {
-                toggleItem: toggleItem
-            };
-
-            // Event Listeners
-            document.getElementById('print-btn').addEventListener('click', () => {
-                window.print();
-            });
-
-            document.getElementById('reset-btn').addEventListener('click', () => {
-                if (confirm('Are you sure you want to clear all progress? This cannot be undone.')) {
-                    state.completed.clear();
-                    saveState();
-                    render();
-                    updateProgress();
-                }
-            });
-
-            // Init
-            document.getElementById('year').innerText = new Date().getFullYear();
-            render();
+            saveProgress();
             updateProgress();
+        }
 
-        })();
+        function updateProgress() {
+            const totalItems = doraData.reduce((acc, pillar) => acc + pillar.items.length, 0);
+            const completedItems = Object.values(userProgress).filter(val => val === true).length;
+            const percentage = Math.round((completedItems / totalItems) * 100);
+
+            const bar = document.getElementById('progressBar');
+            const text = document.getElementById('progressText');
+            
+            bar.style.width = `${percentage}%`;
+            text.textContent = `${percentage}% Compliant`;
+            
+            // Accessibility
+            document.querySelector('.progress-container').setAttribute('aria-valuenow', percentage);
+        }
+
+        function saveProgress() {
+            localStorage.setItem('dora_compliance_progress', JSON.stringify(userProgress));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('dora_compliance_progress');
+            if (saved) {
+                userProgress = JSON.parse(saved);
+            }
+        }
+
+        function resetProgress() {
+            if (confirm("Are you sure you want to clear all progress? This cannot be undone.")) {
+                userProgress = {};
+                saveProgress();
+                renderChecklist();
+                updateProgress();
+                showToast("Progress has been reset");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function exportReport() {
+            let report = `DORA COMPLIANCE GAP ANALYSIS REPORT\n`;
+            report += `Generated on: ${new Date().toLocaleString()}\n`;
+            report += `Overall Compliance: ${document.getElementById('progressText').textContent}\n`;
+            report += `====================================================\n\n`;
+
+            let gapsFound = 0;
+
+            doraData.forEach(pillar => {
+                report += `PILLAR: ${pillar.title}\n`;
+                let pillarGaps = [];
+                
+                pillar.items.forEach(item => {
+                    if (!userProgress[item.id]) {
+                        pillarGaps.push(`- [ ] ${item.text}: ${item.desc}`);
+                    }
+                });
+
+                if (pillarGaps.length > 0) {
+                    report += pillarGaps.join('\n') + `\n`;
+                    gapsFound += pillarGaps.length;
+                } else {
+                    report += `✓ All requirements met for this pillar.\n`;
+                }
+                report += `\n----------------------------------------------------\n`;
+            });
+
+            report += `\nSUMMARY:\nTotal Gaps Identified: ${gapsFound}\n`;
+            report += `Action Required: Prioritize the gaps listed above to reach full DORA compliance.`;
+
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `DORA_Gap_Analysis_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("Report downloaded successfully!");
+        }
+
+        // Start the app
+        window.onload = init;
     </script>
 </body>
 </html>

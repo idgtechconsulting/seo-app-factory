@@ -35,11 +35,18 @@ function slugFromHtml(html, fallbackTitle) {
   const base = src.split(/\s*[\|—–]\s*|\s+-\s+/)[0].trim();
   // Strip common trailing filler words
   const clean = base.replace(/\s*[\|—–]\s*(Professional|Free|Online|Tool|Calculator|Generator|Converter|App).*$/i, '').trim();
-  return clean
+  let slug = clean
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 40);
+    .replace(/^-+|-+$/g, '');
+  // Truncate to 40 chars at word (segment) boundary
+  if (slug.length > 40) {
+    slug = slug.slice(0, 40);
+    const lastHyphen = slug.lastIndexOf('-');
+    if (lastHyphen > 0) slug = slug.slice(0, lastHyphen);
+  }
+  slug = slug.replace(/-+$/, '');
+  return slug;
 }
 
 function extractHTML(text) {
@@ -98,6 +105,7 @@ async function main() {
 
   let extracted = 0;
   let skipped = 0;
+  const usedSlugs = new Set();
 
   for (const issue of appIssues) {
     // Fetch comments for this issue
@@ -133,7 +141,14 @@ async function main() {
       continue;
     }
 
-    const slug = slugFromHtml(html, issue.title);
+    let slug = slugFromHtml(html, issue.title);
+    // Dedup: append -2, -3, etc. if slug already used this run
+    if (usedSlugs.has(slug)) {
+      let n = 2;
+      while (usedSlugs.has(`${slug}-${n}`)) n++;
+      slug = `${slug}-${n}`;
+    }
+    usedSlugs.add(slug);
     const htmlFile = path.join(STAGING_DIR, `${slug}.html`);
     const metaFile = path.join(STAGING_DIR, `${slug}.meta.json`);
 

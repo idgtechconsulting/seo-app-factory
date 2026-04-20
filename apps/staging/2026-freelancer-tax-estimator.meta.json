@@ -1,8 +1,8 @@
 {
-  "issueId": "c39bd80c-5fe1-49a8-bac1-8d6efbdc680a",
-  "title": "Build: A tax calculator with hardcoded 2026 tax brackets and self-employment tax rates. Features include a 'Payment Buffer' cal",
+  "issueId": "05f9b0dc-2f09-42c6-a6fd-6701e1ad5cee",
+  "title": "BUILD: Implement as single-file HTML app: A comprehensive calculator using hardcoded 2026 tax brackets and self-employment tax rates. Includes",
   "slug": "2026-freelancer-tax-estimator",
-  "keywordTarget": "Build: A tax calculator with hardcoded 2026 tax brackets and self-employment tax rates. Features include a 'Payment Buffer' cal",
-  "timestamp": "2026-04-20T16:35:07.052Z",
-  "sourceIssueUrl": "http://localhost:3100/issues/c39bd80c-5fe1-49a8-bac1-8d6efbdc680a"
+  "keywordTarget": "BUILD: Implement as single-file HTML app: A comprehensive calculator using hardcoded 2026 tax brackets and self-employment tax rates. Includes",
+  "timestamp": "2026-04-20T17:02:56.471Z",
+  "sourceIssueUrl": "http://localhost:3100/issues/05f9b0dc-2f09-42c6-a6fd-6701e1ad5cee"
 }

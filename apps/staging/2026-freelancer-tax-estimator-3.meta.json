@@ -1,8 +1,8 @@
 {
-  "issueId": "d704251c-478d-4df6-8754-ed84c8d416ae",
-  "title": "Build: A calculator using 2026 tax brackets (hardcoded). Inputs: Gross income, business expenses, state. Outputs: Estimated fed",
+  "issueId": "dfcf9532-ae9b-43c3-9cad-dd6b9de63855",
+  "title": "Build: A tax calculator with hardcoded 2026 tax brackets. Inputs for gross income, business expenses, and filing status. Output",
   "slug": "2026-freelancer-tax-estimator-3",
-  "keywordTarget": "Build: A calculator using 2026 tax brackets (hardcoded). Inputs: Gross income, business expenses, state. Outputs: Estimated fed",
-  "timestamp": "2026-04-20T17:02:56.634Z",
-  "sourceIssueUrl": "http://localhost:3100/issues/d704251c-478d-4df6-8754-ed84c8d416ae"
+  "keywordTarget": "Build: A tax calculator with hardcoded 2026 tax brackets. Inputs for gross income, business expenses, and filing status. Output",
+  "timestamp": "2026-04-20T17:05:21.660Z",
+  "sourceIssueUrl": "http://localhost:3100/issues/dfcf9532-ae9b-43c3-9cad-dd6b9de63855"
 }

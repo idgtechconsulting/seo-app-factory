@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 Freelancer Tax Estimator | Calculate 1099 Federal & SE Tax</title>
-    <meta name="description" content="Free 2026 Freelancer Tax Estimator. Calculate your estimated federal income tax, self-employment tax, and suggested quarterly savings for independent contractors.">
-    <link rel="canonical" href="https://example.com/2026-freelancer-tax-estimator">
+    <title>2026 Freelancer Tax Estimator | Calculate Your Quarterly 1099 Taxes</title>
+    <meta name="description" content="Free 2026 freelancer tax estimator. Calculate estimated federal income tax, self-employment tax, and quarterly payment goals for 1099 contractors.">
     
     <!-- Open Graph Tags -->
     <meta property="og:title" content="2026 Freelancer Tax Estimator">
-    <meta property="og:description" content="Estimate your 2026 tax liability and determine how much to save for quarterly payments.">
+    <meta property="og:description" content="Stop guessing your quarterly taxes. Use our 2026 bracket calculator for freelancers and 1099 contractors.">
     <meta property="og:type" content="website">
-    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://example.com/2026-freelancer-tax-estimator">
+    
+    <link rel="canonical" href="https://example.com/2026-freelancer-tax-estimator">
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -19,9 +20,9 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "2026 Freelancer Tax Estimator",
-      "description": "A professional tool for freelancers to estimate federal and self-employment taxes for the 2026 tax year.",
+      "description": "A professional tool for freelancers to estimate their 2026 federal and self-employment taxes and plan quarterly payments.",
       "applicationCategory": "FinanceApplication",
-      "operatingSystem": "Any",
+      "operatingSystem": "Web",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -36,58 +37,67 @@
             --primary-dark: #1d4ed8;
             --secondary: #64748b;
             --accent: #10b981;
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
             --error: #ef4444;
-            --success: #22c55e;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 12px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--background);
             color: var(--text-main);
-            line-height: 1.6;
+            line-height: 1.5;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
         header {
-            background-color: var(--card-bg);
+            background-color: var(--surface);
             border-bottom: 1px solid var(--border);
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
             text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        header h1 {
-            font-size: 2rem;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            font-size: 1.875rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: var(--primary);
             margin-bottom: 0.5rem;
         }
 
-        header p {
+        .subtitle {
             color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto;
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        nav {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
         }
 
         main {
-            flex: 1;
-            width: 100%;
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
             display: grid;
             grid-template-columns: 1fr;
             gap: 2rem;
@@ -95,38 +105,35 @@
 
         @media (min-width: 768px) {
             main {
-                grid-template-columns: 1fr 1fr;
-                align-items: start;
+                grid-template-columns: 400px 1fr;
             }
         }
 
-        section {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 1rem;
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
             border: 1px solid var(--border);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
         }
 
         .input-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         label {
             display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            font-size: 0.9rem;
+            color: var(--text-main);
         }
 
         input, select {
             width: 100%;
             padding: 0.75rem;
-            border-radius: 0.5rem;
             border: 1px solid var(--border);
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            border-radius: 8px;
             font-size: 1rem;
             transition: border-color 0.2s, ring 0.2s;
         }
@@ -134,18 +141,18 @@
         input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .btn {
             width: 100%;
-            padding: 1rem;
+            padding: 0.75rem;
             background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 0.5rem;
-            font-size: 1.1rem;
+            border-radius: 8px;
             font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.2s;
         }
@@ -154,125 +161,125 @@
             background-color: var(--primary-dark);
         }
 
-        .results-container {
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .results-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .result-card {
-            padding: 1rem;
-            background-color: var(--bg-dark);
-            border-radius: 0.75rem;
-            border-left: 4px solid var(--primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .result-card.highlight {
-            border-left-color: var(--accent);
-            background-color: rgba(16, 185, 129, 0.1);
+        .result-item {
+            padding: 1.25rem;
+            background: #f1f5f9;
+            border-radius: var(--radius);
+            text-align: center;
         }
 
         .result-label {
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             color: var(--text-muted);
+            display: block;
+            margin-bottom: 0.5rem;
         }
 
         .result-value {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-main);
         }
 
-        .savings-section {
+        .highlight {
+            color: var(--primary);
+        }
+
+        /* Progress Bar */
+        .goal-section {
             margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
         }
 
-        .savings-box {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            text-align: center;
-            color: white;
+        .progress-container {
+            height: 24px;
+            background: var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem 0;
+            position: relative;
         }
 
-        .savings-box h3 {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 0.5rem;
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            transition: width 0.5s ease-out;
         }
 
-        .savings-box .amount {
-            font-size: 2.5rem;
-            font-weight: 800;
-            display: block;
+        .goal-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
 
-        .toast {
+        /* Toast Notification */
+        #toast {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            padding: 1rem 2rem;
-            background-color: var(--error);
+            background: #334155;
             color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            display: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transform: translateY(200%);
+            transition: transform 0.3s ease-in-out;
             z-index: 1000;
-            animation: slideIn 0.3s ease-out;
+            font-size: 0.875rem;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+        #toast.show {
+            transform: translateY(0);
         }
 
         footer {
             text-align: center;
-            padding: 2rem 1rem;
+            padding: 3rem 1rem;
             color: var(--text-muted);
-            font-size: 0.8rem;
-            background-color: var(--card-bg);
+            font-size: 0.875rem;
             border-top: 1px solid var(--border);
+            margin-top: 4rem;
         }
 
         .disclaimer {
-            max-width: 800px;
-            margin: 0 auto 1rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
             font-style: italic;
+            line-height: 1.4;
         }
 
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
+        article {
+            margin-top: 2rem;
+            line-height: 1.6;
+        }
+
+        article h3 {
             margin-bottom: 1rem;
-        }
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.8rem;
-            transition: color 0.2s;
-        }
-
-        nav a:hover {
             color: var(--text-main);
+        }
+
+        article p {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
     </style>
 </head>
@@ -280,207 +287,236 @@
 
     <header>
         <h1>2026 Freelancer Tax Estimator</h1>
-        <p>Simple, subscription-free tool to estimate your 1099 federal taxes and plan your quarterly savings for the 2026 tax year.</p>
+        <p class="subtitle">Precise projections for 1099 contractors & solo-preneurs</p>
     </header>
 
-    <main>
-        <section aria-labelledby="input-heading">
-            <h2 id="input-heading" style="margin-bottom: 1.5rem; font-size: 1.25rem;">Income Details</h2>
-            <form id="taxForm">
-                <div class="input-group">
-                    <label for="grossIncome">Gross Annual Income ($)</label>
-                    <input type="number" id="grossIncome" placeholder="e.g. 85000" required step="0.01" min="0">
+    <div class="container">
+        <main>
+            <!-- Input Section -->
+            <section aria-labelledby="calc-heading">
+                <div class="card">
+                    <h2 id="calc-heading" class="sr-only">Tax Calculation Inputs</h2>
+                    <form id="taxForm" novalidate>
+                        <div class="input-group">
+                            <label for="grossIncome">Annual Gross Income ($)</label>
+                            <input type="number" id="grossIncome" placeholder="e.g. 85000" required step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label for="expenses">Annual Business Expenses ($)</label>
+                            <input type="number" id="expenses" placeholder="e.g. 12000" required step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label for="state">State of Residence</label>
+                            <select id="state">
+                                <option value="0">No State Income Tax (e.g. TX, FL, WA)</option>
+                                <option value="0.05">Average State Tax (~5%)</option>
+                                <option value="0.08">High State Tax (~8%)</option>
+                                <option value="0.13">Very High State Tax (~13%)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="currentSavings">Current Tax Savings ($)</label>
+                            <input type="number" id="currentSavings" placeholder="e.g. 5000" step="0.01">
+                        </div>
+                        <button type="submit" class="btn">Calculate My Taxes</button>
+                    </form>
                 </div>
-                <div class="input-group">
-                    <label for="expenses">Business Expenses ($)</label>
-                    <input type="number" id="expenses" placeholder="e.g. 12000" required step="0.01" min="0">
-                </div>
-                <div class="input-group">
-                    <label for="filingStatus">Filing Status</label>
-                    <select id="filingStatus">
-                        <option value="single">Single</option>
-                        <option value="married">Married Filing Jointly</option>
-                        <option value="hoh">Head of Household</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Calculate Estimate</button>
-            </form>
-        </section>
+            </section>
 
-        <section id="resultsSection" class="results-container" aria-labelledby="results-heading">
-            <h2 id="results-heading" style="margin-bottom: 1.5rem; font-size: 1.25rem;">Your Tax Estimate</h2>
-            
-            <div class="results-grid">
-                <div class="result-card">
-                    <span class="result-label">Net Business Profit</span>
-                    <span class="result-value" id="resNetProfit">$0.00</span>
-                </div>
-                <div class="result-card">
-                    <span class="result-label">Self-Employment Tax</span>
-                    <span class="result-value" id="resSETax">$0.00</span>
-                </div>
-                <div class="result-card">
-                    <span class="result-label">Estimated Federal Tax</span>
-                    <span class="result-value" id="resFedTax">$0.00</span>
-                </div>
-                <div class="result-card highlight">
-                    <span class="result-label">Total Estimated Tax</span>
-                    <span class="result-value" id="resTotalTax">$0.00</span>
-                </div>
-            </div>
+            <!-- Results Section -->
+            <section aria-labelledby="results-heading">
+                <div class="card">
+                    <h2 id="results-heading" style="margin-bottom: 1.5rem; font-size: 1.25rem;">Estimated Tax Breakdown</h2>
+                    
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <span class="result-label">Self-Employment Tax</span>
+                            <span class="result-value" id="seTaxResult">$0.00</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Federal Income Tax</span>
+                            <span class="result-value" id="fedTaxResult">$0.00</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Estimated State Tax</span>
+                            <span class="result-value" id="stateTaxResult">$0.00</span>
+                        </div>
+                        <div class="result-item" style="background: #dcfce7; border: 1px solid #bbf7d0;">
+                            <span class="result-label" style="color: #166534;">Total Est. Tax</span>
+                            <span class="result-value highlight" id="totalTaxResult">$0.00</span>
+                        </div>
+                    </div>
 
-            <div class="savings-section">
-                <div class="savings-box">
-                    <h3>Suggested Monthly Savings</h3>
-                    <span class="amount" id="resMonthly">$0.00</span>
-                    <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">To cover all estimated federal liabilities</p>
-                </div>
-            </div>
-        </section>
-    </main>
+                    <div class="result-item" style="margin-bottom: 2rem; background: #eff6ff; border: 1px solid #bfdbfe;">
+                        <span class="result-label" style="color: #1e40af;">Suggested Quarterly Payment</span>
+                        <span class="result-value" id="quarterlyResult" style="font-size: 2.25rem; color: #1e40af;">$0.00</span>
+                    </div>
 
-    <div id="toast" class="toast">Please enter valid positive numbers.</div>
+                    <div class="goal-section">
+                        <div class="goal-text">
+                            <span>Tax Savings Progress</span>
+                            <span id="goalPercent">0%</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                        <div class="goal-text">
+                            <span id="savingsCurrent">$0</span>
+                            <span id="savingsTarget">$0</span>
+                        </div>
+                    </div>
+
+                    <article>
+                        <h3>Understanding Your 2026 Taxes</h3>
+                        <p>For 2026, this calculator assumes the sunset of the Tax Cuts and Jobs Act (TCJA), reverting to pre-2018 bracket structures adjusted for inflation. As a freelancer, you are responsible for both the employer and employee portions of Social Security and Medicare taxes.</p>
+                        <p><strong>Tip:</strong> To avoid underpayment penalties, the IRS generally requires you to pay at least 90% of your current year's tax or 100% of last year's tax through quarterly estimated payments.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <footer>
-        <nav>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">About</a>
-        </nav>
-        <p class="disclaimer">
-            <strong>Disclaimer:</strong> This calculator provides a rough estimate based on projected 2026 tax brackets and standard deductions. It does not account for state taxes, specific credits, or complex deductions. This is not professional tax advice. Please consult a certified CPA or tax professional for official filings.
-        </p>
-        <p>&copy; 2024 Freelancer Tax Tools. All rights reserved.</p>
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This tool provides estimates for educational purposes only and does not constitute professional tax, legal, or financial advice. Tax laws change frequently. Please consult a Certified Public Accountant (CPA) or tax professional for your specific situation.
+        </div>
+        <p>&copy; 2024-2026 Freelancer Tax Tools. All rights reserved.</p>
     </footer>
 
+    <div id="toast" role="alert"></div>
+
     <script>
-        /**
-         * 2026 Projected Tax Brackets (Simulated/Estimated)
-         * Based on projections for post-TCJA expiration adjusted for inflation.
-         */
-        const BRACKETS = {
-            single: [
+        (function() {
+            'use strict';
+
+            // 2026 Projected "Sunset" Brackets (Single Filer)
+            // These reflect a return to the pre-TCJA structure indexed for inflation
+            const BRACKETS_2026 = [
                 { threshold: 0, rate: 0.10 },
-                { threshold: 11600, rate: 0.12 },
-                { threshold: 47150, rate: 0.22 },
-                { threshold: 100525, rate: 0.24 },
-                { threshold: 191950, rate: 0.32 },
-                { threshold: 243725, rate: 0.35 },
-                { threshold: 609350, rate: 0.37 }
-            ],
-            married: [
-                { threshold: 0, rate: 0.10 },
-                { threshold: 23200, rate: 0.12 },
-                { threshold: 94300, rate: 0.22 },
-                { threshold: 201050, rate: 0.24 },
-                { threshold: 383900, rate: 0.32 },
-                { threshold: 487450, rate: 0.35 },
-                { threshold: 721850, rate: 0.37 }
-            ],
-            hoh: [
-                { threshold: 0, rate: 0.10 },
-                { threshold: 16400, rate: 0.12 },
-                { threshold: 62225, rate: 0.22 },
-                { threshold: 115837, rate: 0.24 },
-                { threshold: 191950, rate: 0.32 },
-                { threshold: 243725, rate: 0.35 },
-                { threshold: 609350, rate: 0.37 }
-            ]
-        };
+                { threshold: 11600, rate: 0.15 },
+                { threshold: 47150, rate: 0.25 },
+                { threshold: 100525, rate: 0.28 },
+                { threshold: 191950, rate: 0.33 },
+                { threshold: 272950, rate: 0.35 },
+                { threshold: 533400, rate: 0.396 }
+            ];
 
-        const STANDARD_DEDUCTIONS = {
-            single: 15000,
-            married: 30000,
-            hoh: 21000
-        };
+            const STANDARD_DEDUCTION_2026 = 15000; // Projected
+            const SE_TAX_RATE = 0.153; // 12.4% SS + 2.9% Medicare
+            const SS_CAP_2026 = 175000; // Projected Social Security Wage Base
 
-        const SE_TAX_RATE = 0.153; // 12.4% SS + 2.9% Medicare
-        const SE_TAX_ADJUSTMENT = 0.9235; // SE tax is calculated on 92.35% of net earnings
+            const form = document.getElementById('taxForm');
+            const toast = document.getElementById('toast');
 
-        const form = document.getElementById('taxForm');
-        const toast = document.getElementById('toast');
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
 
-        function showToast(message) {
-            toast.textContent = message;
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 4000);
-        }
+            function formatCurrency(num) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                }).format(num);
+            }
 
-        function formatCurrency(value) {
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            }).format(value);
-        }
-
-        function calculateFederalTax(taxableIncome, status) {
-            if (taxableIncome <= 0) return 0;
-            
-            const brackets = BRACKETS[status];
-            let tax = 0;
-            
-            for (let i = 0; i < brackets.length; i++) {
-                const current = brackets[i];
-                const next = brackets[i + 1];
+            function calculateFederalTax(taxableIncome) {
+                if (taxableIncome <= 0) return 0;
                 
-                const upperLimit = next ? next.threshold : Infinity;
-                
-                if (taxableIncome > current.threshold) {
-                    const taxableInThisBracket = Math.min(taxableIncome, upperLimit) - current.threshold;
-                    tax += taxableInThisBracket * current.rate;
-                } else {
-                    break;
+                let tax = 0;
+                for (let i = 0; i < BRACKETS_2026.length; i++) {
+                    const current = BRACKETS_2026[i];
+                    const next = BRACKETS_2026[i + 1];
+                    
+                    if (next) {
+                        const taxableInThisBracket = Math.min(taxableIncome, next.threshold) - current.threshold;
+                        if (taxableInThisBracket > 0) {
+                            tax += taxableInThisBracket * current.rate;
+                        }
+                    } else {
+                        const taxableInThisBracket = taxableIncome - current.threshold;
+                        if (taxableInThisBracket > 0) {
+                            tax += taxableInThisBracket * current.rate;
+                        }
+                    }
                 }
-            }
-            return tax;
-        }
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const gross = parseFloat(document.getElementById('grossIncome').value);
-            const expenses = parseFloat(document.getElementById('expenses').value);
-            const status = document.getElementById('filingStatus').value;
-
-            if (isNaN(gross) || isNaN(expenses) || gross < 0 || expenses < 0) {
-                showToast('Please enter valid positive numbers.');
-                return;
+                return tax;
             }
 
-            // 1. Net Business Profit
-            const netProfit = gross - expenses;
-            
-            // 2. Self Employment Tax
-            // SE Tax = Net Profit * 92.35% * 15.3%
-            const seTax = Math.max(0, netProfit * SE_TAX_ADJUSTMENT * SE_TAX_RATE);
-            
-            // 3. Taxable Income for Federal Income Tax
-            // Deduct half of SE tax and standard deduction
-            const halfSETax = seTax / 2;
-            const standardDeduction = STANDARD_DEDUCTIONS[status];
-            const taxableIncome = Math.max(0, netProfit - halfSETax - standardDeduction);
-            
-            // 4. Federal Income Tax
-            const federalTax = calculateFederalTax(taxableIncome, status);
-            
-            // 5. Total Liability
-            const totalTax = seTax + federalTax;
-            const monthlySavings = totalTax / 12;
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
 
-            // Update UI
-            document.getElementById('resNetProfit').textContent = formatCurrency(netProfit);
-            document.getElementById('resSETax').textContent = formatCurrency(seTax);
-            document.getElementById('resFedTax').textContent = formatCurrency(federalTax);
-            document.getElementById('resTotalTax').textContent = formatCurrency(totalTax);
-            document.getElementById('resMonthly').textContent = formatCurrency(monthlySavings);
+                // Inputs
+                const grossIncome = parseFloat(document.getElementById('grossIncome').value) || 0;
+                const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+                const stateRate = parseFloat(document.getElementById('state').value) || 0;
+                const currentSavings = parseFloat(document.getElementById('currentSavings').value) || 0;
 
-            document.getElementById('resultsSection').style.display = 'block';
-            
-            // Smooth scroll to results
-            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
-        });
+                // Validation
+                if (grossIncome <= 0) {
+                    showToast('Please enter a valid gross income.');
+                    return;
+                }
+                if (expenses < 0) {
+                    showToast('Expenses cannot be negative.');
+                    return;
+                }
+
+                // 1. Net Business Profit
+                const netProfit = grossIncome - expenses;
+                if (netProfit <= 0) {
+                    showToast('Net profit is zero or negative. No tax estimated.');
+                    updateUI(0, 0, 0, 0, 0, currentSavings);
+                    return;
+                }
+
+                // 2. Self-Employment (SE) Tax
+                // SE tax is calculated on 92.35% of net profit
+                const seTaxableIncome = netProfit * 0.9235;
+                
+                // Split SE tax into Social Security (12.4% up to cap) and Medicare (2.9% uncapped)
+                const ssTax = Math.min(seTaxableIncome, SS_CAP_2026) * 0.124;
+                const medicareTax = seTaxableIncome * 0.029;
+                const totalSETax = ssTax + medicareTax;
+
+                // 3. Federal Income Tax
+                // Deduct half of SE tax and standard deduction from net profit
+                const adjustedGrossIncome = netProfit - (totalSETax * 0.5);
+                const taxableIncome = Math.max(0, adjustedGrossIncome - STANDARD_DEDUCTION_2026);
+                const fedIncomeTax = calculateFederalTax(taxableIncome);
+
+                // 4. State Tax (Simplified estimate)
+                const stateTax = netProfit * stateRate;
+
+                // Total
+                const totalTax = totalSETax + fedIncomeTax + stateTax;
+                const quarterly = totalTax / 4;
+
+                updateUI(totalSETax, fedIncomeTax, stateTax, totalTax, quarterly, currentSavings);
+                showToast('Calculation updated successfully!');
+            });
+
+            function updateUI(seTax, fedTax, stateTax, total, quarterly, savings) {
+                document.getElementById('seTaxResult').textContent = formatCurrency(seTax);
+                document.getElementById('fedTaxResult').textContent = formatCurrency(fedTax);
+                document.getElementById('stateTaxResult').textContent = formatCurrency(stateTax);
+                document.getElementById('totalTaxResult').textContent = formatCurrency(total);
+                document.getElementById('quarterlyResult').textContent = formatCurrency(quarterly);
+
+                // Goal Progress
+                const target = total;
+                const current = savings;
+                const percent = target > 0 ? Math.min(100, (current / target) * 100) : 0;
+
+                document.getElementById('progressBar').style.width = `${percent}%`;
+                document.getElementById('goalPercent').textContent = `${Math.round(percent)}%`;
+                document.getElementById('savingsCurrent').textContent = `Saved: ${formatCurrency(current)}`;
+                document.getElementById('savingsTarget').textContent = `Goal: ${formatCurrency(target)}`;
+            }
+        })();
     </script>
 </body>
 </html>

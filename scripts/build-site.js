@@ -203,6 +203,23 @@ function main() {
       appHtml = appHtml.replace(/<\/head>/i, `  <meta property="og:url" content="${BASE_URL}/apps/${app.slug}.html">\n</head>`);
     }
 
+    // Insert og:image if missing
+    if (!/property=["']og:image["']/i.test(appHtml)) {
+      appHtml = appHtml.replace(/<\/head>/i, `  <meta property="og:image" content="https://freetoolbox.tools/og-default.png">\n  <meta property="og:image:width" content="1200">\n  <meta property="og:image:height" content="630">\n</head>`);
+    }
+
+    // Insert FAQPage schema for this tool
+    const toolFaqSchema = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        { '@type': 'Question', name: `What does ${app.title} do?`, acceptedAnswer: { '@type': 'Answer', text: app.description || app.title } },
+        { '@type': 'Question', name: `Is ${app.title} free?`, acceptedAnswer: { '@type': 'Answer', text: `Yes, ${app.title} is completely free with no account required.` } },
+        { '@type': 'Question', name: `Does ${app.title} work on mobile?`, acceptedAnswer: { '@type': 'Answer', text: 'Yes, it works on any device with a modern browser.' } }
+      ]
+    });
+    appHtml = appHtml.replace(/<\/head>/i, `  <script type="application/ld+json">${toolFaqSchema}<\/script>\n</head>`);
+
     const patchedHtml = injectIntoTool(
       appHtml,
       others,
@@ -304,6 +321,9 @@ function main() {
   <meta property="og:url" content="${BASE_URL}/">
   <meta property="og:title" content="Free Online Tools — Calculators, Converters &amp; Generators">
   <meta property="og:description" content="${apps.length} free tools that run in your browser. No sign-up required.">
+  <meta property="og:image" content="https://freetoolbox.tools/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">

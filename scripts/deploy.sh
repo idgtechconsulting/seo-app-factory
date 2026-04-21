@@ -63,6 +63,7 @@ APP_COUNT=$(ls deployed/apps/*.html 2>/dev/null | wc -l | tr -d ' ')
 # Step 4: Commit and push
 echo ""
 echo "Step 4: Committing and pushing..."
+find .git -name "*.lock" -delete 2>/dev/null || true
 git add -A
 git commit -m "Deploy: $(date +%Y-%m-%d) — ${APP_COUNT} apps (${APPROVED} new)" || echo "  (nothing new to commit)"
 git push origin main || echo "  [warn] Push failed — check remote"

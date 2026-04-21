@@ -36,15 +36,22 @@
 
     main { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
 
+    /* ── Mixed-content warning banner ── */
+    #mixed-warning { display: none; background: rgba(245,158,11,.1); border: 1px solid var(--warn); border-radius: var(--radius); padding: .75rem 1rem; margin-bottom: 1rem; font-size: .82rem; color: #fde68a; }
+    #mixed-warning strong { color: var(--warn); }
+    #mixed-warning a { color: var(--warn); text-decoration: underline; }
+
     /* ── Stats row ── */
     .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.15rem; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.15rem; position: relative; overflow: hidden; }
     .stat-card .label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .35rem; }
     .stat-card .value { font-size: 1.7rem; font-weight: 700; color: var(--text); }
     .stat-card .sub { font-size: .78rem; color: var(--muted); margin-top: .15rem; }
     .stat-card.green .value { color: var(--accent2); }
     .stat-card.purple .value { color: var(--accent); }
     .stat-card.yellow .value { color: var(--warn); }
+    .stat-card .spark { position: absolute; bottom: 6px; right: 8px; opacity: .6; }
+    .stat-card .stale-flag { display: inline-block; margin-left: .4rem; font-size: .7rem; padding: .05rem .4rem; border-radius: 4px; background: rgba(239,68,68,.15); color: var(--danger); font-weight: 600; }
 
     /* ── Grid layout ── */
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
@@ -137,6 +144,14 @@
     /* ── Search ── */
     .search-input { width: 100%; padding: .55rem .8rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: .85rem; outline: none; margin-bottom: .75rem; }
     .search-input:focus { border-color: var(--accent); }
+
+    /* ── Trend panel ── */
+    .trend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .trend-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: .8rem; }
+    .trend-card .trend-label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .25rem; }
+    .trend-card .trend-value { font-size: 1.2rem; font-weight: 700; margin-bottom: .4rem; }
+    .trend-card .trend-meta { font-size: .72rem; color: var(--muted); margin-top: .25rem; }
+    .trend-card svg { display: block; width: 100%; height: 40px; }
   </style>
 </head>
 <body>
@@ -174,6 +189,11 @@
   </header>
 
   <main>
+    <div id="mixed-warning">
+      <strong>Mixed-content block:</strong> this page is served over HTTPS, so the browser is blocking requests to <code>http://localhost:4000</code>. Open
+      <a href="http://localhost:4000/admin">http://localhost:4000/admin</a> for live pipeline data, or serve the bridge over HTTPS.
+    </div>
+
     <!-- Stats Row -->
     <div class="stats-row">
       <div class="stat-card purple">
@@ -204,7 +224,7 @@
       <div class="stat-card">
         <div class="label">Last Cycle</div>
         <div class="value" id="stat-cycle-age" style="font-size:1rem;padding-top:.4rem">...</div>
-        <div class="sub">ago</div>
+        <div class="sub" id="stat-cycle-sub">ago</div>
       </div>
       <div class="stat-card">
         <div class="label">Avg SEO Score</div>
@@ -215,6 +235,22 @@
         <div class="label">Paperclip</div>
         <div class="value" id="stat-paperclip" style="font-size:1rem;padding-top:.4rem">...</div>
         <div class="sub" id="stat-paperclip-sub">checking...</div>
+      </div>
+    </div>
+
+    <!-- Trends Row -->
+    <div class="panel" style="margin-bottom:1.25rem">
+      <div class="panel-header">
+        <h2>Trends (last 4h)</h2>
+        <span class="badge" id="trend-badge">—</span>
+      </div>
+      <div class="panel-body">
+        <div class="trend-grid" id="trend-grid">
+          <div class="trend-card"><div class="trend-label">Cycles / 5m</div><div class="trend-value" id="trend-cycles-val">—</div><svg id="trend-cycles" viewBox="0 0 200 40" preserveAspectRatio="none"></svg><div class="trend-meta" id="trend-cycles-meta">gathering data…</div></div>
+          <div class="trend-card"><div class="trend-label">Errors</div><div class="trend-value" id="trend-errors-val">—</div><svg id="trend-errors" viewBox="0 0 200 40" preserveAspectRatio="none"></svg><div class="trend-meta" id="trend-errors-meta">gathering data…</div></div>
+          <div class="trend-card"><div class="trend-label">Avg SEO</div><div class="trend-value" id="trend-seo-val">—</div><svg id="trend-seo" viewBox="0 0 200 40" preserveAspectRatio="none"></svg><div class="trend-meta" id="trend-seo-meta">gathering data…</div></div>
+          <div class="trend-card"><div class="trend-label">Apps Deployed</div><div class="trend-value" id="trend-apps-val">—</div><svg id="trend-apps" viewBox="0 0 200 40" preserveAspectRatio="none"></svg><div class="trend-meta" id="trend-apps-meta">gathering data…</div></div>
+        </div>
       </div>
     </div>
 
@@ -357,16 +393,29 @@
 </div>
 
 <script>
-const BRIDGE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? ''
-  : 'http://localhost:4000';
+const IS_LOCAL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const IS_HTTPS = window.location.protocol === 'https:';
+const BRIDGE = IS_LOCAL ? '' : 'http://localhost:4000';
 const BASE_URL = 'https://freetoolbox.tools';
 const CORRECT_PW = 'ginga2026';
+
+// Stale thresholds
+const STALE_WARN_SECONDS = 120;   // > 2 min since last cycle → yellow
+const STALE_DANGER_SECONDS = 300; // > 5 min → red
+
+// Trend storage (localStorage)
+const TREND_KEY = 'ftb_admin_trend_v1';
+const TREND_MAX = 48;              // keep 48 samples
+const TREND_BUCKET_MS = 5 * 60 * 1000; // 5 minutes
+
+// Uptime storage
+const UPTIME_KEY = 'ftb_admin_uptime_v1';
 
 // State
 let allApps = [];
 let seoData = null;
 let bridgeOnline = false;
+let mixedContentSuspected = false;
 
 // ── Auth ──
 function checkAuth() {
@@ -428,15 +477,27 @@ async function checkEndpoint(url, timeout = 4000) {
 
 // ── Load all data ──
 async function loadAll() {
+  // Try canonical endpoint names first, fall back to legacy aliases.
+  const kbPromise = (async () => {
+    return await fetchJSON(`${BRIDGE}/knowledge-base`)
+        || await fetchJSON(`${BRIDGE}/knowledge`);
+  })();
+
   const [pipeline, kb, seo, sitemapText] = await Promise.all([
     fetchJSON(`${BRIDGE}/pipeline-status`),
-    fetchJSON(`${BRIDGE}/knowledge`),
+    kbPromise,
     fetchJSON(`${BRIDGE}/live-test-log`),
     fetchText(`${BASE_URL}/sitemap.xml`),
   ]);
 
   bridgeOnline = !!pipeline;
   seoData = seo;
+
+  // Detect mixed-content scenario: dashboard is on https + bridge unreachable + site is reachable.
+  // If sitemap loaded (external https) but pipeline did not, the most likely cause is mixed content.
+  mixedContentSuspected = IS_HTTPS && !bridgeOnline && !!sitemapText;
+  const mw = document.getElementById('mixed-warning');
+  if (mw) mw.style.display = mixedContentSuspected ? 'block' : 'none';
 
   renderPipeline(pipeline);
   renderKB(kb);
@@ -445,6 +506,10 @@ async function loadAll() {
   renderActivity(pipeline);
   checkServices();
 
+  // Record trend sample and render
+  recordTrendSample(pipeline, seo);
+  renderTrends();
+
   document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
 }
 
@@ -452,7 +517,7 @@ async function loadAll() {
 function renderPipeline(p) {
   if (!p) {
     document.getElementById('stat-mode').textContent = 'offline';
-    document.getElementById('stat-step').textContent = 'bridge unreachable';
+    document.getElementById('stat-step').textContent = mixedContentSuspected ? 'blocked (mixed content)' : 'bridge unreachable';
     document.getElementById('status-dot').style.background = 'var(--danger)';
     document.getElementById('pipeline-mode-badge').textContent = 'offline';
     return;
@@ -466,7 +531,24 @@ function renderPipeline(p) {
   document.getElementById('pipeline-mode-badge').textContent = p.mode + (p.running ? ' running' : ' stopped');
 
   const age = p.secondsSinceLastCycle;
-  document.getElementById('stat-cycle-age').textContent = age != null ? formatAge(age) : '...';
+  const ageEl = document.getElementById('stat-cycle-age');
+  const subEl = document.getElementById('stat-cycle-sub');
+  if (age != null) {
+    ageEl.textContent = formatAge(age);
+    if (age >= STALE_DANGER_SECONDS) {
+      ageEl.style.color = 'var(--danger)';
+      subEl.innerHTML = 'ago <span class="stale-flag">STUCK</span>';
+    } else if (age >= STALE_WARN_SECONDS) {
+      ageEl.style.color = 'var(--warn)';
+      subEl.innerHTML = 'ago <span class="stale-flag" style="background:rgba(245,158,11,.15);color:var(--warn)">STALE</span>';
+    } else {
+      ageEl.style.color = 'var(--text)';
+      subEl.textContent = 'ago';
+    }
+  } else {
+    ageEl.textContent = '...';
+    subEl.textContent = 'ago';
+  }
 
   const steps = ['generating','evaluating','discovering','seo-campaign','waiting'];
   steps.forEach(s => {
@@ -589,7 +671,6 @@ function renderSEO(seo) {
 // ── Apps from Sitemap ──
 function renderAppsFromSitemap(sitemapText) {
   if (!sitemapText) {
-    // Fallback: try to use apps we already know from bridge or keep current
     if (allApps.length === 0) {
       document.getElementById('stat-apps').textContent = '?';
       document.getElementById('apps-count-badge').textContent = 'sitemap unavailable';
@@ -666,7 +747,6 @@ function renderActivity(pipeline) {
 
   const history = pipeline.cycleHistory || pipeline.recentCycles || [];
   if (history.length === 0 && pipeline.cyclesCompleted > 0) {
-    // Synthesize from available data
     const items = [];
     if (pipeline.step) items.push({ text: `Current step: ${pipeline.step}`, time: 'now' });
     if (pipeline.cyclesCompleted) items.push({ text: `${pipeline.cyclesCompleted} cycles completed`, time: '' });
@@ -692,27 +772,160 @@ function renderActivity(pipeline) {
 
 // ── Services ──
 async function checkServices() {
-  // Bridge
   const bridgeUp = await checkEndpoint(`${BRIDGE || 'http://localhost:4000'}/pipeline-status`);
   setServiceStatus('bridge', bridgeUp);
+  recordUptime('bridge', bridgeUp);
 
-  // Paperclip
   const paperclipUp = await checkEndpoint('http://localhost:3100');
   setServiceStatus('paperclip', paperclipUp);
+  recordUptime('paperclip', paperclipUp);
   document.getElementById('stat-paperclip').textContent = paperclipUp ? 'online' : 'offline';
   document.getElementById('stat-paperclip').style.color = paperclipUp ? 'var(--accent2)' : 'var(--danger)';
   document.getElementById('stat-paperclip-sub').textContent = paperclipUp ? 'localhost:3100' : 'not running';
 
-  // Live site (check sitemap as proxy)
   const siteUp = allApps.length > 0;
   setServiceStatus('site', siteUp);
+  recordUptime('site', siteUp);
 }
 
 function setServiceStatus(name, up) {
   const dot = document.getElementById(`svc-dot-${name}`);
   const status = document.getElementById(`svc-status-${name}`);
+  const since = uptimeSince(name, up);
   if (dot) { dot.className = 'svc-dot ' + (up ? 'up' : 'down'); }
-  if (status) { status.textContent = up ? 'online' : 'offline'; }
+  if (status) {
+    const label = up ? 'online' : 'offline';
+    status.textContent = since ? `${label} · ${since}` : label;
+  }
+}
+
+// ── Uptime tracking ──
+function readUptime() {
+  try { return JSON.parse(localStorage.getItem(UPTIME_KEY) || '{}'); } catch { return {}; }
+}
+function writeUptime(data) {
+  try { localStorage.setItem(UPTIME_KEY, JSON.stringify(data)); } catch {}
+}
+function recordUptime(name, up) {
+  const data = readUptime();
+  const now = Date.now();
+  const prev = data[name];
+  if (!prev || prev.up !== up) {
+    data[name] = { up, since: now };
+    writeUptime(data);
+  }
+}
+function uptimeSince(name, currentUp) {
+  const data = readUptime();
+  const entry = data[name];
+  if (!entry || entry.up !== currentUp) return null;
+  const secs = Math.floor((Date.now() - entry.since) / 1000);
+  if (secs < 60) return secs + 's';
+  if (secs < 3600) return Math.floor(secs/60) + 'm';
+  return Math.floor(secs/3600) + 'h ' + Math.floor((secs%3600)/60) + 'm';
+}
+
+// ── Trend tracking ──
+function readTrend() {
+  try { return JSON.parse(localStorage.getItem(TREND_KEY) || '[]'); } catch { return []; }
+}
+function writeTrend(arr) {
+  try { localStorage.setItem(TREND_KEY, JSON.stringify(arr)); } catch {}
+}
+function recordTrendSample(pipeline, seo) {
+  const now = Date.now();
+  const trend = readTrend();
+  const last = trend[trend.length - 1];
+  // Only add a new sample per bucket; otherwise overwrite the latest in-bucket.
+  let avgSEO = null;
+  if (seo && seo.tests) {
+    const vals = Object.values(seo.tests).map(t => t.score ?? 0);
+    if (vals.length > 0) avgSEO = vals.reduce((a,b) => a+b, 0) / vals.length;
+  }
+  const sample = {
+    t: now,
+    cycles: pipeline?.cyclesCompleted ?? null,
+    errors: pipeline?.currentCycleErrors?.length ?? null,
+    seo: avgSEO,
+    apps: allApps.length || null,
+  };
+  if (last && (now - last.t) < TREND_BUCKET_MS) {
+    trend[trend.length - 1] = sample;
+  } else {
+    trend.push(sample);
+    if (trend.length > TREND_MAX) trend.splice(0, trend.length - TREND_MAX);
+  }
+  writeTrend(trend);
+}
+function sparkline(svgEl, values, color) {
+  if (!svgEl) return;
+  const nonNull = values.filter(v => v != null && !isNaN(v));
+  if (nonNull.length < 2) {
+    svgEl.innerHTML = `<text x="100" y="24" text-anchor="middle" fill="#8b8fa8" font-size="11" font-family="system-ui">need more samples</text>`;
+    return;
+  }
+  const min = Math.min(...nonNull);
+  const max = Math.max(...nonNull);
+  const range = max - min || 1;
+  const W = 200, H = 40, PAD = 2;
+  const points = values.map((v, i) => {
+    const x = (i / Math.max(values.length - 1, 1)) * W;
+    if (v == null || isNaN(v)) return null;
+    const y = H - PAD - ((v - min) / range) * (H - PAD * 2);
+    return [x, y];
+  });
+  // Build polyline, skipping null gaps
+  let path = '';
+  let inSegment = false;
+  points.forEach((pt) => {
+    if (!pt) { inSegment = false; return; }
+    path += (inSegment ? ' L ' : ' M ') + pt[0].toFixed(1) + ' ' + pt[1].toFixed(1);
+    inSegment = true;
+  });
+  svgEl.innerHTML = `<path d="${path}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+}
+function renderTrends() {
+  const trend = readTrend();
+  document.getElementById('trend-badge').textContent = trend.length + ' samples';
+
+  const cycleVals = trend.map(s => s.cycles);
+  const errorVals = trend.map(s => s.errors);
+  const seoVals = trend.map(s => s.seo);
+  const appVals = trend.map(s => s.apps);
+
+  // Derive "cycles per 5m" from cumulative cycles by diff-ing adjacent samples
+  const cycleDelta = cycleVals.map((v, i) => (i === 0 || v == null || cycleVals[i-1] == null) ? null : Math.max(0, v - cycleVals[i-1]));
+
+  sparkline(document.getElementById('trend-cycles'), cycleDelta, '#10b981');
+  sparkline(document.getElementById('trend-errors'), errorVals, '#ef4444');
+  sparkline(document.getElementById('trend-seo'), seoVals, '#6c63ff');
+  sparkline(document.getElementById('trend-apps'), appVals, '#3b82f6');
+
+  const setMeta = (id, values, fmt = v => v) => {
+    const metaEl = document.getElementById(id);
+    if (!metaEl) return;
+    const last = [...values].reverse().find(v => v != null);
+    const first = values.find(v => v != null);
+    if (last == null || first == null) {
+      metaEl.textContent = 'gathering data…';
+      return;
+    }
+    const diff = last - first;
+    const arrow = diff > 0 ? '▲' : diff < 0 ? '▼' : '◆';
+    metaEl.textContent = `${arrow} ${fmt(diff)} over window`;
+  };
+
+  const lastVal = (arr) => [...arr].reverse().find(v => v != null);
+  document.getElementById('trend-cycles-val').textContent = (lastVal(cycleDelta) ?? '—');
+  document.getElementById('trend-errors-val').textContent = (lastVal(errorVals) ?? '—');
+  const lastSeo = lastVal(seoVals);
+  document.getElementById('trend-seo-val').textContent = lastSeo != null ? (lastSeo / 10).toFixed(1) : '—';
+  document.getElementById('trend-apps-val').textContent = (lastVal(appVals) ?? '—');
+
+  setMeta('trend-cycles-meta', cycleDelta, v => (v >= 0 ? '+' : '') + v);
+  setMeta('trend-errors-meta', errorVals, v => (v >= 0 ? '+' : '') + v);
+  setMeta('trend-seo-meta', seoVals, v => (v >= 0 ? '+' : '') + (v / 10).toFixed(1));
+  setMeta('trend-apps-meta', appVals, v => (v >= 0 ? '+' : '') + v);
 }
 
 // ── Helpers ──
